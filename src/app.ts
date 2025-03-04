@@ -12,6 +12,7 @@ import homeRoutes from "./routes/home";
 import statusRoutes from "./routes/api/status/status";
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
+import {getAllUsers} from "./services/user";
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
