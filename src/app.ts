@@ -8,6 +8,8 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import * as path from "path";
 
+import homeRoutes from "./routes/home";
+import statusRoutes from "./routes/api/status";
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
@@ -17,8 +19,6 @@ if (ENVIRONMENT === "production") {
 }
 
 app.use(cookieParser());
-
-
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -26,12 +26,14 @@ app.set('views', path.join(__dirname, 'src', 'views', 'pages'));
 app.set('view engine', 'ejs');
 app.use(express.json());
 
-// Routes
-app.get('/', (req: Request, res: Response) => { // not found page
-    res.status(404).json({message: "welcome"})
-});
+// API Routes
+app.use('/api/status', statusRoutes)
 
-app.use((req: Request, res: Response) => { // not found page
+// Routes
+app.use('/', homeRoutes);
+
+// Not found page
+app.use((req: Request, res: Response) => {
      res.status(404).json({error: "not found"})
 });
 
