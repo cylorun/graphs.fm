@@ -9,7 +9,9 @@ import cookieParser from "cookie-parser";
 import * as path from "path";
 
 import homeRoutes from "./routes/home";
-import statusRoutes from "./routes/api/status";
+import statusRoutes from "./routes/api/status/status";
+import spotifyCallbackRoutes from './routes/auth/spotify/callback';
+import spotifyLoginRoutes from './routes/auth/spotify/login';
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
@@ -28,6 +30,10 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/status', statusRoutes)
+
+// Auth routes
+app.use('/auth/spotify/callback', spotifyCallbackRoutes);
+app.use('/auth/spotify/login', spotifyLoginRoutes);
 
 // Routes
 app.use('/', homeRoutes);
