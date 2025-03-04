@@ -82,7 +82,9 @@ router.get("/", async (req: Request, res: Response) => {
                 .where(eq(users.spotifyId, spotifyId));
         }
 
-        res.json({ message: "Login successful", user: user[0] });
+        req.session.uid = user[0].id;
+        res.redirect("/dashboard");
+
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
         res.redirect(
