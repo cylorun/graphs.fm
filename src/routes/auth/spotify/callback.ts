@@ -1,6 +1,9 @@
-import express, { Request, Response, Router } from "express";
+import {Request, Response, Router} from "express";
 import * as querystring from "node:querystring";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
+import {db} from "../../../db";
+import {NewUser, users} from "../../../db/schema";
+import {eq} from "drizzle-orm";
 
 const router = Router();
 
@@ -38,20 +41,48 @@ router.get("/", async (req: Request, res: Response) => {
             }
         );
 
-        console.log(tokenResponse.data);
+        const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
-        const { access_token } = tokenResponse.data;
+        const profileResponse = await axios.get("https://api.spotify.com/v1/me", {
+            headers: { Authorization: `Bearer ${access_token}` },
+        });
 
-        const playerResponse = await axios.get(
-            "https://api.spotify.com/v1/me/player/currently-playing",
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
-            }
-        );
+        const spotifyProfile = profileResponse.data;
+        const spotifyId = spotifyProfile.id;
+        const displayName = spotifyProfile.display_name;
+        const email = spotifyProfile.email;
+        const profileImage = spotifyProfile.images?.[0]?.url || null;
+        console.log(spotifyProfile);
 
-        res.json(playerResponse.data);
+
+        let user = await db.select().from(users).where(eq(users.spotifyId, spotifyId));
+
+        if (user.length === 0) {
+            // if usr doesnt exist, create it
+            const newUser: NewUser = {
+                spotifyId,
+                displayName,
+                email,
+                profileImage,
+                accessToken: access_token,
+                refreshToken: refresh_token,
+                expiresAt: new Date(Date.now() + expires_in * 1000),
+            };
+
+            user = await db.insert(users).values(newUser).returning();
+        } else {
+            await db
+                .update(users)
+                .set({
+                    accessToken: access_token,
+                    refreshToken: refresh_token,
+                    expiresAt: new Date(Date.now() + expires_in * 1000),
+                    lastLogin: new Date(),
+                })
+                .where(eq(users.spotifyId, spotifyId));
+        }
+
+        res.json({ message: "Login successful", user: user[0] });
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
         res.redirect(
