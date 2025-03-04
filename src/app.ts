@@ -8,14 +8,21 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import * as path from "path";
 import session from "express-session";
+declare module "express-session" {
+    interface SessionData {
+        uid?: number;
+    }
+}
+
 import pg from "pg";
 import pgSession from "connect-pg-simple";
 
 import homeRoutes from "./routes/home";
-import statusRoutes from "./routes/api/status/status";
+import statusRoutes from "./routes/api/status";
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
 import logoutRoutes from './routes/auth/logout';
+import dashboardRoutes from './routes/dashboard'
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
@@ -54,6 +61,7 @@ app.use('/auth/logout', logoutRoutes);
 
 // Routes
 app.use('/', homeRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // Not found page
 app.use((req: Request, res: Response) => {

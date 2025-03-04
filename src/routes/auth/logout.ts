@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 const router = Router();
 
-router.get("/logout", (req: Request, res: Response) => {
+router.get("/", (req: Request, res: Response) => {
     req.session.destroy(() => {
         res.redirect("/");
     });
