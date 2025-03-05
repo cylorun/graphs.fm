@@ -11,7 +11,6 @@ import {desc, eq} from "drizzle-orm";
 
 
 async function insertUserTrack(uid: number, track: Track): Promise<void> {
-    console.log('inserting:', uid)
     await db.insert(userTracks).values({userId: uid, trackId: track.id});
 }
 

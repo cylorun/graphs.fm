@@ -25,6 +25,28 @@ export async function getArtistGenres(artistId: number): Promise<Genre[] | null>
     return result.length > 0 ? result : [];
 }
 
-export async function createArtist(artist: NewArtist): Promise<Artist> {
-    return (await db.insert(artists).values(artist).returning())[0];
+export async function createArtist(artist: NewArtist, genreNames: string[]): Promise<Artist> {
+    return await db.transaction(async (tx) => {
+        console.log("Creating artist service")
+        const insertedArtist = await tx.insert(artists).values(artist).returning();
+        const artistId = insertedArtist[0].id;
+
+        const genreRecords = await Promise.all(genreNames.map(async (genreName) => {
+            const existingGenre = await tx.select().from(genres).where(eq(genres.genreName, genreName)).limit(1);
+            if (existingGenre.length > 0) {
+                return existingGenre[0].id;
+            } else {
+                const newGenre = await tx.insert(genres).values({ genreName }).returning();
+                return newGenre[0].id;
+            }
+        }));
+
+        console.log(genreRecords);
+
+        await tx.insert(artistGenres).values(
+            genreRecords.map((genreId) => ({ artistId, genreId }))
+        );
+
+        return insertedArtist[0];
+    });
 }

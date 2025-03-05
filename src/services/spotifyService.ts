@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { refreshAccessToken } from '../util/tokenManager';
-import { db } from "../db";
-import {users, tracks, userTracks} from "../db/schema";
-import {desc, eq} from "drizzle-orm";
+import {refreshAccessToken} from '../util/tokenManager';
+import {db} from "../db";
+import {artistTracks, tracks, users} from "../db/schema";
+import {eq} from "drizzle-orm";
 import {NewTrack, Track} from '../types';
+import {createArtist, getArtistBySpotifyId} from "./artistService";
 
 export const getAccessToken = async (uid: number) => {
-    const user = (await db.select({ accessToken: users.accessToken })
+    const user = (await db.select({accessToken: users.accessToken})
         .from(users)
         .where(eq(users.id, uid)))[0];
 
@@ -17,6 +18,38 @@ export const getAccessToken = async (uid: number) => {
     return user.accessToken;
 };
 
+const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
+    for (const id of ids) {
+        const artist = await getArtistBySpotifyId(id);
+        if (!artist) {
+            const response = await axios.get(`https://api.spotify.com/v1/artists/${id}`, {
+                headers: {Authorization: `Bearer ${accessToken}`}
+            });
+
+            if (response.status === 200) {
+                const {genres, images, name} = response.data;
+                console.log("registering new artist:", name);
+                const imageUrl = images[0]?.url;
+                await createArtist({
+                    spotifyId: id,
+                    artistName: name,
+                    imageUrl: imageUrl
+                }, genres);
+            }
+        }
+    }
+}
+
+const linkArtistTracks = async (artistIds: string[], trackId: number) => {
+    for (let id of artistIds) {
+        const artist = await getArtistBySpotifyId(id);
+        console.log("Inseting artist tracks for artist: " + artist);
+        if (artist) { // it should always exist, since `createArtistIfNotExists` should always be called before
+            await db.insert(artistTracks).values({artistId: artist.id, trackId: trackId});
+        }
+    }
+}
+
 export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 0): Promise<Track | null> => {
     const accessToken = await getAccessToken(uid);
     if (!accessToken) {
@@ -25,17 +58,18 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
 
     try {
         const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
-            headers: { Authorization: `Bearer ${accessToken}` }
+            headers: {Authorization: `Bearer ${accessToken}`}
         });
 
         if (response.status === 204) {
             return null;
         }
 
+        const artistIds = response.data.item.artists.map((a: any) => a.id);
+
         const trackData: NewTrack = {
             spotifyId: response.data.item.id,
             trackName: response.data.item.name,
-            artist: response.data.item.artists.map((a: any) => a.name).join(','),
             album: response.data.item.album.name,
             durationMs: response.data.item.duration_ms,
             imageUrl: response.data.item.album.images[0]?.url || null,
@@ -53,13 +87,18 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             return existingTrack[0];
         }
 
-        const insertedTrack = await db.insert(tracks)
+        const insertedTrack = (await db.insert(tracks)
             .values(trackData)
-            .returning();
+            .returning())[0];
 
-        return insertedTrack[0]
+        console.log("Registered new track:", insertedTrack.trackName);
+
+        await createArtistIfNotExists(artistIds, accessToken);
+        await linkArtistTracks(artistIds, insertedTrack.id)
+
+        return insertedTrack
     } catch (error: any) {
-        if (error.response?.status === 401 && failedAttempts <= 1)  {
+        if (error.response?.status === 401 && failedAttempts <= 1) {
             await refreshAccessToken(uid);
             return getCurrentlyPlaying(uid, failedAttempts++);
         }
