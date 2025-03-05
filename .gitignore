@@ -3,5 +3,5 @@ node_modules
 .env
 dist
 *.js
-
+*.tsbuildinfo
 !src/public/js/*.js
