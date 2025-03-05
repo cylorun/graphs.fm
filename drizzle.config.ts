@@ -15,5 +15,6 @@ export default defineConfig({
     dialect: "postgresql",
     schema: "./src/db/schema.ts",
     out: "./drizzle",
+    // @ts-ignore
     ssl: false
 });
