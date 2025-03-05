@@ -49,6 +49,14 @@ main {
     background-color: #444444;
 }
 
+.play-btn {
+    cursor: pointer;
+    background-color: #7c7878;
+    border: #606060 2px solid;
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .track-name {
     font-size: 1.1rem;
     font-weight: bold;
