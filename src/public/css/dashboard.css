@@ -56,7 +56,7 @@ main {
 }
 
 .artist-name {
-    color: #706e6e;
+    color: #7c7878;
     font-size: 14px;
     margin-top: 5px;
 }
@@ -79,6 +79,12 @@ main {
 
 .currently-listening .artist-name {
     font-size: 14px;
+}
+
+.track-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
 }
 
 footer {

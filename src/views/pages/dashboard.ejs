@@ -29,6 +29,7 @@
                             <span class="artist-name">by <%= t.artists.map(a => a.artistName).join(', ') %></span>
                         </div>
                         <div class="recent-right">
+                            <img class="track-icon" src="<%= t.imageUrl %>" alt="img">
                             <%= Math.floor(t.durationMs / 60000) %>:<%= ((t.durationMs % 60000) / 1000).toFixed(0).padStart(2, '0') %>
                         </div>
 
