@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   app:
     build:
@@ -16,7 +14,19 @@ services:
       - USING_DOCKER=true
     env_file:
       - .env
+    depends_on:
+      - postgres
 
+  weather-scraper:
+    build:
+      context: .
+    container_name: weather-scraper
+    restart: always
+    working_dir: /app
+    command: "npm run scraper"
+    depends_on:
+      - app
+      - postgres
 
   postgres:
     image: postgres:14
