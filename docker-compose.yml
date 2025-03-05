@@ -17,13 +17,15 @@ services:
     depends_on:
       - postgres
 
-  weather-scraper:
+  scraper:
     build:
       context: .
-    container_name: weather-scraper
+    container_name: notestats-scraper
     restart: always
     working_dir: /app
     command: "npm run scraper"
+    env_file:
+      - .env
     depends_on:
       - app
       - postgres
