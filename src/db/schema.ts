@@ -1,5 +1,4 @@
-import { pgTable, serial, varchar, text, timestamp, integer } from "drizzle-orm/pg-core";
-import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import {integer, pgTable, serial, text, timestamp, varchar} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -33,14 +32,3 @@ export const userTracks = pgTable("user_tracks", {
 });
 
 
-export type User = InferSelectModel<typeof users>;
-
-export type NewUser = InferInsertModel<typeof users>;
-
-export type Track = InferSelectModel<typeof tracks>;
-
-export type NewTrack = InferInsertModel<typeof tracks>;
-
-export type UserTrack = InferSelectModel<typeof userTracks>;
-
-export type NewUserTrack = InferInsertModel<typeof userTracks>;

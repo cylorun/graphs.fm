@@ -2,8 +2,9 @@ import {Request, Response, Router} from "express";
 import * as querystring from "node:querystring";
 import axios from "axios";
 import {db} from "../../../db";
-import {NewUser, users} from "../../../db/schema";
+import {users} from "../../../db/schema";
 import {eq} from "drizzle-orm";
+import {NewUser} from "../../../types";
 
 const router = Router();
 
@@ -52,7 +53,6 @@ router.get("/", async (req: Request, res: Response) => {
         const displayName = spotifyProfile.display_name;
         const email = spotifyProfile.email;
         const profileImage = spotifyProfile.images?.[0]?.url || null;
-        console.log(spotifyProfile);
 
 
         let user = await db.select().from(users).where(eq(users.spotifyId, spotifyId));
