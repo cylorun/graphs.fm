@@ -30,10 +30,13 @@
                     <% recentTracks.forEach((t) => { %>
                         <li class="track-item" data-spotify-id="<%= t.spotifyId %>">
                             <div class="recent-left">
-                                <button class="play-btn">play</button>
-                                <span class="track-name"><%= t.trackName %></span>
-                                <br class="track-artist-break">
-                                <span class="artist-name"><%= t.artists.map(a => a.artistName).join(', ') %></span>
+                                <div class="recent-left-top">
+                                    <button class="play-btn"><img src="/assets/icons/spotify-icon.png" alt=""></button>
+                                    <span class="track-name"><%= t.trackName %></span>
+                                </div>
+                                <div class="recent-left-bottom">
+                                    <span class="artist-name"><%= t.artists.map(a => a.artistName).join(', ') %></span>
+                                </div>
                             </div>
                             <div class="recent-right">
                                 <img class="track-icon" src="<%= t.imageUrl %>" alt="img">

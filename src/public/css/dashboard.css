@@ -22,7 +22,7 @@ main {
 }
 
 #stats-intro {
-    width: 100%;
+    width: 90%;
     background-color: #3A4646;
     margin: 10px;
     padding: 10px;
@@ -49,6 +49,20 @@ main {
     padding: 0;
 }
 
+.recent-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.recent-left-top {
+    display: flex;
+}
+
+.recent-left-bottom {
+
+}
+
 .track-item {
     background-color: #76817f;
     padding: 10px;
@@ -71,22 +85,28 @@ main {
 
 .play-btn {
     cursor: pointer;
-    background-color: #7c7878;
-    border: #606060 2px solid;
-    padding: 5px;
-    border-radius: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+.play-btn img {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
 }
 
 .track-name {
     font-size: 1.1rem;
     font-weight: bold;
     color: #1b1e1b;
+    display: block;
 }
 
 .artist-name {
     color: #2d302e;
     font-size: 14px;
     margin-top: 5px;
+    display: block;
 }
 
 .currently-listening {
@@ -124,7 +144,7 @@ footer {
     color: #777;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 800px) {
     #middle-section {
         flex-direction: row;
     }
@@ -137,7 +157,10 @@ footer {
         width: 60%;
     }
 
-    .track-artist-break {
-        display: none;
+    .recent-left {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 80%;
+        margin-right: 10px;
     }
 }
