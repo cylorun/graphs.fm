@@ -1,5 +1,8 @@
 import {Request, Response, Router} from "express";
-import {getCurrentlyPlaying, getRecentTracks} from "../services/spotifyService";
+import {getCurrentlyPlaying} from "../services/spotifyService";
+import {getRecentTracks} from '../services/trackService';
+
+
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
