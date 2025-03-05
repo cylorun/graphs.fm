@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { refreshAccessToken } from '../util/tokenManager';
 import { db } from "../db";
-import { users, tracks } from "../db/schema";
-import { eq } from "drizzle-orm";
+import {users, tracks, userTracks} from "../db/schema";
+import {desc, eq} from "drizzle-orm";
 import {NewTrack, Track} from '../types';
 
 export const getAccessToken = async (uid: number) => {
@@ -66,3 +66,14 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
         throw error;
     }
 };
+
+export const getRecentTracks = async (uid: number, count: number = 20): Promise<Track[]> => {
+    return (await db
+        .select({tracks})
+        .from(tracks)
+        .innerJoin(userTracks, eq(userTracks.trackId, tracks.id))
+        .where(eq(userTracks.userId, uid))
+        .orderBy(desc(userTracks.playedAt))
+        .limit(count))
+        .map(a => a.tracks);
+}

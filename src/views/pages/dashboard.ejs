@@ -11,5 +11,15 @@
     <%- include('../partials/navbar.ejs')%>
 
     Dash
+    <br>
+    Recent tracks
+    <ul>
+        <% recentTracks.map((t) => {%>
+            <li>
+                <%= t.trackName %> by  <%= t.artist %>
+            </li>
+        <% })%>
+    </ul>
+
 </body>
 </html>
