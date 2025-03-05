@@ -12,33 +12,44 @@
 <body>
     <%- include('../partials/navbar.ejs')%>
     <main>
-        <section id="recent-tracks">
-            <h2>Recent Tracks</h2>
-            <ul>
-                <% if (currentTrack) { %>
-                    <li class="currently-listening">
-                        <span class="track-name"><%= currentTrack.trackName %></span>
-                        <span class="artist-name">by <%= currentTrack.artist %></span>
-                        <span>Currently listening</span>
-                    </li>
-                <% } %>
-
-                <% recentTracks.forEach((t) => { %>
-                    <li class="track-item" data-spotify-id="<%= t.spotifyId %>">
-                        <div class="recent-left">
-                            <button class="play-btn">play</button>
-                            <span class="track-name"><%= t.trackName %></span>
-                            <span class="artist-name">by <%= t.artists.map(a => a.artistName).join(', ') %></span>
-                        </div>
-                        <div class="recent-right">
-                            <img class="track-icon" src="<%= t.imageUrl %>" alt="img">
-                            <%= Math.floor(t.durationMs / 60000) %>:<%= ((t.durationMs % 60000) / 1000).toFixed(0).padStart(2, '0') %>
-                        </div>
-                    </li>
-                <% }) %>
-            </ul>
+        <section id="top-section">
+            <h2>Your listening activity</h2>
         </section>
+        <div id="middle-section">
+            <section id="recent-tracks">
+                <h2>Recent Tracks</h2>
+                <ul>
+                    <% if (currentTrack) { %>
+                        <li class="currently-listening">
+                            <span class="track-name"><%= currentTrack.trackName %></span>
+                            <span class="artist-name"><%= currentTrack.artists.map(a => a.artistName).join(', ') %></span>
+                            <span>Currently listening</span>
+                        </li>
+                    <% } %>
 
+                    <% recentTracks.forEach((t) => { %>
+                        <li class="track-item" data-spotify-id="<%= t.spotifyId %>">
+                            <div class="recent-left">
+                                <button class="play-btn">play</button>
+                                <span class="track-name"><%= t.trackName %></span>
+                                <br class="track-artist-break">
+                                <span class="artist-name"><%= t.artists.map(a => a.artistName).join(', ') %></span>
+                            </div>
+                            <div class="recent-right">
+                                <img class="track-icon" src="<%= t.imageUrl %>" alt="img">
+                                <%= Math.floor(t.durationMs / 60000) %>:<%= ((t.durationMs % 60000) / 1000).toFixed(0).padStart(2, '0') %>
+                            </div>
+                        </li>
+                    <% }) %>
+                </ul>
+            </section>
+            <section id="stats-intro">
+                Graphs and stuff...
+            </section>
+        </div>
     </main>
+    <footer>
+        feet
+    </footer>
 </body>
 </html>

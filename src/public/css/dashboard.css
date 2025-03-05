@@ -10,16 +10,36 @@ body, html {
 main {
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
+}
+
+#top-section {
+    min-height: 30vh;
+}
+
+#middle-section {
+    display: flex;
+    flex-direction: column;
+}
+
+#stats-intro {
+    width: 100%;
+    background-color: #3A4646;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 #recent-tracks {
+    width: 90%;
+    background-color: #3A4646;
     margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 #recent-tracks h2 {
     font-size: 1.5rem;
-    color: #ffffff;
+    color: #121111;
     border-bottom: 2px solid #606060;
     padding-bottom: 5px;
 }
@@ -29,8 +49,8 @@ main {
     padding: 0;
 }
 
-#recent-tracks ul li {
-    background-color: #3a3a3a;
+.track-item {
+    background-color: #76817f;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -39,14 +59,14 @@ main {
     transition: background-color 0.3s ease;
 }
 
-#recent-tracks ul li:not(.currently-listening)  {
+.track-item  {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-#recent-tracks ul li:hover {
-    background-color: #444444;
+.track-item:hover {
+    background-color: #889593;
 }
 
 .play-btn {
@@ -60,33 +80,35 @@ main {
 .track-name {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #ffffff;
+    color: #1b1e1b;
 }
 
 .artist-name {
-    color: #7c7878;
+    color: #2d302e;
     font-size: 14px;
     margin-top: 5px;
 }
 
 .currently-listening {
-    background-color: #5e5e5e;
+    background-color: #69817a !important;
     font-size: 1.2rem;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 15px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
 
 .currently-listening .track-name {
     font-weight: bold;
-    color: #f1f1f1;
+    color: #1b1e1b;
 }
 
 .currently-listening .artist-name {
     font-size: 14px;
+    color: #2d302e;
 }
 
 .track-icon {
@@ -100,4 +122,22 @@ footer {
     text-align: center;
     font-size: 0.9rem;
     color: #777;
+}
+
+@media (min-width: 500px) {
+    #middle-section {
+        flex-direction: row;
+    }
+
+    #recent-tracks {
+        width: 40%;
+    }
+
+    #stats-intro {
+        width: 60%;
+    }
+
+    .track-artist-break {
+        display: none;
+    }
 }
