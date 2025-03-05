@@ -17,12 +17,15 @@ declare module "express-session" {
 import pg from "pg";
 import pgSession from "connect-pg-simple";
 
-import homeRoutes from "./routes/home";
 import statusRoutes from "./routes/api/status";
+
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
+
+import homeRoutes from "./routes/home";
 import logoutRoutes from './routes/auth/logout';
 import dashboardRoutes from './routes/dashboard'
+import loginRoutes from './routes/login'
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
@@ -62,6 +65,7 @@ app.use('/auth/logout', logoutRoutes);
 // Routes
 app.use('/', homeRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/login', loginRoutes);
 
 // Not found page
 app.use((req: Request, res: Response) => {
