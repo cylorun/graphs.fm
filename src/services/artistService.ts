@@ -27,7 +27,6 @@ export async function getArtistGenres(artistId: number): Promise<Genre[] | null>
 
 export async function createArtist(artist: NewArtist, genreNames: string[]): Promise<Artist> {
     return await db.transaction(async (tx) => {
-        console.log("Creating artist service")
         const insertedArtist = await tx.insert(artists).values(artist).returning();
         const artistId = insertedArtist[0].id;
 
@@ -41,11 +40,11 @@ export async function createArtist(artist: NewArtist, genreNames: string[]): Pro
             }
         }));
 
-        console.log(genreRecords);
-
-        await tx.insert(artistGenres).values(
-            genreRecords.map((genreId) => ({ artistId, genreId }))
-        );
+        if (genreRecords.length > 0) {
+            await tx.insert(artistGenres).values(
+                genreRecords.map((genreId) => ({ artistId, genreId }))
+            );
+        }
 
         return insertedArtist[0];
     });

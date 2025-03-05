@@ -28,7 +28,8 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
 
             if (response.status === 200) {
                 const {genres, images, name} = response.data;
-                console.log("registering new artist:", name);
+
+                console.log("Registering new artist:", response.data);
                 const imageUrl = images[0]?.url;
                 await createArtist({
                     spotifyId: id,
@@ -43,7 +44,6 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
 const linkArtistTracks = async (artistIds: string[], trackId: number) => {
     for (let id of artistIds) {
         const artist = await getArtistBySpotifyId(id);
-        console.log("Inseting artist tracks for artist: " + artist);
         if (artist) { // it should always exist, since `createArtistIfNotExists` should always be called before
             await db.insert(artistTracks).values({artistId: artist.id, trackId: trackId});
         }
