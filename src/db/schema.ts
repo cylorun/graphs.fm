@@ -1,4 +1,4 @@
-import {integer, pgTable, serial, text, timestamp, varchar} from "drizzle-orm/pg-core";
+import {integer, json, pgTable, primaryKey, serial, text, timestamp, varchar} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -31,4 +31,10 @@ export const userTracks = pgTable("user_tracks", {
     playedAt: timestamp("played_at").defaultNow(),
 });
 
+export const session = pgTable('session', {
+    id: serial("id").primaryKey(),
+    sid: varchar('sid', { length: 255 }).unique().notNull(),
+    sess: json('sess').notNull(),
+    expire: timestamp('expire').notNull(),
+});
 
