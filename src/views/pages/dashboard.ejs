@@ -2,24 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <title>Dashboard</title>
 </head>
 <body>
     <%- include('../partials/navbar.ejs')%>
+    <main>
+        <section id="recent-tracks">
+            <h2>Recent Tracks</h2>
+            <ul>
+                <li class="currently-listening">
+                    <span class="track-name"><%= currentTrack.trackName %></span>
+                    <span class="artist-name">by <%= currentTrack.artist %></span>
+                    <span>Currently listening</span>
+                </li>
 
-    Dash
-    <br>
-    Recent tracks
-    <ul>
-        <% recentTracks.map((t) => {%>
-            <li>
-                <%= t.trackName %> by  <%= t.artist %>
-            </li>
-        <% })%>
-    </ul>
+                <% recentTracks.forEach((t) => { %>
+                    <li>
+                        <div class="recent-left">
+                            <span class="track-name"><%= t.trackName %></span>
+                            <span class="artist-name">by <%= t.artist %></span>
+                        </div>
+                        <div class="recent-right">
+                            <%= Math.floor(t.durationMs / 60000) %>:<%= ((t.durationMs % 60000) / 1000).toFixed(0).padStart(2, '0') %>
+                        </div>
 
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+    </main>
 </body>
 </html>

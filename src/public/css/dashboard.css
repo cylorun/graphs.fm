@@ -1,0 +1,89 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #303030;
+    color: #ddd;
+    line-height: 1.6;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+}
+
+#recent-tracks {
+    margin: 10px;
+}
+
+#recent-tracks h2 {
+    font-size: 1.5rem;
+    color: #ffffff;
+    border-bottom: 2px solid #606060;
+    padding-bottom: 5px;
+}
+
+#recent-tracks ul {
+    list-style: none;
+    padding: 0;
+}
+
+#recent-tracks ul li {
+    background-color: #3a3a3a;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+}
+
+#recent-tracks ul li:not(.currently-listening)  {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#recent-tracks ul li:hover {
+    background-color: #444444;
+}
+
+.track-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artist-name {
+    color: #706e6e;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.currently-listening {
+    background-color: #5e5e5e;
+    font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.currently-listening .track-name {
+    font-weight: bold;
+    color: #f1f1f1;
+}
+
+.currently-listening .artist-name {
+    font-size: 14px;
+}
+
+footer {
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+}

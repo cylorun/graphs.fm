@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {getRecentTracks} from "../services/spotifyService";
+import {getCurrentlyPlaying, getRecentTracks} from "../services/spotifyService";
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
@@ -11,7 +11,8 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const recentTracks = await getRecentTracks(loggedIn);
-    res.render("dashboard", {recentTracks});
+    const currentTrack = await getCurrentlyPlaying(loggedIn);
+    res.render("dashboard", {recentTracks, currentTrack});
 });
 
 export default router;
