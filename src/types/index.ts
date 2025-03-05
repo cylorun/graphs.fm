@@ -15,3 +15,5 @@ export type ArtistGenre = InferSelectModel<typeof artistGenres>;
 export type NewArtistGenre = InferInsertModel<typeof artistGenres>;
 export type ArtistTracks = InferSelectModel<typeof artistTracks>;
 export type NewArtistTracks = InferInsertModel<typeof artistTracks>
+export type DetailedTrack = Track & {playedAt: Date | null} & {artists: Artist[]}
+export type ArtistWithGenre = Artist & {genres: Genre[]}

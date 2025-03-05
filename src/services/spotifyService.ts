@@ -1,9 +1,9 @@
 import axios from 'axios';
 import {refreshAccessToken} from '../util/tokenManager';
 import {db} from "../db";
-import {artistTracks, tracks, users} from "../db/schema";
+import {artists, artistTracks, tracks, users} from "../db/schema";
 import {eq} from "drizzle-orm";
-import {NewTrack, Track} from '../types';
+import {DetailedTrack, NewTrack} from '../types';
 import {createArtist, getArtistBySpotifyId} from "./artistService";
 
 export const getAccessToken = async (uid: number) => {
@@ -29,7 +29,7 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
             if (response.status === 200) {
                 const {genres, images, name} = response.data;
 
-                console.log("Registering new artist:", response.data);
+                console.log("Registering new artist:", response.data.name);
                 const imageUrl = images[0]?.url;
                 await createArtist({
                     spotifyId: id,
@@ -50,7 +50,7 @@ const linkArtistTracks = async (artistIds: string[], trackId: number) => {
     }
 }
 
-export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 0): Promise<Track | null> => {
+export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 0): Promise<DetailedTrack | null> => {
     const accessToken = await getAccessToken(uid);
     if (!accessToken) {
         throw new Error("Access token not found");
@@ -58,9 +58,10 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
 
     try {
         const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
-            headers: {Authorization: `Bearer ${accessToken}`}
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
 
+        // if nothing is playing
         if (response.status === 204) {
             return null;
         }
@@ -75,32 +76,44 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             imageUrl: response.data.item.album.images[0]?.url || null,
         };
 
-        // check if the track exists in our db
         const existingTrack = await db
             .select()
             .from(tracks)
             .where(eq(tracks.spotifyId, trackData.spotifyId))
             .limit(1);
 
-        // return it if it does, else create it
-        if (existingTrack.length > 0) {
-            return existingTrack[0];
+        let track = existingTrack.length > 0 ? existingTrack[0] : null;
+
+        if (!track) {
+            // create the new track
+            track = (await db.insert(tracks)
+                .values(trackData)
+                .returning())[0];
+
+            console.log("Registered new track:", track.trackName);
+
+            // link artists and genres
+            await createArtistIfNotExists(artistIds, accessToken);
+            await linkArtistTracks(artistIds, track.id);
         }
 
-        const insertedTrack = (await db.insert(tracks)
-            .values(trackData)
-            .returning())[0];
 
-        console.log("Registered new track:", insertedTrack.trackName);
+        const artistsData = (await db
+            .select({artists})
+            .from(artists)
+            .innerJoin(artistTracks, eq(artistTracks.artistId, artists.id))
+            .where(eq(artistTracks.trackId, track.id))).map(a => a.artists);
 
-        await createArtistIfNotExists(artistIds, accessToken);
-        await linkArtistTracks(artistIds, insertedTrack.id)
 
-        return insertedTrack
+        return {
+            ...track,
+            playedAt: new Date(),
+            artists: artistsData,
+        };
     } catch (error: any) {
         if (error.response?.status === 401 && failedAttempts <= 1) {
             await refreshAccessToken(uid);
-            return getCurrentlyPlaying(uid, failedAttempts++);
+            return getCurrentlyPlaying(uid, failedAttempts + 1); // Corrected the incrementing of failedAttempts
         }
         throw error;
     }

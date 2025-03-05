@@ -13,17 +13,20 @@
         <section id="recent-tracks">
             <h2>Recent Tracks</h2>
             <ul>
-                <li class="currently-listening">
-                    <span class="track-name"><%= currentTrack.trackName %></span>
-                    <span class="artist-name">by <%= currentTrack.artist %></span>
-                    <span>Currently listening</span>
-                </li>
+                <% if (currentTrack) { %>
+                    <li class="currently-listening">
+                        <span class="track-name"><%= currentTrack.trackName %></span>
+                        <span class="artist-name">by <%= currentTrack.artist %></span>
+                        <span>Currently listening</span>
+                    </li>
+                <% } %>
+
 
                 <% recentTracks.forEach((t) => { %>
                     <li>
                         <div class="recent-left">
                             <span class="track-name"><%= t.trackName %></span>
-                            <span class="artist-name">by <%= t.artist %></span>
+                            <span class="artist-name">by <%= t.artists.map(a => a.artistName).join(', ') %></span>
                         </div>
                         <div class="recent-right">
                             <%= Math.floor(t.durationMs / 60000) %>:<%= ((t.durationMs % 60000) / 1000).toFixed(0).padStart(2, '0') %>

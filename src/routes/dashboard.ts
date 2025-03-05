@@ -15,6 +15,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     const recentTracks = await getRecentTracks(loggedIn);
     const currentTrack = await getCurrentlyPlaying(loggedIn);
+
     res.render("dashboard", {recentTracks, currentTrack});
 });
 
