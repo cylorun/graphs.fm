@@ -17,7 +17,6 @@ export const tracks = pgTable("tracks", {
     id: serial("id").primaryKey(),
     spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
     trackName: varchar("track_name", {length: 255}).notNull(),
-    artist: varchar("artist", {length: 255}).notNull(),
     album: varchar("album", {length: 255}).notNull(),
     durationMs: integer("duration_ms").notNull(),
     imageUrl: text("image_url"),
@@ -51,6 +50,14 @@ export const artistGenres = pgTable("artist_genres", {
         .references(() => artists.id, { onDelete: "cascade" }),
     genreId: integer("genre_id").notNull()
         .references(() => genres.id, { onDelete: "cascade" }),
+});
+
+export const artistTracks = pgTable("artist_tracks", {
+    id: serial("id").primaryKey(),
+    artistId: integer("artist_id").notNull()
+        .references(() => artists.id, { onDelete: "cascade" }),
+    trackId: integer("track_id").notNull()
+        .references(() => tracks.id, { onDelete: "cascade" }),
 });
 
 export const session = pgTable('session', {
