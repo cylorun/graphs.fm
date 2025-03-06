@@ -111,9 +111,12 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             artists: artistsData,
         };
     } catch (error: any) {
+        console.error("failed to fetch current track");
+        console.dir(error);
+
         if (error.response?.status === 401 && failedAttempts <= 1) {
             await refreshAccessToken(uid);
-            return getCurrentlyPlaying(uid, failedAttempts + 1); // Corrected the incrementing of failedAttempts
+            return getCurrentlyPlaying(uid, failedAttempts + 1);
         }
         throw error;
     }

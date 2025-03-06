@@ -10,7 +10,11 @@ router.get('/', async (req: Request, res: Response) => {
         return;
     }
 
-    const currentlyPlaying = await getCurrentlyPlaying(loggedIn);
+    const currentlyPlaying = (await getCurrentlyPlaying(loggedIn));
+    if (!currentlyPlaying) {
+        res.status(204).json({message: "no track playing"});
+        return;
+    }
     res.json(currentlyPlaying);
 });
 
