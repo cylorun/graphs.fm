@@ -24,7 +24,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     const recentTracks = await getRecentTracks(id);
     const currentTrack = await getCurrentlyPlaying(id);
 
-    res.render("user", {recentTracks, currentTrack, loggedIn, isYou});
+    res.render("user", {recentTracks, currentTrack, loggedIn, isYou, userId: req.session?.uid});
 });
 
 export default router;
