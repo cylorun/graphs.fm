@@ -112,9 +112,10 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
         };
     } catch (error: any) {
         console.error("failed to fetch current track");
-        console.dir(error);
+        console.dir(error.response);
 
         if (error.response?.status === 401 && failedAttempts <= 1) {
+            console.log("Reloading access token");
             await refreshAccessToken(uid);
             return getCurrentlyPlaying(uid, failedAttempts + 1);
         }
