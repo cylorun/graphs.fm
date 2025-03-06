@@ -1,12 +1,15 @@
 const useMobileLayout = () => window.screen.width < 700;
 
 $(document).ready(() => {
+    const fetchUser = async () => {
+        return (await fetch('/api/users')).json();
+    }
 
-    const loadNavPfp = () => {
+    const loadNavPfp = async () => {
         const $profileLink = $('#profile-link');
 
         const $img = $('<img>').attr({
-            src: 'http://localhost:5004/assets/logo.png',
+            src: '/assets/blank.png',
             alt: "you"
         });
 
@@ -22,15 +25,10 @@ $(document).ready(() => {
             });
         } else {
             $profileLink.append($img);
-            // $('<li>').append($('.dropdown-btn')).appendTo('#right-side');
-            // $('.dropdown').on('mouseenter', (e) => {
-            //     console.log('enter')
-            //     $('.dropdown-content').css("display", "flex");
-            // }).on('mouseleave', (e) => {
-            //     console.log('leeave')
-            //     $('.dropdown-content').css("display", "none");
-            // });
         }
+
+        const userData = await fetchUser();
+        $img.attr('src', userData.profileImage);
     }
 
     loadNavPfp();
