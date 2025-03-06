@@ -8,7 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node", "express"]
+    "types": ["node", "express"],
+    "noEmit": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

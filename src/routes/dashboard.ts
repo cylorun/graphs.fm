@@ -6,7 +6,7 @@ import {getRecentTracks} from '../services/trackService';
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
-    const loggedIn = req.session.uid;
+    const loggedIn = req.session?.uid;
 
     if (!loggedIn) {
         res.redirect('/login');
@@ -16,7 +16,7 @@ router.get('/', async (req: Request, res: Response) => {
     const recentTracks = await getRecentTracks(loggedIn);
     const currentTrack = await getCurrentlyPlaying(loggedIn);
 
-    res.render("dashboard", {recentTracks, currentTrack});
+    res.render("dashboard", {recentTracks, currentTrack, loggedIn});
 });
 
 export default router;

@@ -1,7 +1,14 @@
 <nav>
     <link rel="stylesheet" href="/css/nav.css">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/dashboard">You</a></li>
+    <ul id="left-side">
+        <li><a href="/"><img src="/assets/logo.png" alt="home">Home</a></li>
+    </ul>
+    <ul id="right-side">
+        <% if (loggedIn) {%>
+            <li><a href="/auth/logout">Logout</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+        <% } else { %>
+            <li><a href="/login">Login</a></li>
+        <% }%>
     </ul>
 </nav>
