@@ -55,6 +55,12 @@ main {
     align-items: flex-start;
 }
 
+.recent-right {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
 .recent-left-top {
     display: flex;
 }
@@ -142,6 +148,12 @@ footer {
     text-align: center;
     font-size: 0.9rem;
     color: #777;
+}
+
+#played-at {
+    color: #1e1e1e;
+    font-size: 10px;
+    margin-left: 10px;
 }
 
 @media (min-width: 800px) {
