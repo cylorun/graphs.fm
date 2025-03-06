@@ -42,6 +42,7 @@ nav ul li a img {
 #right-side-wrapper a, #right-side-wrapper p {
     color: #eae4e4;
     text-decoration: none;
+    margin-right: 20px;
 }
 
 .dropdown-btn {
@@ -94,8 +95,6 @@ nav ul li a img {
 .dropdown-content li:hover {
     background-color: #637563;
 }
-
-
 
 @media (min-width: 700px) {
     #right-side {
