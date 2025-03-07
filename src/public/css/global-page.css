@@ -11,3 +11,36 @@ body, html {
 main {
     display: flex;
 }
+
+main div {
+    background-color: #3A4646;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px;
+}
+
+main div ul {
+    list-style: none;
+}
+
+main div h2 {
+    border-bottom: #303030 2px solid;
+}
+
+#artist-name a, #track-name a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #c0c1b3;
+}
+#artist-name:hover, #track-name:hover {
+    text-decoration: underline;
+    color: #d8dacb;
+    cursor: pointer;
+}
+
+#top-tracks {
+
+}
+
+#top-artists {
+}

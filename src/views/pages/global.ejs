@@ -17,18 +17,20 @@
     <main>
 
         <div id="top-tracks">
-            top tracks
+            <h2>Top tracks</h2>
+
             <ul>
-                <% topTracks.forEach((track) => {%>
-                    <li> <%= track.trackName %> - <%= track.playCount %></li>
+                <% topTracks.forEach((track, i) => {%>
+                    <li> <%= i+1 %>. <span id="track-name"> <a target="_blank" href="/t/<%= track.id %>"><%= track.trackName %></a></span> - <%= track.playCount %></li>
                 <% })%>
             </ul>
         </div>
         <div id="top-artists">
-            top artists
+            <h2>Top artists</h2>
+
             <ul>
-                <% topArtists.forEach((track) => {%>
-                    <li> <%= track.artistName %> - <%= track.playCount %></li>
+                <% topArtists.forEach((artist, i) => { %>
+                    <li> <%= i+1 %>. <span id="artist-name"><a target="_blank" href="/a/<%= artist.id %>"><%= artist.artistName %></a></span>  - <%= artist.playCount %></li>
                 <% })%>
             </ul>
         </div>
