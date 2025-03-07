@@ -29,6 +29,7 @@ import homeRoutes from "./routes/home";
 import logoutRoutes from './routes/auth/logout';
 import dashboardRoutes from './routes/user'
 import loginRoutes from './routes/login'
+import globalRoutes from './routes/global'
 
 const PORT = Number(process.env.PORT) || 7000;
 const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
@@ -73,6 +74,7 @@ app.use('/user', dashboardRoutes);
 app.use('/u', dashboardRoutes);
 
 app.use('/login', loginRoutes);
+app.use('/global', globalRoutes);
 
 // Not found page
 app.use((req: Request, res: Response) => {

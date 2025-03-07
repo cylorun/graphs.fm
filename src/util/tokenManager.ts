@@ -27,6 +27,7 @@ export const refreshAccessToken = async (uid: number) => {
         const {access_token, expires_in,refresh_token} = response.data;
 
         await db.update(users).set({accessToken: access_token, expiresAt: new Date(Date.now() + expires_in * 1000), refreshToken: refresh_token});
+        console.log("Updated access token for", uid);
     } catch (error) {
         throw new Error('Failed to refresh access token');
     }

@@ -10,14 +10,14 @@
         <% if (loggedIn) { %>
 
             <ul id="right-side">
-                <li><a href="/auth/logout">Logout</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
             </ul>
             <div class="dropdown">
                 <div class="dropdown-btn"><a id="profile-link" href="/u/<%= userId %>"></a></div>
                 <div class="dropdown-content">
                     <ul>
                         <li><a href="/u/<%= userId %>">You</a></li>
+                        <li><a href="/global">Global</a></li>
                         <li><a href="/auth/logout">Logout</a></li>
                     </ul>
                 </div>
