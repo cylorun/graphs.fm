@@ -83,7 +83,7 @@ router.get("/", async (req: Request, res: Response) => {
         }
 
         req.session.uid = user[0].id;
-        res.redirect("/dashboard");
+        res.redirect("/user");
 
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
