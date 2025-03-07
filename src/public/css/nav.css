@@ -73,7 +73,7 @@ nav ul li a img {
 .dropdown .dropdown-content {
     display: none;
     flex-direction: column;
-    background-color: #202220;
+    background-color: #1f221f;
     color: white;
     border-radius: 2px;
     position: absolute;
@@ -87,7 +87,7 @@ nav ul li a img {
     flex-direction: column;
     list-style: none;
     margin: 0;
-    padding: 10px;
+    padding: 0 10px;
 }
 
 .dropdown-content li {
@@ -100,7 +100,7 @@ nav ul li a img {
 }
 
 .dropdown-content li:hover {
-    background-color: #637563;
+    background-color: #447e44;
 }
 
 #login-btn {
