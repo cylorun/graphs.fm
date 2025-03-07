@@ -10,6 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
     const isYou = id === req.session?.uid; // if it's your profile
 
     const topTracks = await getTopMostListenedTracks()
+    console.dir(topTracks, {depth: null})
     const topArtists = await getTopMostListenedArtists();
 
     res.render("global", {loggedIn, isYou, userId: req.session?.uid, topTracks, topArtists});
