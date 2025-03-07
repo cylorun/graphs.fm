@@ -1,7 +1,7 @@
 import {Artist, Genre, NewArtist} from "../types";
 import {db} from "../db";
-import {artistGenres, artists, genres} from "../db/schema";
-import {eq} from "drizzle-orm";
+import {artistGenres, artists, artistTracks, genres, tracks, userTracks} from "../db/schema";
+import {desc, eq, sql} from "drizzle-orm";
 
 
 export async function getArtistBySpotifyId(spotifyId: string): Promise<Artist | null> {
@@ -49,3 +49,22 @@ export async function createArtist(artist: NewArtist, genreNames: string[]): Pro
         return insertedArtist[0];
     });
 }
+
+export const getTopArtists = async (count: number = 20): Promise<Artist[]> => {
+    return await db
+        .select({
+            id: artists.id,
+            spotifyId: artists.spotifyId,
+            artistName: artists.artistName,
+            imageUrl: artists.imageUrl,
+            createdAt: artists.createdAt,
+            playCount: sql<number>`COUNT(user_tracks.track_id)`.as("playCount"),
+        })
+        .from(artists)
+        .innerJoin(artistTracks, eq(artistTracks.artistId, artists.id))
+        .innerJoin(tracks, eq(tracks.id, artistTracks.trackId))
+        .innerJoin(userTracks, eq(userTracks.trackId, tracks.id))
+        .groupBy(artists.id)
+        .orderBy(desc(sql`COUNT(user_tracks.track_id)`))
+        .limit(count);
+};
