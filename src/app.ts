@@ -30,11 +30,10 @@ import logoutRoutes from './routes/auth/logout';
 import dashboardRoutes from './routes/user'
 import loginRoutes from './routes/login'
 import globalRoutes from './routes/global'
-
 const PORT = Number(process.env.PORT) || 7000;
-const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
+const NODE_ENV = process.env.NODE_ENV || "dev";
 
-if (ENVIRONMENT === "production") {
+if (NODE_ENV === "production") {
     app.set('trust proxy', 1); // to correctly identify IPs
 }
 
