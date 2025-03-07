@@ -2,17 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>NoteStats - Your Spotify Insights</title>
 
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <link rel="stylesheet" href="/css/home-page.css">
-
-    <title>NoteStats</title>
 </head>
 <body>
-    <%- include('../partials/navbar.ejs')%>
-    Welcome to notestats!
+    <%- include('../partials/navbar.ejs') %>
+    <main>
+        <div id="hero">
+            <h1>Your spotify tracker</h1>
+            <p>Dive into your listening habits with a single click.</p>
+            <a href="/auth/spotify/login" class="button">Connect Spotify</a>
+        </div>
+    </main>
+    <footer>
+        <ul>
+            <li>
+                <div id="notestats-footer-section">
+                    <p>notestats</p>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/start">Get started</a></li>
+                        <li><a href="/global">Global stats</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li>
+                <div>
+                    <p>Socials</p>
+                    <ul>
+                        <li><a href="#insta">Instagram</a></li>
+                        <li><a href="#yt">Youtube</a></li>
+                        <li><a href="#tiktok">Tiktok</a></li>
+
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div id="footer-bottom-section">
+            <p>Notestats 2025 &copy;. Made by some guy in iceland.</p>
+        </div>
+    </footer>
+
 </body>
 </html>

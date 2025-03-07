@@ -4,13 +4,13 @@
     <script src="/js/nav.js"></script>
 
     <ul id="left-side">
-        <li><a href="/"><img src="/assets/logo.png" alt="home">Home</a></li>
+        <li><a href="/"><img src="/assets/logo.png" alt="home"><b>notestats</b></a></li>
     </ul>
     <div id="right-side-wrapper">
         <% if (loggedIn) { %>
 
             <ul id="right-side">
-                <li><a href="/about">About</a></li>
+<!--                <li><a href="/about">About</a></li>-->
             </ul>
             <div class="dropdown">
                 <div class="dropdown-btn"><a id="profile-link" href="/u/<%= userId %>"></a></div>
@@ -23,7 +23,7 @@
                 </div>
             </div>
         <% } else { %>
-            <a href="/login">Login</a>
+            <a id="login-btn" href="/login"><b>Get started</b></a>
         <% } %>
     </div>
 </nav>

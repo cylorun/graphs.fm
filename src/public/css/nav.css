@@ -39,6 +39,13 @@ nav ul li a img {
     display: none;
 }
 
+#right-side a {
+    padding: 5px 10px;
+    background-color: #2b4936;
+    border-radius: 5px;
+    color: #24ca5a !important;
+}
+
 #right-side-wrapper a, #right-side-wrapper p {
     color: #eae4e4;
     text-decoration: none;
@@ -94,6 +101,13 @@ nav ul li a img {
 
 .dropdown-content li:hover {
     background-color: #637563;
+}
+
+#login-btn {
+    padding: 5px 10px;
+    background-color: #2b4936;
+    border-radius: 5px;
+    color: #24ca5a !important;
 }
 
 @media (min-width: 700px) {

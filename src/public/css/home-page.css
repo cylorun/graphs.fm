@@ -1,5 +1,122 @@
-body, head {
+body, html {
     margin: 0;
-    background-color: #303030;
-    color: white;;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 0 20px;
+}
+
+#hero {
+    max-width: 800px;
+}
+
+#hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+#hero p {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    color: #fff;
+    background: #1DB954;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out;
+}
+
+.button:hover {
+    background: #1aa34a;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+
+    border-top: #697369 2px solid;
+    height: 10vh;
+}
+
+footer ul {
+    display: flex;
+    justify-content: center;
+
+    list-style: none;
+    margin: 5px 20px;
+}
+
+footer ul li {
+    margin: 0 20px;
+}
+
+footer ul li div p {
+    font-weight: bold;
+    color: #606060;
+
+    padding: 0;
+    margin: 10px 20px;
+}
+
+footer ul li div {
+    display: flex;
+    flex-direction: column;
+}
+
+footer ul li div ul {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0;
+    margin: 0 2px;
+}
+
+footer ul li div ul a {
+    color: #afb1af;
+    text-decoration: none;
+}
+
+#footer-bottom-section {
+    margin-top: 20px;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+}
+
+#footer-bottom-section p {
+    color: #b6b5b5;
+}
+
+@media (max-width: 768px) {
+    #hero h1 {
+        font-size: 2.5rem;
+    }
+
+    #hero p {
+        font-size: 1rem;
+    }
+
+    .button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
 }
