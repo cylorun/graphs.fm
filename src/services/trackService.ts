@@ -76,8 +76,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
                     'spotifyId', artists.spotify_id,
                     'imageUrl', artists.image_url,
                     'createdAt', artists.created_at,
-                    'artistName', artists.artist_name,
-                    
+                    'artistName', artists.artist_name
                 )
             )
         `).as("artists")
@@ -85,6 +84,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
         .from(sq)
         .leftJoin(artistTracks, eq(artistTracks.trackId, sq.id))
         .leftJoin(artists, eq(artistTracks.artistId, artists.id))
+        .limit(count)
         .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.album, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
         .orderBy(desc(sq.playCount));
 
