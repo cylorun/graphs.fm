@@ -5,12 +5,13 @@
 
     <ul id="left-side">
         <li><a href="/"><img src="/assets/logo.png" alt="home"><b>notestats</b></a></li>
+        <li><a href="/premium">Premium</a></li>
+        <li><a href="/feedback">Feedback</a></li>
     </ul>
     <div id="right-side-wrapper">
         <% if (loggedIn) { %>
-
             <ul id="right-side">
-<!--                <li><a href="/about">About</a></li>-->
+
             </ul>
             <div class="dropdown">
                 <div class="dropdown-btn"><a id="profile-link" href="/u/<%= userId %>"></a></div>
@@ -23,7 +24,7 @@
                 </div>
             </div>
         <% } else { %>
-            <a id="login-btn" href="/login"><b>Get started</b></a>
+            <a id="login-btn" href="/auth/spotify/login">Get started</a>
         <% } %>
     </div>
 </nav>

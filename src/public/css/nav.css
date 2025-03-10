@@ -35,15 +35,24 @@ nav ul li a img {
     margin-right: 10px;
 }
 
+#left-side {
+    display: flex;
+    gap: 30px;
+}
+
 #right-side {
     display: none;
 }
 
 #right-side a {
     padding: 5px 10px;
-    background-color: #2b4936;
     border-radius: 5px;
-    color: #24ca5a !important;
+    color: #9ae1b3 !important;
+}
+
+#right-side a:hover {
+    text-decoration: underline;
+    color: #7bec90;
 }
 
 #right-side-wrapper a, #right-side-wrapper p {
@@ -56,6 +65,7 @@ nav ul li a img {
     margin-right: 10px;
     margin-left: 10px;
 }
+
 .dropdown-btn img {
     width: 48px;
     height: 48px;
@@ -104,10 +114,19 @@ nav ul li a img {
 }
 
 #login-btn {
-    padding: 5px 10px;
-    background-color: #2b4936;
-    border-radius: 5px;
-    color: #24ca5a !important;
+    padding: 12px 24px;
+    font-size: 1rem;
+    color: #fff;
+    background: #1DB954;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out;
+
+}
+
+#login-btn:hover {
+    background: #1aa34a;
 }
 
 @media (min-width: 700px) {
