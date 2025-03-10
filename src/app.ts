@@ -77,9 +77,10 @@ app.use('/global', globalRoutes);
 
 // Not found page
 app.use((req: Request, res: Response) => {
-    const loggedIn = req.session?.uid;
+    const loggedIn = !!req.session?.uid;
+    const userId = req.session?.uid;
 
-     res.status(404).render('not-found', {loggedIn});
+    res.status(404).render('not-found', {loggedIn, userId});
 });
 
 process.on("uncaughtException", (err) => {
