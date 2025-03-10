@@ -1,7 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 import dotenv from "dotenv";
 
-import * as process from "node:process";
 dotenv.config();
 
 export default defineConfig({
@@ -16,5 +15,5 @@ export default defineConfig({
     schema: "./src/db/schema.ts",
     out: "./drizzle",
     // @ts-ignore
-    ssl: false
+    ssl: true
 });
