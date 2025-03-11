@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {handleReqError} from "../util/exceptions";
+import {getDefaultEjsProps} from "../util/util";
 
 
 const router = Router();
@@ -21,9 +22,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     try {
-        const loggedIn = !!req.session?.uid;
-
-        res.render("user", {loggedIn, userId: req.session?.uid});
+        res.render("user", {...getDefaultEjsProps(req, res)});
     } catch (e) {
         handleReqError(req, res);
     }

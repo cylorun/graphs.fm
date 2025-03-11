@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {handleReqError} from "../util/exceptions";
+import {getDefaultEjsProps} from "../util/util";
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
@@ -11,10 +12,7 @@ router.get('/', (req: Request, res: Response) => {
             return;
         }
 
-        const id = parseInt(req.params.id);
-        const isYou = id === req.session?.uid; // if it's your profile
-
-        res.render("login", {loggedIn, isYou, userId: req.session?.uid});
+        res.render("login", {...getDefaultEjsProps(req, res)});
     } catch (e) {
         handleReqError(req, res);
     }

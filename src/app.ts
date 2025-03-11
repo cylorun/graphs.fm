@@ -29,6 +29,7 @@ import logoutRoutes from './routes/auth/logout';
 import dashboardRoutes from './routes/user'
 import loginRoutes from './routes/login'
 import globalRoutes from './routes/global'
+import {getDefaultEjsProps, getSiteVersion} from "./util/util";
 const PORT = Number(process.env.PORT) || 7000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
@@ -76,10 +77,7 @@ app.use('/global', globalRoutes);
 
 // Not found page
 app.use((req: Request, res: Response) => {
-    const loggedIn = !!req.session?.uid;
-    const userId = req.session?.uid;
-``
-    res.status(404).render('not-found', {loggedIn, userId});
+    res.status(404).render('not-found', {...getDefaultEjsProps(req, res)});
 });
 
 process.on("uncaughtException", (err) => {
