@@ -10,6 +10,7 @@
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
     <script src="/js/dashboard/dashboard.js"></script>
 
     <title>Dashboard</title>
@@ -19,43 +20,12 @@
     <main>
         <section id="top-section">
             <h2>Your listening activity</h2>
-            <p>Listens today: <%= userPlayCount.day %></p>
-            <p>Listens past 7 days: <%= userPlayCount.week %></p>
-
         </section>
         <div id="middle-section">
             <section id="recent-tracks">
                 <h2>Recent Tracks</h2>
                 <ul>
-                    <% if (currentTrack) { %>
-                        <li class="currently-listening">
-                            <span class="track-name"><%= currentTrack.trackName %></span>
-                            <span class="artist-name"><%= currentTrack.artists.map(a => a.artistName).join(', ') %></span>
-                            <span>Currently listening</span>
-                        </li>
-                    <% } %>
 
-                    <% recentTracks.forEach((t) => { %>
-                        <li class="track-item" data-spotify-id="<%= t.spotifyId %>">
-                            <div class="recent-left">
-                                <div class="recent-left-top">
-                                    <div class="tooltip">
-                                        <button class="play-btn"><img src="/assets/icons/spotify-icon.png" alt=""></button>
-                                        <span class="tooltiptext">Open in spotify</span>
-                                    </div>
-
-                                    <span class="track-name"><%= t.trackName %></span>
-                                </div>
-                                <div class="recent-left-bottom">
-                                    <span class="artist-name"><%= t.artists.map(a => a.artistName).join(', ') %></span>
-                                </div>
-                            </div>
-                            <div class="recent-right">
-                                <img class="track-icon" src="<%= t.imageUrl %>" alt="img">
-                                <p id="played-at"><%= t.playedAt%></p>
-                            </div>
-                        </li>
-                    <% }) %>
                 </ul>
             </section>
             <section id="stats-intro">

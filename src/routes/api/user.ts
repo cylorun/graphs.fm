@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {getUserById, getUserProfileImageUrl} from "../../services/userService";
+import {getUserById, getUserPlaycount, getUserProfileImageUrl} from "../../services/userService";
 import {getRecentTracks} from "../../services/trackService";
 
 
@@ -36,6 +36,18 @@ router.get('/tracks', async (req: Request, res: Response) => {
 
     const tracks = await getRecentTracks(uid, Math.min(Math.round(Number(count)), 100));
     res.json(tracks);
+});
+
+router.get('/playcount', async (req: Request, res: Response) => {
+    if (!req.session.uid) {
+        res.status(403).json({error: "Not logged in"});
+        return;
+    }
+
+    const uid = req.session.uid;
+
+    const playCountData = await getUserPlaycount(uid);
+    res.json(playCountData);
 });
 
 router.get('/:id/pfp', async (req: Request, res: Response) => {
