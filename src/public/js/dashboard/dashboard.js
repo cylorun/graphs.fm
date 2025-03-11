@@ -64,7 +64,7 @@ $(document).ready(async () => {
                 </div>
                 <div class="recent-right">
                     <img class="track-icon" src="${t.imageUrl}" alt="Track Image">
-                    <p id="played-at">${t.spotifyId === currentTrackData.spotifyId ? "Now playing" : moment(t.playedAt).fromNow()}</p>
+                    <p id="played-at">${t.spotifyId === currentTrackData?.spotifyId ? "Now playing" : moment(t.playedAt).fromNow()}</p>
                 </div>
             </li>`
         );
