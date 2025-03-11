@@ -18,7 +18,6 @@ import pg from "pg";
 import pgSession from "connect-pg-simple";
 
 import statusRoutes from "./routes/api/status";
-import nowPlayingRoutes from "./routes/api/now-playing";
 import userApiRoutes from "./routes/api/user";
 
 
@@ -59,7 +58,6 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/status', statusRoutes)
-app.use('/api/now-playing', nowPlayingRoutes);
 app.use('/api/users', userApiRoutes);
 
 // Auth routes

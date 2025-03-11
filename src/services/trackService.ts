@@ -1,4 +1,4 @@
-import {desc, eq, sql} from "drizzle-orm";
+import {count, desc, eq, sql} from "drizzle-orm";
 import {db} from "../db";
 import {artists, artistTracks, tracks, userTracks} from "../db/schema";
 import {Artist, DetailedTrack} from "../types";
@@ -87,6 +87,11 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
         .limit(count)
         .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.album, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
         .orderBy(desc(sq.playCount));
-
-
 };
+
+
+export async function getTotalPlayCount(): Promise<number> {
+    return (await db
+        .select({val: count()})
+        .from(userTracks))[0].val;
+}

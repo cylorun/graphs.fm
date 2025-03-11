@@ -8,7 +8,7 @@ const getTracks = async () => {
 }
 
 const getCurrentTrack = async () => {
-    const response = await fetch('/api/now-playing');
+    const response = await fetch('/api/users/now-playing');
 
     if (response.status === 204) {
         return null;
