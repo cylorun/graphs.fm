@@ -6,4 +6,7 @@ $(document).ready(() => {
 
         window.open(`https://open.spotify.com/track/${spotifyId}`, '_blank');
     });
+
+
+
 });
