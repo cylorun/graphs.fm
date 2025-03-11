@@ -6,6 +6,7 @@ import {
     getUserTracks,
     getNowPlaying
 } from '../../controllers/api/userApiController'
+import {requireAuth} from "../../middleware";
 
 const router = Router();
 
@@ -22,7 +23,7 @@ const router = Router();
  *   "lastLogin": "2025-03-11T15:54:49.552Z"
  * }
  */
-router.get('/', getUserData);
+router.get('/', requireAuth, getUserData);
 
 
 /**
@@ -48,7 +49,7 @@ router.get('/', getUserData);
  *   ]
  * }
  */
-router.get('/now-playing', getNowPlaying);
+router.get('/now-playing', requireAuth, getNowPlaying);
 
 /**
  * Relies on sessions to get data for the logged in user
@@ -98,7 +99,7 @@ router.get('/now-playing', getNowPlaying);
  *   }
  * ]
  */
-router.get('/tracks', getUserTracks);
+router.get('/tracks', requireAuth, getUserTracks);
 
 /**
  *
@@ -110,7 +111,7 @@ router.get('/tracks', getUserTracks);
  *   "month": 19
  * }
  */
-router.get('/playcount', getUserPlayCount);
+router.get('/playcount', requireAuth, getUserPlayCount);
 
 /**
  * Example response for url /api/users/1/pfp: {

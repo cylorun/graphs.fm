@@ -6,12 +6,7 @@ import {reportError} from "../../util/exceptions";
 
 export async function getUserData(req: Request, res: Response) {
     try {
-        if (!req.session.uid) {
-            res.status(403).json({error: "Not logged in"});
-            return;
-        }
-
-        const data = await getUserById(req.session.uid);
+        const data = await getUserById(req.session.uid!);
         if (!data) {
             res.status(404).json({error: "User not found(idk how)"});
             return;
@@ -25,12 +20,7 @@ export async function getUserData(req: Request, res: Response) {
 
 export async function getUserTracks(req: Request, res: Response) {
     try {
-        if (!req.session.uid) {
-            res.status(403).json({error: "Not logged in"});
-            return;
-        }
-
-        const uid = req.session.uid;
+        const uid = req.session.uid!;
         const {count = 20} = req.params;
         if (isNaN(Number(count))) {
             res.status(400).json({error: "count must be a number"});
@@ -49,19 +39,13 @@ export async function getUserTracks(req: Request, res: Response) {
 
 export async function getUserPlayCount(req: Request, res: Response) {
     try {
-        if (!req.session.uid) {
-            res.status(403).json({error: "Not logged in"});
-            return;
-        }
-
-        const uid = req.session.uid;
-
+        const uid = req.session.uid!;
         const playCountData = await getUserPlaycount(uid);
+
         res.json(playCountData);
-    } catch (e) {
-
+    } catch (e: any) {
+        reportError("AN error occured in  userapicontroller", e, res);
     }
-
 }
 
 
@@ -84,19 +68,11 @@ export async function getUserPfp(req: Request, res: Response) {
     } catch (e: any) {
         reportError("AN error occured in  userapicontroller", e, res);
     }
-
 }
 
 export async function getNowPlaying(req: Request, res: Response) {
     try {
-        const loggedIn = req.session.uid;
-
-        if (!loggedIn) {
-            res.status(401).json({error: "Not logged in"});
-            return;
-        }
-
-        const currentlyPlaying = (await getCurrentlyPlaying(loggedIn));
+        const currentlyPlaying = (await getCurrentlyPlaying(req.session.uid!));
         if (!currentlyPlaying) {
             res.status(204).json({message: "no track playing"});
             return;
@@ -106,5 +82,4 @@ export async function getNowPlaying(req: Request, res: Response) {
     } catch (e: any) {
         reportError("AN error occured in  userapicontroller", e, res);
     }
-
 }
