@@ -1,6 +1,6 @@
 {
   "name": "notestats",
-  "version": "1.0.0",
+  "version": "beta-1.0",
   "description": "Music stat tracker",
   "main": "src/app.ts",
   "scripts": {
