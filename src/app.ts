@@ -19,7 +19,7 @@ import pgSession from "connect-pg-simple";
 
 import statusRoutes from "./routes/api/status";
 import userApiRoutes from "./routes/api/user";
-
+import globalDataRoutes from "./routes/api/global";
 
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
@@ -59,6 +59,7 @@ app.use(express.json());
 // API Routes
 app.use('/api/status', statusRoutes)
 app.use('/api/users', userApiRoutes);
+app.use('/api/global', globalDataRoutes);
 
 // Auth routes
 app.use('/auth/spotify/callback', spotifyCallbackRoutes);

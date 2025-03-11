@@ -1,10 +1,14 @@
-import {Request, Response, Router} from 'express';
-import {getTotalPlayCount} from "../../services/trackService";
+import {Router} from 'express';
+import {getGlobalPlayCount} from "../../controllers/api/globalDataApiController";
 
 const router = Router();
 
-router.get('/', async (req: Request, res: Response) => {
-    const data = await getTotalPlayCount();
 
-    res.status(200).json({count: data});
-});
+/**
+ * Example response: {
+ *   "count": 18
+ * }
+ */
+router.get('/playcount', getGlobalPlayCount);
+
+export default router;
