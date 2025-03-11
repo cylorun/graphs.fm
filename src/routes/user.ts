@@ -3,6 +3,7 @@ import {getCurrentlyPlaying} from "../services/spotifyService";
 import {getRecentTracks} from '../services/trackService';
 import moment from "moment";
 import {handleReqError} from "../util/exceptions";
+import {getUserPlaycount} from "../services/userService";
 
 
 const router = Router();
@@ -30,12 +31,13 @@ router.get('/:id', async (req: Request, res: Response) => {
         const isYou = id === req.session?.uid; //if it's your profile
         const recentTracks = (await getRecentTracks(id)).map(track => {
             const playedAt = moment(track.playedAt).fromNow();
-            return { ...track, playedAt }
+            return { ...track, playedAt };
         });
 
+        const userPlayCount = await getUserPlaycount(id);
         const currentTrack = await getCurrentlyPlaying(id);
 
-        res.render("user", {recentTracks, currentTrack, loggedIn, isYou, userId: req.session?.uid});
+        res.render("user", {recentTracks, currentTrack, loggedIn, isYou, userId: req.session?.uid, userPlayCount});
     } catch (e) {
         handleReqError(req, res);
     }
