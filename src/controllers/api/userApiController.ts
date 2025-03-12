@@ -21,7 +21,7 @@ export async function getUserData(req: Request, res: Response) {
 export async function getUserTracks(req: Request, res: Response) {
     try {
         const uid = req.session.uid!;
-        const {count = 20} = req.params;
+        const {count = 20} = req.query;
         if (isNaN(Number(count))) {
             res.status(400).json({error: "count must be a number"});
             return;

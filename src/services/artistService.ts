@@ -15,6 +15,17 @@ export async function getArtistBySpotifyId(spotifyId: string): Promise<Artist | 
     return artist;
 }
 
+export async function getArtistById(aid: number): Promise<Artist | null> {
+    const artist = (await db
+        .select()
+        .from(artists)
+        .where(eq(artists.id, aid)))[0];
+
+    if (!artist) return null;
+
+    return artist;
+}
+
 export async function getArtistGenres(artistId: number): Promise<Genre[] | null> {
     const result = await db
         .select({ id: genres.id, genreName: genres.genreName, createdAt: genres.createdAt })

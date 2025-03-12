@@ -4,4 +4,4 @@ node_modules
 dist
 *.js
 *.tsbuildinfo
-!src/public/js/*.js
+!src/public/js/**/*.js

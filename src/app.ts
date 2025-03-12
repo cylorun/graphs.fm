@@ -20,6 +20,7 @@ import pgSession from "connect-pg-simple";
 import statusRoutes from "./routes/api/status";
 import userApiRoutes from "./routes/api/user";
 import globalDataRoutes from "./routes/api/global";
+import artistApiRoutes from './routes/api/artist'
 
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
@@ -29,7 +30,12 @@ import logoutRoutes from './routes/auth/logout';
 import dashboardRoutes from './routes/user'
 import loginRoutes from './routes/login'
 import globalRoutes from './routes/global'
-import {getDefaultEjsProps, getSiteVersion} from "./util/util";
+import aristRoutes from './routes/artist'
+
+import {getDefaultEjsProps} from "./util/util";
+
+
+
 const PORT = Number(process.env.PORT) || 7000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
@@ -60,6 +66,7 @@ app.use(express.json());
 // API Routes
 app.use('/api/status', statusRoutes)
 app.use('/api/users', userApiRoutes);
+app.use('/api/artists', artistApiRoutes);
 app.use('/api/global', globalDataRoutes);
 
 // Auth routes
@@ -71,6 +78,7 @@ app.use('/auth/logout', logoutRoutes);
 app.use('/', homeRoutes);
 app.use('/user', dashboardRoutes);
 app.use('/u', dashboardRoutes);
+app.use('/a', aristRoutes);
 
 app.use('/login', loginRoutes);
 app.use('/global', globalRoutes);
