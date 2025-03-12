@@ -56,10 +56,10 @@ $(document).ready(async () => {
                             <button class="play-btn"><img src="/assets/icons/spotify-icon.png" alt=""></button>
                             <span class="tooltiptext">Open in Spotify</span>
                         </div>
-                        <span class="track-name">${t.trackName}</span>
+                        <a href="/t/${t.id}" target="_blank" class="track-name">${t.trackName}</a>
                     </div>
                     <div class="recent-left-bottom">
-                        <span class="artist-name">${t.artists.map(a => a.artistName).join(', ')}</span>
+                        <a href="/a/${t.artists[0].id}" target="_blank" class="artist-name">${t.artists.map(a => a.artistName).join(', ')}</a>
                     </div>
                 </div>
                 <div class="recent-right">
