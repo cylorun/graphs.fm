@@ -114,19 +114,8 @@ nav ul li a img {
 }
 
 #login-btn {
-    padding: 12px 24px;
-    font-size: 1rem;
-    color: #fff;
-    background: #1DB954;
-    border: none;
-    border-radius: 25px;
-    text-decoration: none;
-    transition: background 0.3s ease-in-out;
-
-}
-
-#login-btn:hover {
-    background: #1aa34a;
+    font-size: clamp(12px, 1vw, 18px) !important;
+    padding: 10px !important;
 }
 
 @media (min-width: 700px) {

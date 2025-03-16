@@ -9,16 +9,20 @@
 
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <link rel="stylesheet" href="/css/home-page.css">
+    <link rel="stylesheet" href="/css/components.css">
 </head>
 <body>
     <%- include('../partials/navbar.ejs') %>
     <main>
         <div id="hero">
-            <h1>Your spotify tracker</h1>
-            <p>Dive into your listening habits with a single click.</p>
-            <a href="/auth/spotify/login" class="button">Connect Spotify</a>
+            <div id="hero-text">
+                <h1>Your spotify tracker</h1>
+                <p>Dive into your listening habits with a single click.</p>
+                <a href="/auth/spotify/login" class="green-button">Connect Spotify</a>
+            </div>
         </div>
     </main>
     <%- include('../partials/footer.ejs') %>
 </body>
 </html>
+
