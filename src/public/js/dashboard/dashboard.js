@@ -81,18 +81,10 @@ const createRecentTracksSection = async () => {
 
         recentTracksContainer.append(trackItem);
     });
-
-
-    const playCountData = await getUserPlayCount();
     const $topsection = $('#top-section');
-
-    $topsection.append([
-            $('<p>').text(`Listens today: ${playCountData.day}`),
-            $('<p>').text(`Listens past week: ${playCountData.week}`),
-            $('<p>').text(`Listens past month: ${playCountData.month}`)
-        ]
-    );
-
+    $topsection.append(
+        $('<h1>').text('user smthh')
+    )
 
     $('#recent-tracks').on('click', 'li.track-item .play-btn', function (event) {
         event.stopPropagation();
@@ -102,7 +94,15 @@ const createRecentTracksSection = async () => {
 }
 
 const createGraphDataSection = async () => {
-
+    const playCountData = await getUserPlayCount();
+    const $statssection = $('#stats-intro');
+    const $bubblesection = $statssection.append('<div id="bubbles-section"">');
+    $bubblesection.append([
+            $('<p>').text(`Listens today: ${playCountData.day}`),
+            $('<p>').text(`Listens past week: ${playCountData.week}`),
+            $('<p>').text(`Listens past month: ${playCountData.month}`)
+        ]
+    );
 }
 
 $(document).ready(async () => {

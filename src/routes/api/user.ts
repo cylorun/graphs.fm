@@ -10,6 +10,7 @@ import {requireAuth} from "../../middleware";
 
 const router = Router();
 
+
 /**
  * Relies on sessions to get the data for the logged in user
  *
@@ -115,7 +116,7 @@ router.get('/:id/tracks', getUserTracks);
  * }
  */
 router.get('/playcount', requireAuth, getUserPlayCount);
-router.get('/:id/playcount', requireAuth, getUserPlayCount);
+router.get('/:id/playcount', getUserPlayCount);
 
 
 /**
