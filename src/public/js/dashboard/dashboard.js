@@ -1,9 +1,11 @@
 const ID = window.location.pathname.split("/").pop();
 
+
+// returns null if error or user not exist
 const getTracks = async () => {
     const response = await fetch(`/api/users/${ID}/tracks?count=20`);
     if (!response.ok) {
-        throw new Error(response.statusText);
+        return null;
     }
 
     return await response.json();
@@ -17,7 +19,7 @@ const getCurrentTrack = async () => {
     }
 
     if (!response.ok) {
-        throw new Error(response.statusText);
+        return null;
     }
 
     return await response.json();
@@ -32,7 +34,18 @@ const getUserPlayCount = async () => {
     return await response.json();
 }
 
+const userExists = async () => {
+    const response = await fetch(`/api/users/${ID}/pfp`);
+    return response.status !== 404;
+}
+
 $(document).ready(async () => {
+    if (!(await userExists())) {
+        $(document.body).append(
+            $("<h1>").text("User not found")
+        )
+        return;
+    }
     const recentTracksContainer = $('#recent-tracks ul');
 
     const currentTrackData = await getCurrentTrack();

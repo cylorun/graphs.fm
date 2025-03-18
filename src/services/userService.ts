@@ -5,7 +5,7 @@ import {PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
 export async function getUserProfileImageUrl(userId: number): Promise<string | null> {
-    return (await db.select({url: users.profileImage}).from(users).where(eq(users.id, userId)))[0].url || null;
+    return (await db.select({url: users.profileImage}).from(users).where(eq(users.id, userId)))[0]?.url || null;
 }
 
 export async function getUserById(userId: number): Promise<PublicUser | null> {
