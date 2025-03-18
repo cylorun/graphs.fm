@@ -3,7 +3,7 @@ import {refreshAccessToken} from '../util/tokenManager';
 import {db} from "../db";
 import {artists, artistTracks, tracks, users} from "../db/schema";
 import {eq} from "drizzle-orm";
-import {DetailedTrack, NewTrack} from '../types';
+import {DetailedTrack, NewTrack, UserNotFoundException} from '../types';
 import {createArtist, getArtistBySpotifyId} from "./artistService";
 
 export const getAccessToken = async (uid: number) => {
@@ -53,7 +53,7 @@ const linkArtistTracks = async (artistIds: string[], trackId: number) => {
 export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 0): Promise<DetailedTrack | null> => {
     const accessToken = await getAccessToken(uid);
     if (!accessToken) {
-        throw new Error("Access token not found");
+        throw new UserNotFoundException("Access token not found");
     }
 
     try {

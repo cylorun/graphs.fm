@@ -3,6 +3,7 @@ import {getUserById, getUserPlaycount, getUserProfileImageUrl} from "../../servi
 import {getRecentTracks} from "../../services/trackService";
 import {getCurrentlyPlaying} from "../../services/spotifyService";
 import {reportError} from "../../util/exceptions";
+import {UserNotFoundException} from "../../types";
 
 export async function getUserData(req: Request, res: Response) {
     try {
@@ -20,7 +21,11 @@ export async function getUserData(req: Request, res: Response) {
 
 export async function getUserTracks(req: Request, res: Response) {
     try {
-        const uid = req.session.uid!;
+        const uid =  parseInt(req.params.id) || req.session.uid;
+        if (!uid) {
+            res.status(400).json({error: "No uid provided"});
+            return;
+        }
         const {count = 20} = req.query;
         if (isNaN(Number(count))) {
             res.status(400).json({error: "count must be a number"});
@@ -36,10 +41,13 @@ export async function getUserTracks(req: Request, res: Response) {
 }
 
 
-
 export async function getUserPlayCount(req: Request, res: Response) {
     try {
-        const uid = req.session.uid!;
+        const uid =  parseInt(req.params.id) || req.session.uid;
+        if (!uid) {
+            res.status(400).json({error: "No uid provided"});
+            return;
+        }
         const playCountData = await getUserPlaycount(uid);
 
         res.json(playCountData);
@@ -47,7 +55,6 @@ export async function getUserPlayCount(req: Request, res: Response) {
         reportError("AN error occured in  userapicontroller", e, res);
     }
 }
-
 
 
 export async function getUserPfp(req: Request, res: Response) {
@@ -70,9 +77,16 @@ export async function getUserPfp(req: Request, res: Response) {
     }
 }
 
+
 export async function getNowPlaying(req: Request, res: Response) {
     try {
-        const currentlyPlaying = (await getCurrentlyPlaying(req.session.uid!));
+        const uid =  parseInt(req.params.id) || req.session.uid;
+        if (!uid) {
+            res.status(400).json({error: "No uid provided"});
+            return;
+        }
+
+        const currentlyPlaying = (await getCurrentlyPlaying(uid));
         if (!currentlyPlaying) {
             res.status(204).json({message: "no track playing"});
             return;
@@ -80,6 +94,11 @@ export async function getNowPlaying(req: Request, res: Response) {
 
         res.json(currentlyPlaying);
     } catch (e: any) {
+        if (e instanceof UserNotFoundException) {
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+
         reportError("AN error occured in  userapicontroller", e, res);
     }
 }

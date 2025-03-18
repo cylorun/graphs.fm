@@ -50,6 +50,7 @@ router.get('/', requireAuth, getUserData);
  * }
  */
 router.get('/now-playing', requireAuth, getNowPlaying);
+router.get('/:id/now-playing', getNowPlaying);
 
 /**
  * Relies on sessions to get data for the logged in user
@@ -100,6 +101,8 @@ router.get('/now-playing', requireAuth, getNowPlaying);
  * ]
  */
 router.get('/tracks', requireAuth, getUserTracks);
+router.get('/:id/tracks', getUserTracks);
+
 
 /**
  *
@@ -112,6 +115,8 @@ router.get('/tracks', requireAuth, getUserTracks);
  * }
  */
 router.get('/playcount', requireAuth, getUserPlayCount);
+router.get('/:id/playcount', requireAuth, getUserPlayCount);
+
 
 /**
  * Example response for url /api/users/1/pfp: {
