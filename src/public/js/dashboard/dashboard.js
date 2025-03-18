@@ -1,5 +1,7 @@
+const ID = window.location.pathname.split("/").pop();
+
 const getTracks = async () => {
-    const response = await fetch('/api/users/tracks?count=20');
+    const response = await fetch(`/api/users/${ID}/tracks?count=20`);
     if (!response.ok) {
         throw new Error(response.statusText);
     }
@@ -8,7 +10,7 @@ const getTracks = async () => {
 }
 
 const getCurrentTrack = async () => {
-    const response = await fetch('/api/users/now-playing');
+    const response = await fetch(`/api/users/${ID}/now-playing`);
 
     if (response.status === 204) {
         return null;
@@ -22,7 +24,7 @@ const getCurrentTrack = async () => {
 }
 
 const getUserPlayCount = async () => {
-    const response = await fetch('/api/users/playcount');
+    const response = await fetch(`/api/users/${ID}/playcount`);
     if (!response.ok) {
         throw new Error(response.statusText);
     }
