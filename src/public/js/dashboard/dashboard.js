@@ -39,13 +39,8 @@ const userExists = async () => {
     return response.status !== 404;
 }
 
-$(document).ready(async () => {
-    if (!(await userExists())) {
-        $(document.body).append(
-            $("<h1>").text("User not found")
-        )
-        return;
-    }
+
+const createRecentTracksSection = async () => {
     const recentTracksContainer = $('#recent-tracks ul');
 
     const currentTrackData = await getCurrentTrack();
@@ -79,7 +74,7 @@ $(document).ready(async () => {
                 </div>
                 <div class="recent-right">
                     <img class="track-icon" src="${t.imageUrl}" alt="Track Image">
-                    <p id="played-at">${t.spotifyId === currentTrackData?.spotifyId ? "Now playing" : moment(t.playedAt).fromNow()}</p>
+                    <p class="played-at">${t.spotifyId === currentTrackData?.spotifyId ? "Now playing" : moment(t.playedAt).fromNow()}</p>
                 </div>
             </li>`
         );
@@ -104,4 +99,20 @@ $(document).ready(async () => {
         const spotifyId = $(this).closest('li').data('spotify-id');
         window.open(`https://open.spotify.com/track/${spotifyId}`, '_blank');
     });
+}
+
+const createGraphDataSection = async () => {
+
+}
+
+$(document).ready(async () => {
+    if (!(await userExists())) {
+        $(document.body).append(
+            $("<h1>").text("User not found")
+        )
+        return;
+    }
+
+    await createRecentTracksSection();
+    await createGraphDataSection();
 });

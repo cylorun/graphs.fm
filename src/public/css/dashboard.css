@@ -23,7 +23,6 @@ main {
 
 #stats-intro {
     width: 90%;
-    background-color: #3A4646;
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
@@ -31,7 +30,6 @@ main {
 
 #recent-tracks {
     width: 90%;
-    background-color: #3A4646;
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
@@ -39,7 +37,7 @@ main {
 
 #recent-tracks h2 {
     font-size: 1.5rem;
-    color: #121111;
+    color: #e8e3e3;
     border-bottom: 2px solid #606060;
     padding-bottom: 5px;
 }
@@ -70,7 +68,7 @@ main {
 }
 
 .track-item {
-    background-color: #76817f;
+    background-color: #2e302e;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -86,7 +84,7 @@ main {
 }
 
 .track-item:hover {
-    background-color: #889593;
+    background-color: #363936;
 }
 
 .play-btn {
@@ -104,14 +102,18 @@ main {
 .track-name {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #1b1e1b;
+    color: #b8bfb8;
     display: block;
 
     text-decoration: none;
 }
 
+.track-name:hover {
+    color: #c8d3c8;
+}
+
 .artist-name {
-    color: #2d302e;
+    color: #a2bcab;
     font-size: 14px;
     margin-top: 5px;
     display: block;
@@ -120,11 +122,13 @@ main {
 }
 
 .artist-name:hover {
-    color: #3b3e3d;
+    color: #bfd6c7;
 }
 
-.track-name:hover {
-    color: #2e332e;
+.played-at {
+    color: #b8bfb8;
+    font-size: 10px;
+    margin-left: 10px;
 }
 
 .currently-listening {
@@ -153,12 +157,6 @@ main {
     width: 48px;
     height: 48px;
     border-radius: 4px;
-}
-
-#played-at {
-    color: #1e1e1e;
-    font-size: 10px;
-    margin-left: 10px;
 }
 
 @media (min-width: 800px) {
