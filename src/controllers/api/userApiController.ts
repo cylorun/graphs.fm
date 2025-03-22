@@ -63,11 +63,12 @@ export async function getUserTracks(req: Request, res: Response) {
 
 export async function getUserPlayCount(req: Request, res: Response) {
     try {
-        const uid =  parseInt(req.params.id) || req.session.uid;
+        const uid =  (await resolveUid(req.params.id)) || req.session.uid;
         if (!uid) {
             res.status(400).json({error: "No uid provided"});
             return;
         }
+
         const playCountData = await getUserPlaycount(uid);
 
         res.json(playCountData);
@@ -79,17 +80,14 @@ export async function getUserPlayCount(req: Request, res: Response) {
 
 export async function getUserPfp(req: Request, res: Response) {
     try {
-        const uid = parseInt(req.params.id);
-        if (isNaN(uid)) {
-            res.status(400).json({error: "Invalid uid"});
-            return;
-        }
-
-        const url = await getUserProfileImageUrl(uid);
-        if (!url) {
+        const uid = await resolveUid(req.params.id)
+        if (!uid) {
             res.status(404).json({error: "User not found"});
             return;
         }
+
+        // if url doesnt exist then i dont know what the fuck went wrong
+        const url = await getUserProfileImageUrl(uid);
 
         res.status(200).json({url: url});
     } catch (e: any) {
