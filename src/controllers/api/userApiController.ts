@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getUserById, getUserPlaycount, getUserProfileImageUrl} from "../../services/userService";
+import {getUserById, getUserId, getUserPlaycount, getUserProfileImageUrl, resolveUid} from "../../services/userService";
 import {getRecentTracks} from "../../services/trackService";
 import {getCurrentlyPlaying} from "../../services/spotifyService";
 import {reportError} from "../../util/exceptions";
@@ -9,12 +9,13 @@ export async function getUserData(req: Request, res: Response) {
     try {
         const id = req.params.id;
         if (id) {
-            const nid = parseInt(id);
-            if (isNaN(nid)) {
-                res.status(400).json({error: "id must be a number"});
+            const uid = await resolveUid(id);
+            if (!uid) {
+                res.status(404).json({error: "User not found"});
                 return;
             }
-            const data = await getUserById(nid);
+
+            const data = await getUserById(uid);
             if (!data) {
                 res.status(404).json({error: "User not found"});
                 return;
@@ -25,7 +26,6 @@ export async function getUserData(req: Request, res: Response) {
             res.json(pubdata);
             return;
         }
-
 
         const data = await getUserById(req.session.uid!);
         if (!data) {

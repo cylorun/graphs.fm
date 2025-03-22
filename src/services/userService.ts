@@ -4,8 +4,28 @@ import {and, count, eq} from "drizzle-orm";
 import {PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
+
+// returns if user doesnt exist
+export async function resolveUid(identifier: string) {
+    let uid: number = parseInt(identifier);
+    if (isNaN(uid)) {
+        const d = await getUserId(identifier);
+        if (!d) {
+            return null;
+        }
+
+        uid = d;
+    }
+
+    return uid;
+}
+
 export async function getUserProfileImageUrl(userId: number): Promise<string | null> {
     return (await db.select({url: users.profileImage}).from(users).where(eq(users.id, userId)))[0]?.url || null;
+}
+
+export async function getUserId(displayName: string): Promise<number | null> {
+    return (await db.select().from(users).where(eq(users.displayName, displayName)))[0]?.id || null;
 }
 
 export async function getUserById(userId: number): Promise<PublicUser | null> {
