@@ -22,7 +22,31 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     try {
-        res.render("user", {...getDefaultEjsProps(req, res)});
+        res.render("user", {...getDefaultEjsProps(req, res), section: 'overview'});
+    } catch (e) {
+        handleReqError(req, res);
+    }
+});
+
+router.get('/:id/reports', async (req: Request, res: Response) => {
+    try {
+        res.render("user", {...getDefaultEjsProps(req, res), section: 'reports'});
+    } catch (e) {
+        handleReqError(req, res);
+    }
+});
+
+router.get('/:id/top', async (req: Request, res: Response) => {
+    try {
+        res.render("user", {...getDefaultEjsProps(req, res), section: 'top'});
+    } catch (e) {
+        handleReqError(req, res);
+    }
+});
+
+router.get('/:id/following', async (req: Request, res: Response) => {
+    try {
+        res.render("user", {...getDefaultEjsProps(req, res), section: 'following'});
     } catch (e) {
         handleReqError(req, res);
     }

@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://momentjs.com/downloads/moment.js"></script>
     <script src="/js/dashboard/dashboard.js"></script>
+    <script src="/js/dashboard/user-redirect.js"></script>
 
     <title>Dashboard</title>
 </head>
@@ -29,24 +30,43 @@
             </div>
             <div id="tabs-div">
                 <ul>
-                    <li class="tab-item">Overview</li>
-                    <li class="tab-item">Reports</li>
-                    <li class="tab-item">Top</li>
-                    <li class="tab-item">Following</li>
+                    <li class="tab-item <%= section === 'overview' ? 'item-selected' : '' %>" onclick="userRedirect('overview')">Overview</li>
+                    <li class="tab-item <%= section === 'reports' ? 'item-selected' : '' %>" onclick="userRedirect('reports')">Reports</li>
+                    <li class="tab-item <%= section === 'top' ? 'item-selected' : '' %>" onclick="userRedirect('top')">Top</li>
+                    <li class="tab-item <%= section === 'following' ? 'item-selected' : '' %>" onclick="userRedirect('following')">Following</li>
                 </ul>
             </div>
         </section>
 
         <div id="middle-section">
-            <section id="recent-tracks">
-                <h2>Recent Tracks</h2>
-                <ul>
+            <% if (section === "overview") {%>
+                    <section id="recent-tracks">
+                        <h2>Recent Tracks</h2>
+                        <ul></ul>
+                    </section>
+                    <section id="stats-intro">
+                    </section>
 
-                </ul>
-            </section>
-            <section id="stats-intro">
-            </section>
+            <% } else if (section === "reports") { %>
+                <div id="section-reports">
+                    <h2>Reports</h2>
+                    <p>Reports content goes here...</p>
+                </div>
+
+            <% } else if (section === "top") { %>
+                <div id="section-top">
+                    <h2>Top Charts</h2>
+                    <p>Top tracks, artists, or albums go here...</p>
+                </div>
+
+            <% } else { %>
+                <div id="section-default">
+                    <h2>Not Found</h2>
+                    <p>how aer u herer bro</p>
+                </div>
+            <% } %>
         </div>
+
     </main>
     <%- include('../partials/footer.ejs') %>
 </body>

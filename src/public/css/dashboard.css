@@ -22,9 +22,10 @@ main {
 #top-section {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     min-height: 30vh;
     border-bottom: 2px solid #606060;
+    justify-content: space-between;
 }
 
 #profile-div {
@@ -52,6 +53,7 @@ main {
 #user-info-name {
     font-size: clamp(18px, 5vw, 32px);
     font-weight: 600;
+    margin: 0;
 }
 
 #user-info p {
@@ -88,17 +90,19 @@ main {
     transition: all 0.2s ease-in-out;
 }
 
-.tab-item:first-child {
+
+
+.tab-item:hover {
+    background-color: #444444;
+}
+
+.item-selected{
     background-color: var(--green);
     color: #ffffff;
 }
 
-.tab-item:first-child:hover {
+.item-selected:hover {
     background-color: var(--green-secondary);
-}
-
-.tab-item:hover {
-    background-color: #444444;
 }
 
 /*<------------- TOP SECTION ENDS -------------->*/

@@ -1,4 +1,4 @@
-const ID = window.location.pathname.split("/").pop();
+const ID = window.location.pathname.split("/")[2]; // user urls are /u/{id} or /user/{id}
 
 
 // returns null if error or user not exist
