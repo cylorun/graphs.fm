@@ -113,6 +113,11 @@ const createTopSection = async () => {
 
 }
 
+// section being overview | reports | top | following
+const getCurrentSection = () => {
+    return window.location.pathname.split("/")[3] || "overview"; // cause overview is the default
+}
+
 $(document).ready(async () => {
     if (!(await userExists())) {
         $(document.body).append(
@@ -121,7 +126,11 @@ $(document).ready(async () => {
         return;
     }
 
-    await createTopSection();
-    await createRecentTracksSection();
-    await createGraphDataSection();
+    switch (getCurrentSection()) {
+        case 'overview': {
+            await createTopSection();
+            await createRecentTracksSection();
+            await createGraphDataSection();
+        }
+    }
 });
