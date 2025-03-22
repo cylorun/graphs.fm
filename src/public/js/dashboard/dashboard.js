@@ -39,6 +39,11 @@ const userExists = async () => {
     return response.status !== 404;
 }
 
+const getUserData = async () => {
+    const response = await fetch(`/api/users/${ID}`);
+    return response.json();
+}
+
 
 const createRecentTracksSection = async () => {
     const recentTracksContainer = $('#recent-tracks ul');
@@ -90,19 +95,22 @@ const createRecentTracksSection = async () => {
 }
 
 const createGraphDataSection = async () => {
-    const playCountData = await getUserPlayCount();
     const $statssection = $('#stats-intro');
-    const $bubblesection = $statssection.append('<div id="bubbles-section"">');
-    $bubblesection.append([
-            $('<p>').text(`Listens today: ${playCountData.day}`),
-            $('<p>').text(`Listens past week: ${playCountData.week}`),
-            $('<p>').text(`Listens past month: ${playCountData.month}`)
-        ]
-    );
 }
 
 const createTopSection = async () => {
     const $topsection = $('#top-section');
+
+    const userData = await getUserData();
+    if (!userData) {
+        throw new Error(response.statusText);
+    }
+
+    $('#user-info-name').text(userData.displayName);
+    $('#user-info-joined').text("Joined " + new Date(userData.createdAt).toLocaleString())
+    $('#user-info-followers').text(userData.followers || 0 + " followers");
+    $('#profile-div-pfp').attr('src', userData.profileImage);
+
 }
 
 $(document).ready(async () => {
