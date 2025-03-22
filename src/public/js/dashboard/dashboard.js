@@ -120,7 +120,10 @@ const getCurrentSection = () => {
 
 $(document).ready(async () => {
     if (!(await userExists())) {
-        $(document.body).append(
+        $('#top-section').empty();
+        $('#middle-section').empty();
+
+        $('#middle-section').append(
             $("<h1>").text("User not found")
         )
         return;
