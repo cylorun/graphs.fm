@@ -7,6 +7,26 @@ import {UserNotFoundException} from "../../types";
 
 export async function getUserData(req: Request, res: Response) {
     try {
+        const id = req.params.id;
+        if (id) {
+            const nid = parseInt(id);
+            if (isNaN(nid)) {
+                res.status(400).json({error: "id must be a number"});
+                return;
+            }
+            const data = await getUserById(nid);
+            if (!data) {
+                res.status(404).json({error: "User not found"});
+                return;
+            }
+
+            const {email, ...pubdata} = data;
+
+            res.json(pubdata);
+            return;
+        }
+
+
         const data = await getUserById(req.session.uid!);
         if (!data) {
             res.status(404).json({error: "User not found(idk how)"});

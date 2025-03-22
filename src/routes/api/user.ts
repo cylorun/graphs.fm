@@ -26,6 +26,7 @@ const router = Router();
  */
 router.get('/', requireAuth, getUserData);
 
+router.get('/:id', getUserData);
 
 /**
  * Relies on sessions to get data for the logged in user

@@ -13,8 +13,45 @@ main {
 }
 
 #top-section {
+    display: flex;
     min-height: 30vh;
+    border-bottom: #606060 2px solid;
+    align-items: center;
 }
+
+#profile-div {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 0;
+    padding-left: 20px;
+}
+
+#profile-div p, #profile-div h2 {
+    padding: 0;
+    margin: 0;
+}
+
+#profile-div-pfp {
+    width: clamp(100px, 15vmin, 164px);
+    height: clamp(100px, 15vmin, 164px);
+    aspect-ratio: 1/1 !important;
+    border-radius: 50%;
+}
+
+#user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#user-info-name {
+    font-size: clamp(14px, 10vw, 40px);
+}
+
+#profile-div p {
+    font-size: clamp(14px, 5vw, 16px);
+}
+
 
 #middle-section {
     display: flex;

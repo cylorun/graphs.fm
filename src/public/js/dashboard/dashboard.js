@@ -81,10 +81,6 @@ const createRecentTracksSection = async () => {
 
         recentTracksContainer.append(trackItem);
     });
-    const $topsection = $('#top-section');
-    $topsection.append(
-        $('<h1>').text('user smthh')
-    )
 
     $('#recent-tracks').on('click', 'li.track-item .play-btn', function (event) {
         event.stopPropagation();
@@ -105,6 +101,10 @@ const createGraphDataSection = async () => {
     );
 }
 
+const createTopSection = async () => {
+    const $topsection = $('#top-section');
+}
+
 $(document).ready(async () => {
     if (!(await userExists())) {
         $(document.body).append(
@@ -113,6 +113,7 @@ $(document).ready(async () => {
         return;
     }
 
+    await createTopSection();
     await createRecentTracksSection();
     await createGraphDataSection();
 });

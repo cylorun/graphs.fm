@@ -12,9 +12,9 @@ export async function getUserById(userId: number): Promise<PublicUser | null> {
     const user = (await db.select().from(users).where(eq(users.id, userId)))[0];
     if (!user) return null;
 
-    const { accessToken, refreshToken, expiresAt, ...userWithoutToken } = user;
+    const { accessToken, refreshToken, expiresAt, lastLogin, ...userWithoutToken } = user;
 
-    return userWithoutToken;
+    return {plays: (await getUserPlaysSince(userId, new Date(0))) || 0, ...userWithoutToken};
 }
 
 export async function getUserPlaycount(uid: number): Promise<{day: number, week: number, month: number} | null> {
