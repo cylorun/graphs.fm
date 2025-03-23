@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="/css/artist.css">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="/js/artist/artist.js"></script>
+    <% if (prod) { %>
+        <script src="/js/artist-all.min.js"></script>
+    <% } else {%>
+        <script src="/js/artist/artist.js"></script>
+    <%}%>
 
     <title>Artist</title>
 </head>

@@ -68,10 +68,8 @@ const staticHandler = (req: Request, res: Response, next: NextFunction): void =>
         return;
     }
 
-    if (fs.existsSync(absolutePath)) {
-        res.setHeader('Content-Type', getContentType(resourcePath));
-        fs.createReadStream(absolutePath).pipe(res);
-        console.log("Default for:" + absolutePath);
+    if (!absolutePath.endsWith(".gz") && !absolutePath.endsWith(".br")) {
+        res.status(403).json({message: "you dont have access to that"});
         return;
     }
 
