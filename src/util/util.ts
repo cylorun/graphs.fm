@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import * as fs from "node:fs";
 
 let siteVersion: string | null = null;
+const NODE_ENV = process.env.NODE_ENV;
 
 export function randomString(length: number): string {
     if (length % 2 !== 0) {
@@ -27,5 +28,5 @@ export function getDefaultEjsProps(req: Request, res: Response) {
 
     const version = getSiteVersion();
 
-    return {version, loggedIn, userId}
+    return {version, loggedIn, userId, prod: NODE_ENV === 'production'}
 }

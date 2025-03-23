@@ -33,6 +33,7 @@ import globalRoutes from './routes/global'
 import aristRoutes from './routes/artist'
 
 import {getDefaultEjsProps} from "./util/util";
+import {staticHandler} from "./middleware/serveCompressedStatic";
 
 
 
@@ -58,6 +59,7 @@ app.use(
 );
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
+app.use(staticHandler); // important to set this before express.static
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views', 'pages'));
 app.set('view engine', 'ejs');

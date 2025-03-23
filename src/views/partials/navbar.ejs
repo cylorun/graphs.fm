@@ -3,7 +3,11 @@
     <link rel="stylesheet" href="/css/components.css">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="/js/nav.js"></script>
+    <% if (prod) { %>
+        <script src="/js/nav-all.min.js"></script>
+    <% } else {%>
+        <script src="/js/nav.js"></script>
+    <%}%>
 
     <ul id="left-side">
         <li><a href="/"><img src="/assets/logo.png" alt="home"><b>notestats</b></a></li>

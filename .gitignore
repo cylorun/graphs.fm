@@ -5,3 +5,9 @@ dist
 *.js
 *.tsbuildinfo
 !src/public/js/**/*.js
+!src/scripts/*.js
+
+# compression stuff
+*.min.js
+*.br
+*.gz
