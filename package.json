@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/app.ts",
-    "build": "tsc --build",
+    "build": "tsc --build && node src/scripts/minify.js && node src/scripts/compress.js",
     "scraper": "node src/scraper/scraper.js",
     "start": "node src/app.js"
   },

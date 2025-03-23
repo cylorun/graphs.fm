@@ -12,6 +12,7 @@ services:
     environment:
       - PORT=5004
       - USING_DOCKER=true
+      - NODE_ENV=production
     env_file:
       - .env
     depends_on:
