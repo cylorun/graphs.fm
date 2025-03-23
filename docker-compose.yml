@@ -1,5 +1,6 @@
 services:
   app:
+    network_mode: "host"
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,6 +20,7 @@ services:
       - postgres
 
   scraper:
+    network_mode: "host"
     build:
       context: .
     container_name: notestats-scraper
