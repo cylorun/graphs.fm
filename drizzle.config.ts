@@ -15,5 +15,5 @@ export default defineConfig({
     schema: "./src/db/schema.ts",
     out: "./drizzle",
     // @ts-ignore
-    ssl: true
+    ssl: process.env.NODE_ENV !== "production",
 });
