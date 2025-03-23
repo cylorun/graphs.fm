@@ -4,6 +4,7 @@ import * as path from 'path';
 
 const TEXT_FOLDERS = ['css', 'js'];
 const NODE_ENV = process.env.NODE_ENV;
+const PUBLIC_DIR = path.resolve(__dirname, '../public');
 
 const supportsBrotli = (req: Request): boolean => {
     const acceptEncoding = req.headers['accept-encoding'];
@@ -50,7 +51,12 @@ const staticHandler = (req: Request, res: Response, next: NextFunction): void =>
         return next();
     }
 
-    const absolutePath = path.join(__dirname, '../public', resourcePath);
+    const absolutePath = path.resolve(PUBLIC_DIR, `.${resourcePath}`);
+    if (!absolutePath.startsWith(PUBLIC_DIR)) {
+         res.status(403).json({ message: "Access denied." });
+         return;
+    }
+
     const brotliPath = `${absolutePath}.br`;
     const gzipPath = `${absolutePath}.gz`;
 
@@ -68,12 +74,11 @@ const staticHandler = (req: Request, res: Response, next: NextFunction): void =>
         return;
     }
 
-    if (!absolutePath.endsWith(".gz") && !absolutePath.endsWith(".br")) {
-        res.status(403).json({message: "you dont have access to that"});
+    const allowedExtensions = ['.gz', '.br'];
+    if (!allowedExtensions.includes(path.extname(absolutePath))) { // for now just prevents raw access to un minified js, lowkey useless
+        res.status(403).json({ message: "You do not have access to this resource." });
         return;
     }
-
-    console.log("nothjing for:" + absolutePath);
 
     next(); // If it's not a text-based static file it continues to the express.static middleware
 };
