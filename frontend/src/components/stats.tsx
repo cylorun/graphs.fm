@@ -1,4 +1,4 @@
-import { stats } from "@/data/stats"
+import { stats } from "@/config/stats"
 
 const Stats: React.FC = () => {
     return (

@@ -59,7 +59,7 @@ Before starting, make sure you have the following installed:
 ## Customization
 
 1. **Edit colors**: Update `globals.css` for primary, secondary, background, and accent colors.
-2. **Update site details**: Customize `siteDetails.ts` in `/src/data` to reflect your brand and site info.
+2. **Update site details**: Customize `siteConfig.ts` in `/src/data` to reflect your brand and site info.
 3. **Modify content**: Files in `/src/data` handle data for navigation, features, pricing, testimonials, and more.
 4. **Replace favicon**: Add your icon to `/src/app/favicon.ico`.
 5. **Add images**: Update `public/images` for Open Graph metadata (e.g., `og-image.jpg`, `twitter-image.jpg`).

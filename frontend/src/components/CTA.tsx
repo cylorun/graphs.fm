@@ -1,7 +1,5 @@
-import { ctaDetails } from "@/data/cta"
-
-import AppStoreButton from "./app-store-button"
-import PlayStoreButton from "./play-store-button"
+import { ctaDetails } from "@/config/cta"
+import GetStartedButton from "@/components/get-started-button";
 
 const CTA: React.FC = () => {
     return (
@@ -18,8 +16,7 @@ const CTA: React.FC = () => {
                         <p className="mx-auto max-w-xl md:px-5">{ctaDetails.subheading}</p>
 
                         <div className="mt-4 flex flex-col sm:flex-row items-center sm:gap-4">
-                        <AppStoreButton />
-                        <PlayStoreButton />
+                            <GetStartedButton/>
                         </div>
                     </div>
                 </div>

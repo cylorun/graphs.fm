@@ -3,7 +3,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react
 import { BiMinus, BiPlus } from "react-icons/bi";
 
 import SectionTitle from "./section-title";
-import { faqs } from "@/data/faq";
+import { faqs } from "@/config/faq";
+import {siteConfig} from "@/config/siteConfig";
 
 const FAQ: React.FC = () => {
     return (
@@ -17,7 +18,7 @@ const FAQ: React.FC = () => {
                     <p className="lg:mt-10 text-foreground-accent text-center lg:text-left">
                         Ask us anything!
                     </p>
-                    <a href="mailto:" className="mt-3 block text-xl lg:text-4xl text-secondary font-semibold hover:underline text-center lg:text-left">help@finwise.com</a>
+                    <a href={`mailto:${siteConfig.supportMail}`} className="mt-3 block text-xl lg:text-4xl text-secondary font-semibold hover:underline text-center lg:text-left">{siteConfig.supportMail}</a>
                 </div>
 
                 <div className="w-full lg:max-w-2xl mx-auto border-b">

@@ -4,7 +4,7 @@ import {Manrope, Source_Sans_3} from "next/font/google";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import {siteDetails} from '@/data/siteDetails';
+import {siteConfig} from '@/config/siteConfig';
 
 import "./globals.css";
 
@@ -12,26 +12,26 @@ const manrope = Manrope({subsets: ['latin']});
 const sourceSans = Source_Sans_3({subsets: ['latin']});
 
 export const metadata: Metadata = {
-    title: siteDetails.metadata.title,
-    description: siteDetails.metadata.description,
+    title: siteConfig.metadata.title,
+    description: siteConfig.metadata.description,
     openGraph: {
-        title: siteDetails.metadata.title,
-        description: siteDetails.metadata.description,
-        url: siteDetails.siteUrl,
+        title: siteConfig.metadata.title,
+        description: siteConfig.metadata.description,
+        url: siteConfig.siteUrl,
         type: 'website',
         images: [
             {
                 url: '/images/og-image.jpg',
                 width: 1200,
                 height: 675,
-                alt: siteDetails.siteName,
+                alt: siteConfig.siteName,
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: siteDetails.metadata.title,
-        description: siteDetails.metadata.description,
+        title: siteConfig.metadata.title,
+        description: siteConfig.metadata.description,
         images: ['/images/twitter-image.jpg'],
     },
 };
@@ -46,7 +46,7 @@ export default function RootLayout({
         <body
             className={`${manrope.className} ${sourceSans.className} antialiased`}
         >
-        {siteDetails.googleAnalyticsId && <GoogleAnalytics gaId={siteDetails.googleAnalyticsId}/>}
+        {siteConfig.googleAnalyticsId && <GoogleAnalytics gaId={siteConfig.googleAnalyticsId}/>}
         <Header/>
         <main>
             {children}
