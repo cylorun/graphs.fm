@@ -1,6 +1,11 @@
 {
     "name": "notestats.com",
     "private": true,
+    "scripts": {
+        "dev:front": "pnpm --filter frontend dev",
+        "dev:back": "pnpm --filter backend dev",
+        "start:cron": "pnpm --filter cron start"
+    },
     "workspaces": [
         "backend",
         "frontend",
