@@ -20,6 +20,7 @@ export const refreshAccessToken = async (uid: number) => {
             }).toString(),
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
         );
+
         if (response.status !== 200) {
             throw new Error("Failed to refresh token")
         }

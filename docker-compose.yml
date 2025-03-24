@@ -41,7 +41,7 @@ services:
     restart: always
     working_dir: /app
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - backend
       - postgres
