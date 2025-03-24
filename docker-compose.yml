@@ -1,34 +1,49 @@
 services:
-  app:
+  backend:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: notestats-web
+      dockerfile: ./backend/Dockerfile
+    container_name: notestats-backend
     expose:
-      - "5004"
-    ports:
-      - "5004:5004"
+      - "5000"  # expose to containers internal network
     restart: always
     environment:
-      - PORT=5004
-      - USING_DOCKER=true
+      - PORT=500
       - NODE_ENV=production
     env_file:
       - .env
+      - ./backend/.env # includes backend specific variables, such as api credentials and token secrets
     depends_on:
       - postgres
 
-  scraper:
+  frontend:
     build:
       context: .
-    container_name: notestats-scraper
+      dockerfile: ./frontend/Dockerfile
+    container_name: notestats-frontend
+    expose:
+      - "3000" # expose to containers internal network
+    restart: always
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:5000/api
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - postgres
+
+  cron:
+    build:
+      context: .
+      dockerfile: ./cron/Dockerfile
+    container_name: notestats-cron
     restart: always
     working_dir: /app
-    command: "npm run scraper"
     env_file:
       - .env
     depends_on:
-      - app
+      - backend
       - postgres
 
   postgres:
@@ -41,6 +56,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  nginx:
+    image: nginx:alpine
+    container_name: notestats-nginx
+    ports:
+      - "5004:80"  # Expose port 5004 to host
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
 
 volumes:
   postgres_data:

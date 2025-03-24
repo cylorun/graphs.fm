@@ -1,49 +1,23 @@
 {
-  "name": "notestats",
-  "version": "beta-1.0",
-  "description": "Music stat tracker",
-  "main": "src/app.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.ts",
-    "build": "tsc --build && node src/scripts/minify.js && node src/scripts/compress.js",
-    "scraper": "node src/scraper/scraper.js",
-    "start": "node src/app.js"
-  },
-  "author": "cylorun",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^1.8.1",
-    "connect-pg-simple": "^10.0.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "drizzle-kit": "^0.30.5",
-    "drizzle-orm": "^0.40.0",
-    "ejs": "^3.1.10",
-    "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "fs-extra": "^11.3.0",
-    "moment": "^2.30.1",
-    "mysql2": "^3.12.0",
-    "node-cron": "^3.0.3",
-    "node-schedule": "^2.1.1",
-    "nodemon": "^3.1.9",
-    "pg": "^8.13.3",
-    "query-string": "^9.1.1",
-    "terser": "^5.39.0",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.8.2"
-  },
-  "devDependencies": {
-    "@types/connect-pg-simple": "^7.0.3",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.17",
-    "@types/node": "^22.13.11",
-    "@types/node-cron": "^3.0.11",
-    "@types/node-schedule": "^2.1.7",
-    "@types/pg": "^8.11.11",
-    "i": "^0.3.7"
-  }
+    "name": "notestats.com",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend",
+        "cron",
+        "shared"
+    ],
+    "dependencies": {
+        "drizzle-kit": "^0.20.0",
+        "drizzle-orm": "^0.30.0",
+        "pg": "^8.11.1"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.1",
+        "@types/node": "^22.13.11",
+        "ts-node": "^10.9.2",
+        "tsc-alias": "^1.8.11",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.8.2"
+    }
 }
