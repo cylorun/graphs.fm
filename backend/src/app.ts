@@ -38,10 +38,10 @@ app.use(express.json());
 
 
 // API Routes
-app.use('/api/status', statusRoutes)
-app.use('/api/users', userApiRoutes);
-app.use('/api/artists', artistApiRoutes);
-app.use('/api/global', globalDataRoutes);
+app.use('/status', statusRoutes)
+app.use('/users', userApiRoutes);
+app.use('/artists', artistApiRoutes);
+app.use('/global', globalDataRoutes);
 
 // Auth routes
 app.use('/auth/spotify/callback', spotifyCallbackRoutes);

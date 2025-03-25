@@ -86,7 +86,7 @@ router.get("/", async (req: Request, res: Response) => {
 
         const token = generateToken(user[0]);
         saveTokenAsCookie(res, token);
-        res.json({message: "logged in"});
+        redirectFrontend(res, '/user?m=login+successful');
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
         res.redirect(
