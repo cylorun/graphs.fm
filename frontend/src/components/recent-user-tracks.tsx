@@ -14,6 +14,7 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
 
     useEffect(() => {
         const fetchTracks = async () => {
+            if (!uid) return;
             setLoading(true);
             try {
                 const res = await api.get(`/users/${uid}/tracks?count=20`);
