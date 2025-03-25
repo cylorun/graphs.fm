@@ -4,6 +4,7 @@ import * as fs from "node:fs";
 
 let siteVersion: string | null = null;
 const NODE_ENV = process.env.NODE_ENV;
+const FRONTEND_BASE_URL =  process.env.FRONTEND_URL;
 
 export function randomString(length: number): string {
     if (length % 2 !== 0) {
@@ -22,11 +23,9 @@ export function getSiteVersion(): string {
 }
 
 
-export function getDefaultEjsProps(req: Request, res: Response) {
-    const loggedIn = !!req.session?.uid;
-    const userId = req.session?.uid;
+export function redirectFrontend(res: Response, path: string) {
+    if (!path) throw new Error("Path not provided");
+    if (path[0] !== '/') throw new Error("Path must start with a forward slash");
 
-    const version = getSiteVersion();
-
-    return {version, loggedIn, userId, prod: NODE_ENV === 'production'}
+    res.redirect(`${FRONTEND_BASE_URL}${path}`);
 }

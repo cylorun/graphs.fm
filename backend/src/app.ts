@@ -6,15 +6,6 @@ dotenv.config();
 
 import cors from 'cors';
 import cookieParser from "cookie-parser";
-import session from "express-session";
-declare module "express-session" {
-    interface SessionData {
-        uid?: number;
-    }
-}
-
-import pg from "pg";
-import pgSession from "connect-pg-simple";
 
 import statusRoutes from "./routes/api/status";
 import userApiRoutes from "./routes/api/user";
@@ -24,8 +15,7 @@ import artistApiRoutes from './routes/api/artist'
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
 import logoutRoutes from './routes/auth/logout';
-
-
+import {JWTUser} from "@/shared/types";
 
 const PORT = 5000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
@@ -34,19 +24,13 @@ if (NODE_ENV === "production") {
     app.set('trust proxy', 1); // to correctly identify IPs
 }
 
-const PgSessionStore = pgSession(session);
-const pgPool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+declare module "express" {
+    export interface Request {
+        user?: JWTUser;
+    }
+}
 
 app.use(cookieParser());
-app.use(
-    session({
-        store: new PgSessionStore({ pool: pgPool }),
-        secret: process.env.SESSION_SECRET!,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
-    })
-);
 
 app.use(cors());
 app.use(express.urlencoded({extended: true}));

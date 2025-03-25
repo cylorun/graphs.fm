@@ -2,9 +2,8 @@ import {Request, Response, Router} from "express";
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-    req.session.destroy(() => {
-        res.redirect("/");
-    });
+    res.clearCookie("token");
+    res.json({ message: "Logged out successfully" });
 });
 
 export default router;

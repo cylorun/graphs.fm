@@ -27,7 +27,7 @@ export async function getUserData(req: Request, res: Response) {
             return;
         }
 
-        const data = await getUserById(req.session.uid!);
+        const data = await getUserById(req.user?.id!);
         if (!data) {
             res.status(404).json({error: "User not found(idk how)"});
             return;
@@ -41,7 +41,7 @@ export async function getUserData(req: Request, res: Response) {
 
 export async function getUserTracks(req: Request, res: Response) {
     try {
-        const uid = (await resolveUid(req.params.id)) || req.session.uid;
+        const uid = (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
             res.status(400).json({error: "No uid provided"});
             return;
@@ -64,7 +64,7 @@ export async function getUserTracks(req: Request, res: Response) {
 
 export async function getUserPlayCount(req: Request, res: Response) {
     try {
-        const uid =  (await resolveUid(req.params.id)) || req.session.uid;
+        const uid =  (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
             res.status(400).json({error: "No uid provided"});
             return;
@@ -99,7 +99,7 @@ export async function getUserPfp(req: Request, res: Response) {
 
 export async function getNowPlaying(req: Request, res: Response) {
     try {
-        const uid =  parseInt(req.params.id) || req.session.uid;
+        const uid =  parseInt(req.params.id) || req.user?.id;
         if (!uid) {
             res.status(400).json({error: "No uid provided"});
             return;

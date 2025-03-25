@@ -20,6 +20,11 @@ export type ArtistWithGenre = Artist & {genres: Genre[]}
 
 export type PublicUser = Omit<User & {plays: number}, "expiresAt" | "refreshToken" | "accessToken" | "lastLogin">
 
+export type JWTUser = {
+    id: number;
+    username: string;
+}
+
 export class UserNotFoundException extends Error {
     constructor(message: string) {
         super(message);

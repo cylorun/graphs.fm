@@ -5,6 +5,8 @@ import {db} from "../../../../../shared/db";
 import {users} from "../../../../../shared/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {NewUser} from "../../../../../shared/types";
+import {generateToken, saveTokenAsCookie} from "../../../util/jwt";
+import {redirectFrontend} from "../../../util/util";
 
 const router = Router();
 
@@ -71,7 +73,7 @@ router.get("/", async (req: Request, res: Response) => {
 
             user = await db.insert(users).values(newUser).returning();
         } else {
-            await db
+            await db // update old user tokens
                 .update(users)
                 .set({
                     accessToken: access_token,
@@ -82,9 +84,9 @@ router.get("/", async (req: Request, res: Response) => {
                 .where(eq(users.spotifyId, spotifyId));
         }
 
-        req.session.uid = user[0].id;
-        res.redirect("/user");
-
+        const token = generateToken(user[0]);
+        saveTokenAsCookie(res, token);
+        res.json({message: "logged in"});
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
         res.redirect(
