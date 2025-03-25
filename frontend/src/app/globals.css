@@ -8,9 +8,12 @@
     --primary: #1DB954;
     --secondary: #088738;
 
+    --card-background: #222322;
+
     --primary-accent: #42ca6f;
     --foreground-accent: #a0ba99;
     --hero-background: #121212;
+
 }
 
 html {

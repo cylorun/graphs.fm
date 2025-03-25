@@ -15,48 +15,20 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
     useEffect(() => {
         const fetchTracks = async () => {
             setLoading(true);
-            // try {
-            //     const res = await api.get(`/users/${uid}/tracks?count=20`);
-            //
-            //     if (res.status === 200) {
-            //         setTracks(res.data);
-            //         return;
-            //     }
-            //
-            //     setError(new Error(res.statusText));
-            // } catch (e) {
-            //     setError(new Error("Something went wrong :///"));
-            // } finally {
-            //     setLoading(false);
-            // }
+            try {
+                const res = await api.get(`/users/${uid}/tracks?count=20`);
 
-            const tmp = {
-                spotifyId: "idk",
-                durationMs: 100000,
-                id: 1,
-                createdAt: new Date(),
-                playedAt: new Date(),
-                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png",
-                trackName: "Never",
-                album: "the album",
-                artists: [
-                    {
-                        id: 1,
-                        spotifyId: "iii",
-                        imageUrl: "sdihasdiah",
-                        createdAt: new Date(),
-                        artistName: "kanye"
-                    }
-                ]
-            };
-            setTracks([
-                tmp,
-                tmp,
-                tmp,
-                tmp,
-                tmp,
-                tmp,
-            ]);
+                if (res.status === 200) {
+                    setTracks(res.data);
+                    return;
+                }
+
+                setError(new Error(res.statusText));
+            } catch (e) {
+                setError(new Error("Something went wrong :///"));
+            } finally {
+                setLoading(false);
+            }
         }
 
         fetchTracks();
