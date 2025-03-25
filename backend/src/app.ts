@@ -24,7 +24,6 @@ import artistApiRoutes from './routes/api/artist'
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
 import logoutRoutes from './routes/auth/logout';
-import {getDefaultEjsProps} from "./util/util";
 
 
 
