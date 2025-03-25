@@ -13,10 +13,10 @@ export const generateToken = (user: NewUser) => {
 }
 
 export const saveTokenAsCookie = (res: Response, token: string) => {
-    res.cookie("token", token,
-        {
-            httpOnly: true,
-            secure: NODE_ENV === 'production',
-            sameSite: "strict"
-        });
-}
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: NODE_ENV === 'production',
+        sameSite: "strict",
+        path: '/',
+    });
+};
