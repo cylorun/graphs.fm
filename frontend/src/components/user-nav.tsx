@@ -1,4 +1,3 @@
-import Container from "@/components/container";
 
 
 export type UserNavProps = {
@@ -26,10 +25,16 @@ const UserNav = ({uid, tab, className}: UserNavProps) => {
                 </div>
             </div>
             <ul className={'flex gap-4'}>
-                <li className={`usr-nav-item ${tab === 'overview' ? 'bg-green-600' : 'bg-gray-800'}`}>Overview</li>
-                <li className={`usr-nav-item ${tab === 'top' ? 'bg-green-600' : 'bg-gray-800'}`}>Top</li>
-                <li className={`usr-nav-item ${tab === 'reccomended' ? 'bg-green-600' : 'bg-gray-800'}`}>Recs</li>
-                <li className={`usr-nav-item ${tab === 'friends' ? 'bg-green-600' : 'bg-gray-800'}`}>Friends</li>
+                <a className={`usr-nav-item ${tab === 'overview' ? 'bg-green-600' : 'bg-gray-800'}`}
+                   href={`/user/${uid}/`}>Overview</a>
+                <a className={`usr-nav-item ${tab === 'top' ? 'bg-green-600' : 'bg-gray-800'}`}
+                   href={`/user/${uid}/top`}>Top</a>
+                <a
+                    className={`usr-nav-item ${tab === 'reccomended' ? 'bg-green-600' : 'bg-gray-800'}`}
+                    href={`/user/${uid}/recs`}>Recs</a>
+
+                <a className={`usr-nav-item ${tab === 'friends' ? 'bg-green-600' : 'bg-gray-800'}`}
+                   href={`/user/${uid}/friends`}>Friends</a>
             </ul>
         </div>
     )
