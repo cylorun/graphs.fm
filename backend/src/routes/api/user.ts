@@ -17,7 +17,7 @@ const router = Router();
  * Example response: {
  *   "id": 1,
  *   "spotifyId": "31b6uc5ivi7ocv6zfoefnwyrh45m",
- *   "displayName": "cylorun",
+ *   "username": "cylorun",
  *   "email": "cylorun@gmail.com",
  *   "profileImage": "https://i.scdn.co/image/ab6775700000ee8583623c574dfc7f0c4a63ec97",
  *   "createdAt": "2025-03-10T22:54:52.654Z",

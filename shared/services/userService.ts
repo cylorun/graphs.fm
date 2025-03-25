@@ -24,8 +24,8 @@ export async function getUserProfileImageUrl(userId: number): Promise<string | n
     return (await db.select({url: users.profileImage}).from(users).where(eq(users.id, userId)))[0]?.url || null;
 }
 
-export async function getUserId(displayName: string): Promise<number | null> {
-    return (await db.select().from(users).where(eq(users.displayName, displayName)))[0]?.id || null;
+export async function getUserId(username: string): Promise<number | null> {
+    return (await db.select().from(users).where(eq(users.username, username)))[0]?.id || null;
 }
 
 export async function getUserById(userId: number): Promise<PublicUser | null> {

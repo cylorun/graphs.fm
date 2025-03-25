@@ -45,6 +45,7 @@
         "@types/node-cron": "^3.0.11",
         "@types/node-schedule": "^2.1.7",
         "@types/pg": "^8.11.11",
+        "drizzle-kit": "^0.30.5",
         "i": "^0.3.7"
     }
 }

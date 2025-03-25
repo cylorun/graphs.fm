@@ -63,7 +63,7 @@ router.get("/", async (req: Request, res: Response) => {
             // if usr doesnt exist, create it
             const newUser: NewUser = {
                 spotifyId,
-                displayName,
+                username: displayName,
                 email,
                 profileImage,
                 accessToken: access_token,
@@ -86,7 +86,7 @@ router.get("/", async (req: Request, res: Response) => {
 
         const token = generateToken(user[0]);
         saveTokenAsCookie(res, token);
-        redirectFrontend(res, '/user?m=login+successful');
+        redirectFrontend(res, `/user/${user[0].username}?m=login+successful`);
     } catch (error) {
         console.error("Error fetching Spotify data:", error);
         res.redirect(

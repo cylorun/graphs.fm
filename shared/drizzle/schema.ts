@@ -3,7 +3,7 @@ import {integer, json, pgTable, serial, text, timestamp, varchar} from "drizzle-
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
     spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
-    displayName: varchar("display_name", {length: 25}).unique().notNull(),
+    username: varchar("username", {length: 25}).unique().notNull(),
     email: varchar("email", {length: 100}).unique(),
     profileImage: text("profile_image"),
     accessToken: text("access_token").notNull(),

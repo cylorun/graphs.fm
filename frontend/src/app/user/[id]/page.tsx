@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import Container from "@/components/container";
 import UserNav from "@/components/user-nav";
 import RecentUserTracks from "@/components/recent-user-tracks";
+import api from "@/util/api";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -20,7 +21,8 @@ const Page = ({params}: PageProps) => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-
+            const res = await api.get(`/users`);
+            console.log(res.data);
         }
         fetchUserData();
     }, [uid]);
