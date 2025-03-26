@@ -59,11 +59,3 @@ export const artistTracks = pgTable("artist_tracks", {
     trackId: integer("track_id").notNull()
         .references(() => tracks.id, { onDelete: "cascade" }),
 });
-
-export const session = pgTable('session', {
-    id: serial("id").primaryKey(),
-    sid: varchar('sid', {length: 255}).unique().notNull(),
-    sess: json('sess').notNull(),
-    expire: timestamp('expire').notNull(),
-});
-
