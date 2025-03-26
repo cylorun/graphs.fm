@@ -1,10 +1,22 @@
 import {useEffect, useState} from "react";
 import {DetailedTrack} from '@shared/types'
 import api from "@/util/api";
-import UserTrackEntry from "@/components/user-track-entry";
+import UserTrackEntry, {UserTrackEntrySkeleton} from "@/components/user-track-entry";
 
 export type RecentUserTracksProps = {
     uid?: string;
+}
+
+export const RecentUserTracksSkeleton = ({rows}: {rows: number}) => {
+    return (
+        <div className={'flex'}>
+            <ul className={'flex flex-col gap-2 mt-4'}>
+                {Array.from({length: rows}).map((_, idx) => (
+                    <li key={idx}><UserTrackEntrySkeleton /></li>
+                ))}
+            </ul>
+        </div>
+    );
 }
 
 const RecentUserTracks = ({uid}: RecentUserTracksProps) => {

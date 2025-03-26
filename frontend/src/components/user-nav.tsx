@@ -7,9 +7,28 @@ export type UserNavProps = {
     tab: "overview" | "top" | "reccomended" | "friends";
 }
 
+export const UserNavSkeleton = () => {
+    return (
+        <div className={`flex flex-col gap-8`}>
+            <div className={'flex gap-4 items-center'}>
+                <div className={'size-48 rounded-[50%] bg-gray-600 animate-pulse'}></div>
+                <div className={'flex flex-col gap-4'}>
+                    <div className={'mb-4 bg-gray-600 min-w-32 h-8 rounded-lg animate-pulse'}></div>
+                    <div className={'bg-gray-600 min-w-24 h-4 rounded-lg animate-pulse'}></div>
+                    <div className={'bg-gray-600 min-w-24 h-4 rounded-lg animate-pulse'}></div>
+                </div>
+            </div>
+            <ul className={'flex gap-4'}>
+                <li className={`usr-nav-item bg-gray-800`}>Overview</li>
+                <li className={`usr-nav-item bg-gray-800`}>Top</li>
+                <li className={`usr-nav-item bg-gray-800`}>Recs</li>
+                <li className={`usr-nav-item bg-gray-800`}>Friends</li>
+            </ul>
+        </div>
+    )
+}
+
 const UserNav = ({user, tab, className}: UserNavProps) => {
-
-
     return (
         <div className={`flex flex-col gap-8 ${className || ""}`}>
             {/*uid: {uid ? uid : "Loading..."}*/}

@@ -1,8 +1,8 @@
 'use client'
 import React, {useEffect, useState} from "react";
 import Container from "@/components/container";
-import UserNav from "@/components/user-nav";
-import RecentUserTracks from "@/components/recent-user-tracks";
+import UserNav, {UserNavSkeleton} from "@/components/user-nav";
+import RecentUserTracks, {RecentUserTracksSkeleton} from "@/components/recent-user-tracks";
 import api from "@/util/api";
 import {PublicUser, UserNotFoundException} from "@shared/types";
 
@@ -13,7 +13,8 @@ export type PageProps = {
 const PageSkeleton = () => {
     return (
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            Loading...
+            <UserNavSkeleton/>
+            <RecentUserTracksSkeleton rows={15}/>
         </Container>
     )
 }

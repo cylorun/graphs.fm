@@ -1,17 +1,39 @@
 import {DetailedTrack} from "@shared/types";
+import moment from "moment";
 
 export type UserTrackEntryProps = {
     track: DetailedTrack;
 }
 
+export const UserTrackEntrySkeleton = () => {
+
+    return (
+        <div className={'flex justify-between gap-4 bg-card-background p-4 rounded-xl'}>
+            <div className="flex items-center gap-2 mt-4">
+                <div className={'size-12 rounded-lg bg-gray-600 animate-pulse'}/>
+                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
+                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
+            </div>
+            <div className="flex items-center gap-2 mt-4">
+                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
+            </div>
+        </div>
+    )
+}
+
 const UserTrackEntry = ({track}: UserTrackEntryProps) => {
 
     return (
-        <div className={'flex items-center gap-4 bg-card-background p-4 rounded-xl'}>
-            <img src={`${track.imageUrl}`} className={'size-12 rounded-lg'}/>
-            <p>{track.trackName}</p>
-            <p>{track.artists.map(a => a.artistName).join(', ')}</p>
-            <p>{track?.playedAt?.toLocaleString()}</p>
+        <div className={'flex justify-between gap-4 bg-card-background p-4 rounded-xl'}>
+            <div className="flex items-center gap-2 mt-4">
+                <img src={`${track.imageUrl}`} className={'size-12 rounded-lg'}/>
+                <p><b>{track.trackName}</b></p>
+                <p>{track.artists.map(a => a.artistName).join(', ')}</p>
+            </div>
+
+            <div className="flex items-center gap-2 mt-4">
+                <p>{moment(track?.playedAt).fromNow()}</p>
+            </div>
         </div>
     )
 }
