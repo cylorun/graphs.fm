@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { HiOutlineXMark, HiBars3 } from 'react-icons/hi2';
 
@@ -9,13 +9,31 @@ import Container from './container';
 import { siteConfig } from '@/config/siteConfig';
 import { menuItems } from '@/config/menuItems';
 import GetStartedButton from "@/components/get-started-button";
+import api from "@/util/api";
+import {PublicUser} from "@shared/types";
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<PublicUser | null>(null);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    useEffect(() => {
+        const checkUserLoggedIn = async () => {
+            try {
+                const res = await api.get('/users');
+                if (res.status === 200) {
+                    setUser(res.data);
+                }
+            } catch (error) {
+                setUser(null);
+            }
+        };
+
+        checkUserLoggedIn();
+    }, []);
 
     return (
         <header className="bg-transparent fixed top-0 left-0 right-0 md:absolute z-50 mx-auto w-full">
@@ -38,9 +56,26 @@ const Header: React.FC = () => {
                                 </Link>
                             </li>
                         ))}
-                        <li>
-                            <GetStartedButton/>
-                        </li>
+                        <li className={'border-r border-r-gray-500'}></li>
+                        {user ? (
+                            <>
+                                <li>
+                                    <Link href={`/user/${user.username}`} className="text-foreground hover:text-foreground-accent transition-colors">
+                                        Profile
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/logout" className="text-foreground hover:text-foreground-accent transition-colors">
+                                        Log out
+                                    </Link>
+                                </li>
+                            </>
+
+                        ) : (
+                            <li>
+                                <GetStartedButton />
+                            </li>
+                        )}
                     </ul>
 
                     {/* Mobile Menu Button */}
@@ -82,11 +117,27 @@ const Header: React.FC = () => {
                                 </Link>
                             </li>
                         ))}
-                        <li>
-                            <Link href="#cta" className="text-black bg-primary hover:bg-primary-accent px-5 py-2 rounded-full block w-fit" onClick={toggleMenu}>
-                                Get Started
-                            </Link>
-                        </li>
+                        {/* Conditionally render "Get Started" or Profile Link */}
+                        <li className={'border-t border-t-gray-400'}></li>
+                        {user ? (
+                            <>
+                                <li>
+                                    <Link href={`/user/${user.username}`} className="text-foreground hover:text-foreground-accent transition-colors">
+                                        Profile
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/logout" className="text-foreground hover:text-foreground-accent transition-colors">
+                                        Log out
+                                    </Link>
+                                </li>
+                            </>
+
+                        ) : (
+                            <li>
+                                <GetStartedButton />
+                            </li>
+                        )}
                     </ul>
                 </div>
             </Transition>
