@@ -52,7 +52,11 @@ const Page = ({params}: PageProps) => {
                     });
                 }
             } catch (e: any) {
-                setError(new Error("Failed to fetch user data: " + e.message));
+                if (e.status === 404) {
+                    setError(new UserNotFoundException("User not found"));
+                    return;
+                }
+                setError(new Error("Failed to fetch user data: " + e.status));
             } finally {
                 setLoading(false);
             }
