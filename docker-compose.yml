@@ -13,8 +13,6 @@ services:
     env_file:
       - .env
       - ./backend/.env # includes backend specific variables, such as api credentials and token secrets
-    depends_on:
-      - postgres
 
   frontend:
     build:
@@ -30,8 +28,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://backend:5000/api
     env_file:
       - ./frontend/.env
-    depends_on:
-      - postgres
+
 
   cron:
     build:
@@ -44,7 +41,6 @@ services:
       - ./backend/.env
     depends_on:
       - backend
-      - postgres
 
   nginx:
     image: nginx:alpine
