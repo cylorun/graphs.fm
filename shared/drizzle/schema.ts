@@ -4,13 +4,13 @@ export const users = pgTable("users", {
     id: serial("id").primaryKey(),
     spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
     username: varchar("username", {length: 25}).unique().notNull(),
-    email: varchar("email", {length: 100}).unique(),
-    profileImage: text("profile_image"),
+    email: varchar("email", {length: 100}).unique().notNull(),
+    profileImage: text("profile_image").notNull(),
     accessToken: text("access_token").notNull(),
     refreshToken: text("refresh_token").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow(),
-    lastLogin: timestamp("last_login").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    lastLogin: timestamp("last_login").defaultNow().notNull(),
 });
 
 export const tracks = pgTable("tracks", {
