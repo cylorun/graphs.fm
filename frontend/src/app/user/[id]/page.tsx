@@ -41,7 +41,7 @@ const Page = ({params}: PageProps) => {
 
             try {
                 const res = await api.get(`/users/${uid}`, {
-                    validateStatus: (status) => status === 200 || status === 304,
+                    validateStatus: (status: number) => status === 200 || status === 304,
                 });
 
                 if (res.status === 200 || res.status === 304) {
