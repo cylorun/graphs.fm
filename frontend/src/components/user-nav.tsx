@@ -44,7 +44,7 @@ const UserNav = ({user, tab, className}: UserNavProps) => {
                     <p>0 friends</p>
                 </div>
             </div>
-            <ul className={'flex gap-4'}>
+            <ul className={'flex gap-4 flex-wrap'}>
                 <a className={`usr-nav-item ${tab === 'overview' ? 'bg-green-600' : 'bg-gray-800'}`}
                    href={`/user/${user.id}/`}>Overview</a>
                 <a className={`usr-nav-item ${tab === 'top' ? 'bg-green-600' : 'bg-gray-800'}`}
