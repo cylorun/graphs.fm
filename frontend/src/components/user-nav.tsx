@@ -34,7 +34,7 @@ const UserNav = ({user, tab, className}: UserNavProps) => {
             {/*uid: {uid ? uid : "Loading..."}*/}
             <div className={'flex gap-4 items-center'}>
                 <img
-                    src={user.profileImage}
+                    src={user.profileImage || "/placeholder-user.jpg"}
                     alt="Profile image"
                     className={'size-48 rounded-[50%]'}
                 />

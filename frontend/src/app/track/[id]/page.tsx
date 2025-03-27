@@ -98,7 +98,7 @@ const Page = ({ params }: PageProps) => {
                     {track?.artists.map(artist => (
                         <div key={artist.id} className="flex flex-col items-center">
                             <Image
-                                src={artist.imageUrl || "/placeholder.jpg"}
+                                src={artist.imageUrl || "/placeholder-artist.jpg"}
                                 alt={artist.artistName}
                                 width={60}
                                 height={60}
