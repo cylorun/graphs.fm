@@ -27,7 +27,7 @@ const UserTrackEntry = ({track}: UserTrackEntryProps) => {
         <div className={'flex justify-between gap-4 bg-card-background p-4 rounded-xl'}>
             <div className="flex items-center gap-2 mt-4">
                 <img src={`${track.imageUrl}`} className={'size-12 rounded-lg'}/>
-                <p><b>{track.trackName}</b></p>
+                <a className={'hover:underline'} href={`/track/${track.id}`}><b>{track.trackName}</b></a>
                 <p>{track.artists.map(a => a.artistName).join(', ')}</p>
             </div>
 
