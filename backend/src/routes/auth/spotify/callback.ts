@@ -71,7 +71,15 @@ router.get("/", async (req: Request, res: Response) => {
                 expiresAt: new Date(Date.now() + expires_in * 1000),
             };
 
-            user = await db.insert(users).values(newUser).returning();
+            user = await db
+                .insert(users)
+                .values(newUser)
+                .onConflictDoUpdate({ // if username is taken you username will be set to your spotify ID
+                    target: users.username,
+                    set: { username: spotifyId },
+                })
+                .returning();
+
         } else {
             await db // update old user tokens
                 .update(users)
