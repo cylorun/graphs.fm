@@ -8,9 +8,10 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 
 import statusRoutes from "./routes/api/status";
-import userApiRoutes from "./routes/api/user";
+import userApiRoutes from "./routes/api/users";
 import globalDataRoutes from "./routes/api/global";
-import artistApiRoutes from './routes/api/artist'
+import artistApiRoutes from './routes/api/artists'
+import tracksApiRoutes from './routes/api/tracks';
 
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
@@ -45,7 +46,10 @@ app.use(express.json());
 app.use('/status', statusRoutes)
 app.use('/users', userApiRoutes);
 app.use('/artists', artistApiRoutes);
+app.use('/tracks', tracksApiRoutes);
+
 app.use('/global', globalDataRoutes);
+
 
 // Auth routes
 app.use('/auth/spotify/callback', spotifyCallbackRoutes);

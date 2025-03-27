@@ -90,6 +90,38 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
 };
 
 
+export async function getById(tracKId: number): Promise<Omit<DetailedTrack, "playedAt"> | null> {
+    return (await db
+        .select({
+            id: tracks.id,
+            spotifyId: tracks.spotifyId,
+            trackName: tracks.trackName,
+            album: tracks.album,
+            durationMs: tracks.durationMs,
+            imageUrl: tracks.imageUrl,
+            createdAt: tracks.createdAt,
+            artists: sql.raw(`json_agg(json_build_object(
+                'id', artists.id,
+                'spotifyId', artists.spotify_id,
+                'artistName', artists.artist_name,
+                'imageUrl', artists.image_url,
+                'createdAt', artists.created_at
+            ))`).as("artists"),
+        })
+        .from(tracks)
+        .innerJoin(artistTracks, eq(artistTracks.trackId, tracks.id))
+        .innerJoin(artists, eq(artists.id, artistTracks.artistId))
+        .where(eq(tracks.id, tracKId))
+        .groupBy(tracks.id)
+        .then(rows =>
+            rows.map(row => ({
+                ...row,
+                artists: typeof row.artists === "string" ? JSON.parse(row.artists) : row.artists, // Ensure proper JSON parsing
+            }))
+        ))[0] || null;
+}
+
+
 export async function getTotalPlayCount(): Promise<number> {
     return (await db
         .select({val: count()})
