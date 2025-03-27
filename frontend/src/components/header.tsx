@@ -45,6 +45,9 @@ const Header: React.FC = () => {
                         <span className="manrope text-xl font-semibold text-foreground cursor-pointer">
                             {siteConfig.siteName}
                         </span>
+                        <h2 className="flex text-2xl text-black  rounded-xl bg-gradient-to-tl to-primary from-secondary h-10 w-24 items-center justify-center ">
+                            WIP
+                        </h2>
                     </Link>
 
                     {/* Desktop Menu */}

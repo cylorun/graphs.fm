@@ -8,6 +8,6 @@ export const siteConfig = {
     language: 'en-us',
     locale: 'en-US',
     siteLogo: `${process.env.BASE_PATH || ''}/images/logo.png`,
-    supportMail: 'support@notestats.com',
+    supportMail: 'cylo8479x@gmail.com',
     googleAnalyticsId: '', // e.g. G-XXXXXXX,
 }

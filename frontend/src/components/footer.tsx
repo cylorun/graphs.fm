@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
 
                     {siteConfig.supportMail && <a href={`mailto:${siteConfig.supportMail}`}  className="block text-foreground-accent hover:text-foreground">Email: {siteConfig.supportMail}</a>}
 
-                    {footerDetails.discord && <a href={`https://${footerDetails.discord}`} className="block text-foreground-accent hover:text-foreground">Discord: {footerDetails.discord}</a>}
+                    {footerDetails.discord && <a href={`#`} className="block text-foreground-accent hover:text-foreground">Discord: WIP</a>}
 
                     {footerDetails.socials && (
                         <div className="mt-5 flex items-center gap-5 flex-wrap">
