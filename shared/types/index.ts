@@ -30,3 +30,9 @@ export class UserNotFoundException extends Error {
         super(message);
     }
 }
+
+export class TrackNotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
