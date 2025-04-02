@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
 import * as querystring from "node:querystring";
 import axios from "axios";
-import {db} from "../../../../../shared/db";
-import {users} from "../../../../../shared/drizzle/schema";
+import {db} from "@/shared/db";
+import {users} from "@/shared/drizzle/schema";
 import {eq} from "drizzle-orm";
-import {NewUser} from "../../../../../shared/types";
+import {NewUser} from "@/shared/types";
 import {generateToken, saveTokenAsCookie} from "../../../util/jwt";
 import {redirectFrontend} from "../../../util/util";
 
