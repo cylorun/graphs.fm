@@ -30,7 +30,7 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
             if (!uid) return;
             setLoading(true);
             try {
-                const allTracksResponse = await api.get(`/users/${uid}/tracks?count=20`);
+                const allTracksResponse = await api.get(`/users/${uid}/tracks/recent?count=20`);
                 if (allTracksResponse.status === 200) {
                     setTracks(allTracksResponse.data);
                 } else {

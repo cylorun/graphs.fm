@@ -1,63 +1,73 @@
-import {PublicUser} from "@shared/types";
-
+import { PublicUser } from "@shared/types";
+import Link from "next/link";
 
 export type UserNavProps = {
     user: PublicUser;
     className?: string;
     tab: "overview" | "top" | "reccomended" | "friends";
-}
+};
 
 export const UserNavSkeleton = () => {
     return (
-        <div className={`flex flex-col gap-8`}>
-            <div className={'flex gap-4 items-center'}>
-                <div className={'size-48 rounded-[50%] bg-gray-600 animate-pulse'}></div>
-                <div className={'flex flex-col gap-4'}>
-                    <div className={'mb-4 bg-gray-600 min-w-32 h-8 rounded-lg animate-pulse'}></div>
-                    <div className={'bg-gray-600 min-w-24 h-4 rounded-lg animate-pulse'}></div>
-                    <div className={'bg-gray-600 min-w-24 h-4 rounded-lg animate-pulse'}></div>
+        <div className="flex flex-col gap-6">
+            <div className="flex gap-4 items-center">
+                <div className="size-48 rounded-full bg-gray-700 animate-pulse"></div>
+                <div className="flex flex-col gap-3">
+                    <div className="bg-gray-700 w-36 h-8 rounded-lg animate-pulse"></div>
+                    <div className="bg-gray-700 w-24 h-4 rounded-lg animate-pulse"></div>
+                    <div className="bg-gray-700 w-24 h-4 rounded-lg animate-pulse"></div>
                 </div>
             </div>
-            <ul className={'flex gap-4'}>
-                <li className={`usr-nav-item bg-gray-800`}>Overview</li>
-                <li className={`usr-nav-item bg-gray-800`}>Top</li>
-                <li className={`usr-nav-item bg-gray-800`}>Recs</li>
-                <li className={`usr-nav-item bg-gray-800`}>Friends</li>
+            <ul className="flex gap-4">
+                {["Overview", "Top", "Recs", "Friends"].map((tab) => (
+                    <li key={tab} className="usr-nav-item bg-gray-800 h-10 w-24 rounded-lg animate-pulse"></li>
+                ))}
             </ul>
         </div>
-    )
-}
+    );
+};
 
-const UserNav = ({user, tab, className}: UserNavProps) => {
+const UserNav = ({ user, tab, className }: UserNavProps) => {
     return (
-        <div className={`flex flex-col gap-8 ${className || ""}`}>
-            {/*uid: {uid ? uid : "Loading..."}*/}
-            <div className={'flex gap-4 items-center'}>
+        <div className={`flex flex-col gap-6 ${className || ""}`}>
+            {/* user info */}
+            <div className="flex gap-6 items-center">
                 <img
                     src={user.profileImage || "/placeholder-user.jpg"}
-                    alt="Profile image"
-                    className={'size-48 rounded-[50%]'}
+                    alt="Profile"
+                    className="size-48 rounded-full object-cover border-2 border-gray-700"
                 />
                 <div>
-                    <h2 className={'text-2xl mb-4'}>{user.username}</h2>
-                    <p>Joined {user.createdAt?.toLocaleDateString()}</p>
-                    <p>0 friends</p>
+                    <h2 className="text-3xl font-semibold text-white">{user.username}</h2>
+                    <p className="text-gray-400 text-sm">Joined {user.createdAt?.toLocaleDateString()}</p>
+                    <p className="text-gray-400 text-sm">0 friends</p>
                 </div>
             </div>
-            <ul className={'flex gap-4 flex-wrap'}>
-                <a className={`usr-nav-item ${tab === 'overview' ? 'bg-green-600' : 'bg-gray-800'}`}
-                   href={`/user/${user.id}/`}>Overview</a>
-                <a className={`usr-nav-item ${tab === 'top' ? 'bg-green-600' : 'bg-gray-800'}`}
-                   href={`/user/${user.id}/top`}>Top</a>
-                <a
-                    className={`usr-nav-item ${tab === 'reccomended' ? 'bg-green-600' : 'bg-gray-800'}`}
-                    href={`/user/${user.id}/recs`}>Recs</a>
 
-                <a className={`usr-nav-item ${tab === 'friends' ? 'bg-green-600' : 'bg-gray-800'}`}
-                   href={`/user/${user.id}/friends`}>Friends</a>
+            {/* nav tabs */}
+            <ul className="flex gap-4 flex-wrap">
+                {[
+                    { name: "Overview", path: `/user/${user.id}/`, key: "overview" },
+                    { name: "Top", path: `/user/${user.id}/top`, key: "top" },
+                    { name: "Recs", path: `/user/${user.id}/recs`, key: "reccomended" },
+                    { name: "Friends", path: `/user/${user.id}/friends`, key: "friends" }
+                ].map(({ name, path, key }) => (
+                    <Link
+                        key={key}
+                        href={path}
+                        className={`usr-nav-item px-6 py-2 rounded-lg text-sm font-semibold transition-colors
+                            ${
+                            tab === key
+                                ? "bg-green-500 text-white shadow-lg"
+                                : "bg-gray-800 text-gray-300 hover:bg-green-500 hover:text-white"
+                        }`}
+                    >
+                        {name}
+                    </Link>
+                ))}
             </ul>
         </div>
-    )
-}
+    );
+};
 
 export default UserNav;

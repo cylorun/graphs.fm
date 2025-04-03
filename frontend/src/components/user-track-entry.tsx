@@ -1,42 +1,80 @@
-import {DetailedTrack} from "@shared/types";
+import { DetailedTrack } from "@shared/types";
 import moment from "moment";
+import { cn } from "@/util/utils";
+import React from "react";
 
 export type UserTrackEntryProps = {
     track: DetailedTrack;
     isActive?: boolean; // is currently listening
-}
+};
 
 export const UserTrackEntrySkeleton = () => {
-
     return (
-        <div className={'flex justify-between gap-4 bg-card-background p-4 rounded-xl'}>
-            <div className="flex items-center gap-2 mt-4">
-                <div className={'size-12 rounded-lg bg-gray-600 animate-pulse'}/>
-                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
-                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
+        <div className="flex justify-between items-center gap-4 bg-[#121212] p-4 rounded-xl animate-pulse">
+            <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-lg bg-gray-700"></div>
+                <div className="flex flex-col gap-1">
+                    <div className="w-28 h-5 bg-gray-700 rounded"></div>
+                    <div className="w-20 h-4 bg-gray-800 rounded"></div>
+                </div>
             </div>
-            <div className="flex items-center gap-2 mt-4">
-                <p className={'w-12 h-4 bg-gray-600 animate-pulse'}></p>
+            <div className="w-16 h-4 bg-gray-700 rounded"></div>
+        </div>
+    );
+};
+
+const UserTrackEntry = ({ track, isActive = false }: UserTrackEntryProps) => {
+    return (
+        <div
+            className={cn(
+                "flex justify-between items-center gap-4 p-4 rounded-xl transition-all duration-300",
+                isActive
+                    ? "bg-[#1db954]/20 border border-[#1db954] shadow-md"
+                    : "bg-[#181818] hover:bg-[#282828]"
+            )}
+        >
+            {/* left section - album cover & info */}
+            <div className="flex items-center gap-4">
+                <img
+                    src={track.imageUrl || "/placeholder-track.png"}
+                    alt={track.trackName}
+                    className="w-14 h-14 rounded-lg object-cover shadow-md"
+                />
+                <div className="flex flex-col">
+                    <a
+                        className="text-white font-semibold text-lg hover:text-[#1db954] transition-colors"
+                        href={`/track/${track.id}`}
+                    >
+                        {track.trackName}
+                    </a>
+                    <p className="text-gray-400 text-sm hover:text-white transition-colors">
+                        {track.artists.map((a, index) => (
+                            <React.Fragment key={a.id}>
+                                {index > 0 && ", "}
+                                <a href={`/artist/${a.id}`} className="hover:underline">
+                                    {a.artistName}
+                                </a>
+                            </React.Fragment>
+                        ))}
+                    </p>
+                </div>
+            </div>
+
+            {/* Right Section - Playback Info */}
+            <div className="text-right">
+                <p
+                    className={cn(
+                        "text-sm",
+                        isActive
+                            ? "text-[#1db954] font-semibold animate-pulse"
+                            : "text-gray-400"
+                    )}
+                >
+                    {isActive ? "Now Playing" : moment(track?.playedAt).fromNow()}
+                </p>
             </div>
         </div>
-    )
-}
-
-const UserTrackEntry = ({track, isActive = false}: UserTrackEntryProps) => {
-
-    return (
-        <div className={`flex justify-between gap-4 p-4 rounded-xl ${isActive ? 'bg-active-card-background' : 'bg-card-background'}`}>
-            <div className="flex items-center gap-2">
-                <img src={`${track.imageUrl}`} className={'size-12 rounded-lg'}/>
-                <a className={'hover:underline'} href={`/track/${track.id}`}><b>{track.trackName}</b></a>
-                <p>{track.artists.map(a => a.artistName).join(', ')}</p>
-            </div>
-
-            <div className="flex items-center gap-2 mt-4">
-                <p>{isActive ? 'Now  playing' : moment(track?.playedAt).fromNow()}</p>
-            </div>
-        </div>
-    )
-}
+    );
+};
 
 export default UserTrackEntry;
