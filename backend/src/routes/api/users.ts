@@ -4,7 +4,7 @@ import {
     getUserPlayCount,
     getUserData,
     getUserTracks,
-    getNowPlaying
+    getNowPlaying, getTopTracks
 } from '../../controllers/api/userApiController'
 import {requireAuth} from "../../middleware";
 
@@ -102,8 +102,10 @@ router.get('/:id/now-playing', getNowPlaying);
  *   }
  * ]
  */
-router.get('/tracks', requireAuth, getUserTracks);
-router.get('/:id/tracks', getUserTracks);
+router.get('/tracks/recent', requireAuth, getUserTracks);
+router.get('/:id/tracks/recent', getUserTracks);
+router.get('/tracks/top', getTopTracks);
+router.get('/:id/tracks/top', getTopTracks);
 
 
 /**

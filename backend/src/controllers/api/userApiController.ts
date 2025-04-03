@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {getUserById, getUserId, getUserPlaycount, getUserProfileImageUrl, resolveUid} from "@/shared/services/userService";
-import {getRecentTracks} from "@/shared/services/trackService";
+import {getRecentTracks, getTopUserTracks} from "@/shared/services/trackService";
 import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
 import {reportError} from "../../util/exceptions";
 import {UserNotFoundException} from "@/shared/types";
@@ -118,6 +118,22 @@ export async function getNowPlaying(req: Request, res: Response) {
             return;
         }
 
+        reportError("AN error occured in  userapicontroller", e, res);
+    }
+}
+
+
+export async function getTopTracks(req: Request, res: Response) {
+    try {
+        const uid =  (await resolveUid(req.params.id)) || req.user?.id;
+        if (!uid) {
+            res.status(400).json({error: "No uid provided"});
+            return;
+        }
+
+        const d = await getTopUserTracks(20, uid);
+        res.json(d);
+    } catch (e: any) {
         reportError("AN error occured in  userapicontroller", e, res);
     }
 }
