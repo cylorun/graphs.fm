@@ -5,8 +5,8 @@ import {PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
 
-// returns if user doesnt exist
-export async function resolveUid(identifier: string) {
+// returns null if user doesnt exist
+export async function resolveUid(identifier: string): Promise<number | null> {
     let uid: number = parseInt(identifier);
     if (isNaN(uid)) {
         const d = await getUserId(identifier);

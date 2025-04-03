@@ -19,6 +19,7 @@ const config: Config = {
         "foreground-accent": "var(--foreground-accent)",
         "hero-background": "var(--hero-background)",
         "card-background": "var(--card-background)",
+        "active-card-background": "var(--active-card-background)",
       },
     },
   },

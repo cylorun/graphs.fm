@@ -21,6 +21,7 @@ export const RecentUserTracksSkeleton = ({rows}: {rows: number}) => {
 
 const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
     const [tracks, setTracks] = useState<DetailedTrack[]>([]);
+    const [currTrack, setCurrTrack] = useState<DetailedTrack | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error>();
 
@@ -29,14 +30,21 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
             if (!uid) return;
             setLoading(true);
             try {
-                const res = await api.get(`/users/${uid}/tracks?count=20`);
-
-                if (res.status === 200) {
-                    setTracks(res.data);
-                    return;
+                const allTracksResponse = await api.get(`/users/${uid}/tracks?count=20`);
+                if (allTracksResponse.status === 200) {
+                    setTracks(allTracksResponse.data);
+                } else {
+                    setError(new Error(allTracksResponse.statusText));
                 }
 
-                setError(new Error(res.statusText));
+                const currTrackResponse = await api.get(`/users/${uid}/now-playing`);
+                if (currTrackResponse.status === 200) {
+                    setCurrTrack(currTrackResponse.data);
+                    // console.log("currtrack:" , currTrackResponse.data.artists);
+                } else if (currTrackResponse.status !== 204) { // no content / no track playing
+                    setError(new Error(currTrackResponse.statusText));
+                }
+
             } catch (e) {
                 setError(new Error("Something went wrong :///"));
             } finally {
@@ -50,6 +58,9 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
     return (
         <div className={'flex'}>
             <ul className={'flex flex-col gap-2 mt-4'}>
+                {currTrack && (
+                    <li><UserTrackEntry isActive={true} track={currTrack}/></li>
+                )}
                 {tracks && tracks.map((track, idx) => (
                     <li key={idx}><UserTrackEntry track={track}/></li>
                 ))}

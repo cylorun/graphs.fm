@@ -99,7 +99,7 @@ export async function getUserPfp(req: Request, res: Response) {
 
 export async function getNowPlaying(req: Request, res: Response) {
     try {
-        const uid =  parseInt(req.params.id) || req.user?.id;
+        const uid =  (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
             res.status(400).json({error: "No uid provided"});
             return;

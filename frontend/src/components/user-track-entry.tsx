@@ -3,6 +3,7 @@ import moment from "moment";
 
 export type UserTrackEntryProps = {
     track: DetailedTrack;
+    isActive?: boolean; // is currently listening
 }
 
 export const UserTrackEntrySkeleton = () => {
@@ -21,18 +22,18 @@ export const UserTrackEntrySkeleton = () => {
     )
 }
 
-const UserTrackEntry = ({track}: UserTrackEntryProps) => {
+const UserTrackEntry = ({track, isActive = false}: UserTrackEntryProps) => {
 
     return (
-        <div className={'flex justify-between gap-4 bg-card-background p-4 rounded-xl'}>
-            <div className="flex items-center gap-2 mt-4">
+        <div className={`flex justify-between gap-4 p-4 rounded-xl ${isActive ? 'bg-active-card-background' : 'bg-card-background'}`}>
+            <div className="flex items-center gap-2">
                 <img src={`${track.imageUrl}`} className={'size-12 rounded-lg'}/>
                 <a className={'hover:underline'} href={`/track/${track.id}`}><b>{track.trackName}</b></a>
                 <p>{track.artists.map(a => a.artistName).join(', ')}</p>
             </div>
 
             <div className="flex items-center gap-2 mt-4">
-                <p>{moment(track?.playedAt).fromNow()}</p>
+                <p>{isActive ? 'Now  playing' : moment(track?.playedAt).fromNow()}</p>
             </div>
         </div>
     )

@@ -88,6 +88,7 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             // create the new track
             track = (await db.insert(tracks)
                 .values(trackData)
+                .onConflictDoNothing()
                 .returning())[0];
 
             console.log("Registered new track:", track.trackName);
