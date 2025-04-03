@@ -8,28 +8,38 @@ import {users, userTracks, tracks, artistTracks} from "@/shared/drizzle/schema";
 import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
 import {Track} from "@/shared/types";
 import {desc, eq} from "drizzle-orm";
+import moment from "moment";
 
 
 async function insertUserTrack(uid: number, track: Track): Promise<void> {
     await db.insert(userTracks).values({userId: uid, trackId: track.id});
 }
 
+
 async function shouldInsertTrack(uid: number, track: Track): Promise<boolean> {
     const lastTrack = await db
         .select({
-            trackId: tracks.spotifyId
+            trackId: tracks.spotifyId,
+            playedAt: userTracks.playedAt,
+            durationMs: tracks.durationMs
         })
         .from(userTracks)
         .innerJoin(tracks, eq(userTracks.trackId, tracks.id))
         .where(eq(userTracks.userId, uid))
         .orderBy(desc(userTracks.playedAt))
         .limit(1)
-        .then(rows => rows[0]?.trackId);
+        .then(rows => rows[0]);
 
+    // if no last track, it's safe to insert
     if (!lastTrack) return true;
 
-    return lastTrack !== track.spotifyId;
+    const lastTrackEndTime = moment(lastTrack.playedAt).add(lastTrack.durationMs, "ms");
+    const currentTime = moment();
+
+    // check if the track ended before the current time, meaning we can insert again
+    return currentTime.isAfter(lastTrackEndTime);
 }
+
 
 async function run() {
     try {
