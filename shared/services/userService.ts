@@ -1,6 +1,6 @@
 import {db} from "../db";
 import {users, userTracks} from "../drizzle/schema";
-import {and, count, eq} from "drizzle-orm";
+import {and, count, eq, ilike} from "drizzle-orm";
 import {PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
@@ -9,7 +9,7 @@ import {between} from "drizzle-orm/sql/expressions/conditions";
 export async function resolveUid(identifier: string): Promise<number | null> {
     let uid: number = parseInt(identifier);
     if (isNaN(uid)) {
-        const d = await getUserId(identifier);
+        const d = await getUserId(identifier.toLowerCase());
         if (!d) {
             return null;
         }
@@ -24,9 +24,11 @@ export async function getUserProfileImageUrl(userId: number): Promise<string | n
     return (await db.select({url: users.profileImage}).from(users).where(eq(users.id, userId)))[0]?.url || null;
 }
 
+
 export async function getUserId(username: string): Promise<number | null> {
-    return (await db.select().from(users).where(eq(users.username, username)))[0]?.id || null;
+    return (await db.select().from(users).where(ilike(users.username, username)))[0]?.id || null;
 }
+
 
 export async function getUserById(userId: number): Promise<PublicUser | null> {
     const user = (await db.select().from(users).where(eq(users.id, userId)))[0];
