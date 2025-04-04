@@ -90,7 +90,7 @@ const Page = ({ params }: PageProps) => {
             />
             <h2 className="text-2xl font-bold mt-4">{track?.trackName}</h2>
             <p className="text-lg text-gray-500">{track?.album}</p>
-            <p className="text-sm text-gray-400 mt-2">Duration: {formatDuration(track?.durationMs || 0)}</p>
+            <p className="text-sm text-foreground-muted  mt-2">Duration: {formatDuration(track?.durationMs || 0)}</p>
 
             <div className="mt-6">
                 <h3 className="text-lg font-semibold">Artists</h3>

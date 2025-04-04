@@ -39,8 +39,8 @@ const UserNav = ({ user, tab, className }: UserNavProps) => {
                 />
                 <div>
                     <h2 className="text-3xl font-semibold text-white">{user.username}</h2>
-                    <p className="text-gray-400 text-sm">Joined {user.createdAt?.toLocaleDateString()}</p>
-                    <p className="text-gray-400 text-sm">0 friends</p>
+                    <p className="text-foreground-muted  text-sm">Joined {user.createdAt?.toLocaleDateString()}</p>
+                    <p className="text-foreground-muted  text-sm">0 friends</p>
                 </div>
             </div>
 
@@ -58,8 +58,8 @@ const UserNav = ({ user, tab, className }: UserNavProps) => {
                         className={`usr-nav-item px-6 py-2 rounded-lg text-sm font-semibold transition-colors
                             ${
                             tab === key
-                                ? "bg-green-500 text-white shadow-lg"
-                                : "bg-gray-800 text-gray-300 hover:bg-green-500 hover:text-white"
+                                ? "bg-primary text-gray-950 shadow-lg"
+                                : "bg-card-background text-gray-300 hover:bg-active-card-background hover:text-white"
                         }`}
                     >
                         {name}

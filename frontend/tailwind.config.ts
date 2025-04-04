@@ -17,6 +17,7 @@ const config: Config = {
 
         "primary-accent": "var(--primary-accent)",
         "foreground-accent": "var(--foreground-accent)",
+        "foreground-muted": "var(--foreground-muted)",
         "hero-background": "var(--hero-background)",
         "card-background": "var(--card-background)",
         "active-card-background": "var(--active-card-background)",

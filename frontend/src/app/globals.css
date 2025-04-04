@@ -5,11 +5,12 @@
 :root {
     --background: #121212;
     --foreground: #ddd9d9;
+    --foreground-muted: #9ca3af;
     --primary: #1DB954;
     --secondary: #04732e;
 
-    --card-background: #222322;
-    --active-card-background: #3a3c3a;
+    --card-background: #181818;
+    --active-card-background: #282828;
 
 
     --primary-accent: #42ca6f;

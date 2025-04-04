@@ -5,7 +5,7 @@ import UserNav, { UserNavSkeleton } from "@/components/user-nav";
 import {DetailedTrack, PublicUser, UserNotFoundException} from "@shared/types";
 import api from "@/util/api";
 import Link from "next/link";
-import {TopUserTrackEntry} from "@/components/top-user-track";
+import {TopUserTrackEntry} from "@/components/top-user-track-entry";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -133,7 +133,7 @@ const Page = ({ params }: PageProps) => {
 
             <div className="mt-6 space-y-3">
                 {topTracks.length === 0 ? (
-                    <p className="text-gray-400">No tracks found</p>
+                    <p className="text-foreground-muted">No tracks found</p>
                 ) : (
                     topTracks.map((track, index) => (
                        <TopUserTrackEntry track={track} idx={index} key={index} />

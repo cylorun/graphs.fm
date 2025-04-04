@@ -29,8 +29,8 @@ const UserTrackEntry = ({ track, isActive = false }: UserTrackEntryProps) => {
             className={cn(
                 "flex justify-between items-center gap-4 p-4 rounded-xl transition-all duration-300",
                 isActive
-                    ? "bg-[#1db954]/20 border border-[#1db954] shadow-md"
-                    : "bg-[#181818] hover:bg-[#282828]"
+                    ? "bg-[#1DB954]/20 border border-primary shadow-md" // bg shit is literally just primary but tailwind moment
+                    : "bg-card-background hover:bg-active-card-background"
             )}
         >
             {/* left section - album cover & info */}
@@ -42,12 +42,12 @@ const UserTrackEntry = ({ track, isActive = false }: UserTrackEntryProps) => {
                 />
                 <div className="flex flex-col">
                     <a
-                        className="text-white font-semibold text-lg hover:text-[#1db954] transition-colors"
+                        className="text-white font-semibold text-lg hover:text-primary transition-colors"
                         href={`/track/${track.id}`}
                     >
                         {track.trackName}
                     </a>
-                    <p className="text-gray-400 text-sm hover:text-white transition-colors">
+                    <p className="text-foreground-muted text-sm hover:text-white transition-colors">
                         {track.artists.map((a, index) => (
                             <React.Fragment key={a.id}>
                                 {index > 0 && ", "}
@@ -66,8 +66,8 @@ const UserTrackEntry = ({ track, isActive = false }: UserTrackEntryProps) => {
                     className={cn(
                         "text-sm",
                         isActive
-                            ? "text-[#1db954] font-semibold animate-pulse"
-                            : "text-gray-400"
+                            ? "text-primary font-semibold animate-pulse"
+                            : "text-foreground-muted "
                     )}
                 >
                     {isActive ? "Now Playing" : moment(track?.playedAt).fromNow()}

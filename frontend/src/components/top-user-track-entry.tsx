@@ -27,7 +27,7 @@ export function TopUserTrackEntry({track, idx}: TopUserTrackEntryProps) {
                     >
                         {track.trackName}
                     </Link>
-                    <p className="text-gray-400 text-sm">{track.album}</p>
+                    <p className="text-foreground-muted  text-sm">{track.album}</p>
                     <p className="text-gray-500 text-xs">
                         {track.artists.map((a, i) => (
                             <React.Fragment key={a.id}>
@@ -40,7 +40,7 @@ export function TopUserTrackEntry({track, idx}: TopUserTrackEntryProps) {
                     </p>
                 </div>
             </div>
-            <span className="text-sm text-gray-400">{track.playCount} plays</span>
+            <span className="text-sm text-foreground-muted ">{track.playCount} plays</span>
         </div>
     )
 }
