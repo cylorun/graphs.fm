@@ -9,7 +9,7 @@ export const getRecentTracks = async (uid: number, count: number = 20): Promise<
             id: tracks.id,
             spotifyId: tracks.spotifyId,
             trackName: tracks.trackName,
-            album: tracks.album,
+            albumId: tracks.albumId,
             durationMs: tracks.durationMs,
             imageUrl: tracks.imageUrl,
             createdAt: tracks.createdAt,
@@ -46,7 +46,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
                 id: tracks.id,
                 spotifyId: tracks.spotifyId,
                 trackName: tracks.trackName,
-                album: tracks.album,
+                albumId: tracks.albumId,
                 durationMs: tracks.durationMs,
                 imageUrl: tracks.imageUrl,
                 createdAt: tracks.createdAt,
@@ -54,7 +54,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
             })
             .from(tracks)
             .innerJoin(userTracks, eq(userTracks.trackId, tracks.id))
-            .groupBy(tracks.id, tracks.spotifyId, tracks.trackName, tracks.album, tracks.durationMs, tracks.imageUrl, tracks.createdAt)
+            .groupBy(tracks.id, tracks.spotifyId, tracks.trackName, tracks.albumId, tracks.durationMs, tracks.imageUrl, tracks.createdAt)
     );
 
     // @ts-ignore
@@ -64,7 +64,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
             id: sq.id,
             spotifyId: sq.spotifyId,
             trackName: sq.trackName,
-            album: sq.album,
+            album: sq.albumId,
             durationMs: sq.durationMs,
             imageUrl: sq.imageUrl,
             createdAt: sq.createdAt,
@@ -85,7 +85,7 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
         .leftJoin(artistTracks, eq(artistTracks.trackId, sq.id))
         .leftJoin(artists, eq(artistTracks.artistId, artists.id))
         .limit(count)
-        .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.album, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
+        .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.albumId, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
         .orderBy(desc(sq.playCount));
 };
 
@@ -96,7 +96,7 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
                 id: tracks.id,
                 spotifyId: tracks.spotifyId,
                 trackName: tracks.trackName,
-                album: tracks.album,
+                album: tracks.albumId,
                 durationMs: tracks.durationMs,
                 imageUrl: tracks.imageUrl,
                 createdAt: tracks.createdAt,
@@ -105,7 +105,7 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
             .from(tracks)
             .innerJoin(userTracks, eq(userTracks.trackId, tracks.id))
             .where(eq(userTracks.userId, uid))
-            .groupBy(tracks.id, tracks.spotifyId, tracks.trackName, tracks.album, tracks.durationMs, tracks.imageUrl, tracks.createdAt)
+            .groupBy(tracks.id, tracks.spotifyId, tracks.trackName, tracks.albumId, tracks.durationMs, tracks.imageUrl, tracks.createdAt)
     );
 
     // @ts-ignore
@@ -147,7 +147,7 @@ export async function getById(tracKId: number): Promise<Omit<DetailedTrack, "pla
             id: tracks.id,
             spotifyId: tracks.spotifyId,
             trackName: tracks.trackName,
-            album: tracks.album,
+            albumId: tracks.albumId,
             durationMs: tracks.durationMs,
             imageUrl: tracks.imageUrl,
             createdAt: tracks.createdAt,

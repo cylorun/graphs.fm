@@ -14,14 +14,27 @@ export const users = pgTable("users", {
     lastLogin: timestamp("last_login").defaultNow().notNull(),
 });
 
+
 export const tracks = pgTable("tracks", {
     id: serial("id").primaryKey(),
-    spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
-    trackName: varchar("track_name", {length: 255}).notNull(),
-    album: varchar("album", {length: 255}).notNull(),
+    spotifyId: varchar("spotify_id", { length: 50 }).unique().notNull(),
+    trackName: varchar("track_name", { length: 255 }).notNull(),
     durationMs: integer("duration_ms").notNull(),
     imageUrl: text("image_url"),
-    createdAt: timestamp("created_at").defaultNow(),
+    albumId: integer("album_id")
+        .references(() => albums.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow()
+});
+
+export const albums = pgTable("albums", {
+    id: serial("id").primaryKey(),
+    spotifyId: varchar("spotify_id", { length: 50 }).unique().notNull(),
+    albumName: varchar("album_name", { length: 255 }).notNull(),
+    imageUrl: text("image_url"),
+    releaseDate: timestamp("release_date"),
+    artistId: integer("artist_id").notNull()
+        .references(() => artists.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow()
 });
 
 export const userTracks = pgTable("user_tracks", {

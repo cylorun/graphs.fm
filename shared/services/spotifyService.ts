@@ -71,7 +71,6 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
         const trackData: NewTrack = {
             spotifyId: response.data.item.id,
             trackName: response.data.item.name,
-            album: response.data.item.album.name,
             durationMs: response.data.item.duration_ms,
             imageUrl: response.data.item.album.images[0]?.url || null,
         };
