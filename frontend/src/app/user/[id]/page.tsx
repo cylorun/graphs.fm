@@ -65,6 +65,8 @@ const Page = ({params}: PageProps) => {
 
         // sets the users timezone in the DB, used for radial bar graph (clock graph)
         const updateUserTimezone = async () => {
+            if (!uid) return;
+
             try {
                 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 const res = await api.post('/users/set-timezone', {
