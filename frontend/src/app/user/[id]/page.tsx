@@ -62,7 +62,23 @@ const Page = ({params}: PageProps) => {
             }
         };
 
+
+        // sets the users timezone in the DB, used for radial bar graph (clock graph)
+        const updateUserTimezone = async () => {
+            try {
+                const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const res = await api.post('/users/set-timezone', {
+                    timezone: timeZone
+                });
+            } catch (e) {
+                console.error(e);
+                setError(new Error("Failed to update user data"));
+            }
+        }
+
         fetchUserData();
+        updateUserTimezone(); // maybe some issues with the fact that this is called after the data is fetched,
+                              // so if tz changed the clock graphs might be off
     }, [uid]);
 
     if (error instanceof UserNotFoundException) {
