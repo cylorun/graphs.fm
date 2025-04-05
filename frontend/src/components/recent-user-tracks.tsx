@@ -58,11 +58,11 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
     return (
         <div className={'flex'}>
             <ul className={'flex flex-col gap-2 mt-4'}>
-                {currTrack && (
-                    <li><UserTrackEntry isActive={true} track={currTrack}/></li>
-                )}
+                {/*{currTrack && (*/}
+                {/*    <li><UserTrackEntry isActive={true} track={currTrack}/></li>*/}
+                {/*)}*/}
                 {tracks && tracks.map((track, idx) => (
-                    <li key={idx}><UserTrackEntry track={track}/></li>
+                    <li key={idx}><UserTrackEntry isActive={(currTrack?.id === track.id && idx === 0)} track={track}/></li>
                 ))}
             </ul>
         </div>

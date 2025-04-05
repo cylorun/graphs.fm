@@ -19,7 +19,7 @@ async function insertUserTrack(uid: number, track: Track): Promise<void> {
 async function shouldInsertTrack(uid: number, track: Track): Promise<boolean> {
     const lastTrack = await db
         .select({
-            trackId: tracks.spotifyId,
+            trackId: tracks.id,
             playedAt: userTracks.playedAt,
             durationMs: tracks.durationMs
         })
@@ -30,8 +30,8 @@ async function shouldInsertTrack(uid: number, track: Track): Promise<boolean> {
         .limit(1)
         .then(rows => rows[0]);
 
-    // if no last track, it's safe to insert
-    if (!lastTrack) return true;
+    // if no last track, or it's different from current, it's safe to insert
+    if (!lastTrack || lastTrack.trackId !== track.id) return true;
 
     const lastTrackEndTime = moment(lastTrack.playedAt).add(lastTrack.durationMs, "ms");
     const currentTime = moment();
@@ -57,6 +57,6 @@ async function run() {
 }
 
 // every 20s
-schedule.scheduleJob("*/20 * * * * *", () => {
+schedule.scheduleJob("*/10 * * * * *", () => {
     run();
 });
