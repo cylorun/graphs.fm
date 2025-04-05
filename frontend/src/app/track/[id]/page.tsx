@@ -96,7 +96,7 @@ const Page = ({ params }: PageProps) => {
                 <h3 className="text-lg font-semibold">Artists</h3>
                 <div className="flex gap-4 mt-2">
                     {track?.artists.map(artist => (
-                        <div key={artist.id} className="flex flex-col items-center">
+                        <a  href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
                             <Image
                                 src={artist.imageUrl || "/placeholder-artist.jpg"}
                                 alt={artist.artistName}
@@ -105,7 +105,7 @@ const Page = ({ params }: PageProps) => {
                                 className="rounded-full"
                             />
                             <p className="text-sm text-gray-600 mt-1">{artist.artistName}</p>
-                        </div>
+                        </a>
                     ))}
                 </div>
             </div>
