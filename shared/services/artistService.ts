@@ -57,7 +57,7 @@ export async function createArtist(artist: NewArtist, genreNames: string[]): Pro
             );
         }
 
-        return insertedArtist[0];
+        return insertedArtist[0] || null;
     });
 }
 

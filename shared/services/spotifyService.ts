@@ -1,10 +1,11 @@
 import axios from 'axios';
 import {refreshAccessToken} from '../util/tokenManager';
 import {db} from "../db";
-import {artists, artistTracks, tracks, users} from "../drizzle/schema";
+import {albums, artists, artistTracks, tracks, users} from "../drizzle/schema";
 import {eq} from "drizzle-orm";
-import {DetailedTrack, NewTrack, UserNotFoundException} from '../types';
+import {Artist, DetailedTrack, NewAlbum, NewTrack, UserNotFoundException} from '../types';
 import {createArtist, getArtistBySpotifyId} from "./artistService";
+import {createAlbum, getAlbumBySpotifyID} from "./albumService";
 
 export const getAccessToken = async (uid: number) => {
     const user = (await db.select({accessToken: users.accessToken})
@@ -39,6 +40,21 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
             }
         }
     }
+}
+
+const createAlbumIfNotExists = async (albumId: string, data: Omit<NewAlbum, "artistId"> & {artistSpotifyId: string}) => {
+    const album = await getAlbumBySpotifyID(albumId);
+    if (!album) {
+        const artist = await getArtistBySpotifyId(data.artistSpotifyId);
+        if (!artist) {
+            console.error("Failed to fetch artist data whilst registering album");
+            return null;
+        }
+
+        return await createAlbum({...data, artistId: artist.id});
+    }
+
+    return null;
 }
 
 const linkArtistTracks = async (artistIds: string[], trackId: number) => {
@@ -85,14 +101,31 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
 
         if (!track) {
             // create the new track
-            track = (await db.insert(tracks)
-                .values(trackData)
-                .returning())[0];
 
-            console.log("Registered new track:", track.trackName);
 
             // link artists and genres
             await createArtistIfNotExists(artistIds, accessToken);
+
+            const albumItemData = response.data.item.album;
+            const albumData = {
+                spotifyId: albumItemData.id,
+                albumName: albumItemData.name,
+                artistSpotifyId: albumItemData.artists[0].id,
+                imageUrl: albumItemData.images[0]?.url || null,
+            };
+
+            const album = await createAlbumIfNotExists(albumItemData.id, albumData);
+            if (!album) {
+                console.error("Failed to register album :/");
+                return null;
+            }
+
+            track = (await db.insert(tracks)
+                .values({...trackData, albumId: album.id})
+                .returning())[0];
+
+            console.log("Registered new track:", track.trackName, {...trackData, albumId: album.id});
+
             await linkArtistTracks(artistIds, track.id);
         }
 

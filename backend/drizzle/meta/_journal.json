@@ -64,6 +64,13 @@
       "when": 1743811843385,
       "tag": "0008_shocking_roxanne_simpson",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1743894601694,
+      "tag": "0009_damp_paladin",
+      "breakpoints": true
     }
   ]
 }
