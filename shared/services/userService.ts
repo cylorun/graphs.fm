@@ -63,3 +63,7 @@ export async function getUserPlaysSince(uid: number, since: Date): Promise<numbe
         .where(and(eq(userTracks.userId, uid), between(userTracks.playedAt, since, new Date()))))[0].val;
 
 }
+
+export async function setUserTimezone(uid: number, timezone: string): Promise<void> {
+    await db.update(users).set({timezone: timezone}).where(eq(users.id, uid));
+}

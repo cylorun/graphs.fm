@@ -1,4 +1,4 @@
-import {integer, json, pgTable, serial, text, timestamp, varchar} from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, varchar, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -9,6 +9,7 @@ export const users = pgTable("users", {
     accessToken: text("access_token").notNull(),
     refreshToken: text("refresh_token").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
+    timezone: varchar("timezone", {length: 50}).default('UTC').notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     lastLogin: timestamp("last_login").defaultNow().notNull(),
 });
@@ -27,7 +28,7 @@ export const userTracks = pgTable("user_tracks", {
     id: serial("id").primaryKey(),
     userId: integer("user_id").references(() => users.id, {onDelete: "cascade"}),
     trackId: integer("track_id").references(() => tracks.id, {onDelete: "cascade"}),
-    playedAt: timestamp("played_at").defaultNow(),
+    playedAt: timestamp("played_at", {withTimezone: true}).defaultNow(),
 });
 
 export const artists = pgTable("artists", {

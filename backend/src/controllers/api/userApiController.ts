@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {getUserById, getUserId, getUserPlaycount, getUserProfileImageUrl, resolveUid} from "@/shared/services/userService";
 import {getRecentTracks, getTopUserTracks} from "@/shared/services/trackService";
 import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
+import {setUserTimezone} from "@/shared/services/userService";
 import {reportError} from "../../util/exceptions";
 import {UserNotFoundException} from "@/shared/types";
 
@@ -11,13 +12,13 @@ export async function getUserData(req: Request, res: Response) {
         if (id) {
             const uid = await resolveUid(id);
             if (!uid) {
-                res.status(404).json({error: "User not found"});
+                res.status(404).json({message: "User not found"});
                 return;
             }
 
             const data = await getUserById(uid);
             if (!data) {
-                res.status(404).json({error: "User not found"});
+                res.status(404).json({message: "User not found"});
                 return;
             }
 
@@ -29,7 +30,7 @@ export async function getUserData(req: Request, res: Response) {
 
         const data = await getUserById(req.user?.id!);
         if (!data) {
-            res.status(404).json({error: "User not found(idk how)"});
+            res.status(404).json({message: "User not found(idk how)"});
             return;
         }
 
@@ -43,13 +44,13 @@ export async function getUserTracks(req: Request, res: Response) {
     try {
         const uid = (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
-            res.status(400).json({error: "No uid provided"});
+            res.status(400).json({message: "No uid provided"});
             return;
         }
 
         const {count = 20} = req.query;
         if (isNaN(Number(count))) {
-            res.status(400).json({error: "count must be a number"});
+            res.status(400).json({message: "count must be a number"});
             return;
         }
 
@@ -66,7 +67,7 @@ export async function getUserPlayCount(req: Request, res: Response) {
     try {
         const uid =  (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
-            res.status(400).json({error: "No uid provided"});
+            res.status(400).json({message: "No uid provided"});
             return;
         }
 
@@ -83,7 +84,7 @@ export async function getUserPfp(req: Request, res: Response) {
     try {
         const uid = await resolveUid(req.params.id)
         if (!uid) {
-            res.status(404).json({error: "User not found"});
+            res.status(404).json({message: "User not found"});
             return;
         }
 
@@ -101,7 +102,7 @@ export async function getNowPlaying(req: Request, res: Response) {
     try {
         const uid =  (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
-            res.status(400).json({error: "No uid provided"});
+            res.status(400).json({message: "No uid provided"});
             return;
         }
 
@@ -114,7 +115,7 @@ export async function getNowPlaying(req: Request, res: Response) {
         res.json(currentlyPlaying);
     } catch (e: any) {
         if (e instanceof UserNotFoundException) {
-            res.status(404).json({error: "User not found"});
+            res.status(404).json({message: "User not found"});
             return;
         }
 
@@ -127,12 +128,33 @@ export async function getTopTracks(req: Request, res: Response) {
     try {
         const uid =  (await resolveUid(req.params.id)) || req.user?.id;
         if (!uid) {
-            res.status(400).json({error: "No uid provided"});
+            res.status(400).json({message: "No uid provided"});
             return;
         }
 
         const d = await getTopUserTracks(20, uid);
         res.json(d);
+    } catch (e: any) {
+        reportError("AN error occured in  userapicontroller", e, res);
+    }
+}
+
+export async function setTimezone(req: Request, res: Response) {
+    try {
+        const uid = req.user?.id;
+        if (!uid) { // should never happen cause this function should always be after the 'requireAuth' middleware function
+            res.status(401).json({message: "Not logged in"});
+            return;
+        }
+
+        const {timezone} = req.body;
+        if (!timezone) {
+            res.status(400).json({message: "Timezone not provided"});
+            return;
+        }
+
+        await setUserTimezone(uid, timezone);
+        res.json({message: "Success"});
     } catch (e: any) {
         reportError("AN error occured in  userapicontroller", e, res);
     }

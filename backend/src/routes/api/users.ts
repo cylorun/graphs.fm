@@ -4,7 +4,9 @@ import {
     getUserPlayCount,
     getUserData,
     getUserTracks,
-    getNowPlaying, getTopTracks
+    getNowPlaying,
+    getTopTracks,
+    setTimezone
 } from '../../controllers/api/userApiController'
 import {requireAuth} from "../../middleware";
 
@@ -128,5 +130,16 @@ router.get('/:id/playcount', getUserPlayCount);
  * }
  */
 router.get('/:id/pfp', getUserPfp);
+
+
+/**
+ * Sets users timezone
+ *
+ * Payload {
+ *     "timezone": "America/New_York"
+ * }
+ */
+router.post('/set-timezone', requireAuth, setTimezone);
+
 
 export default router;
