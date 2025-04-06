@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "@/components/container";
 import api from "@/util/api";
-import { DetailedTrack, TrackNotFoundException } from "@shared/types";
+import {Album, DetailedTrack, TrackNotFoundException} from "@shared/types";
 import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
 
@@ -35,7 +35,7 @@ const Page = ({ params }: PageProps) => {
     const [trackId, setTrackId] = useState<string>();
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [track, setTrack] = useState<DetailedTrack | null>(null);
+    const [track, setTrack] = useState<DetailedTrack & {album: Album} | null>(null);
 
     useEffect(() => {
         const unwrapParams = async () => {
@@ -52,7 +52,7 @@ const Page = ({ params }: PageProps) => {
             setError(null);
 
             try {
-                const res = await api.get(`/tracks/${trackId}`, {
+                const res = await api.get(`/tracks/${trackId}?albumdata=1`, {
                     validateStatus: (status: number) => status === 200 || status === 304,
                 });
 
@@ -89,7 +89,7 @@ const Page = ({ params }: PageProps) => {
                 className="rounded-lg shadow-lg"
             />
             <h2 className="text-2xl font-bold mt-4">{track?.trackName}</h2>
-            <p className="text-lg text-gray-500">{track?.album}</p>
+            <p className="text-lg text-gray-500">{track?.album.albumName}</p>
             <p className="text-sm text-foreground-muted  mt-2">Duration: {formatDuration(track?.durationMs || 0)}</p>
 
             <div className="mt-6">
