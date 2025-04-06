@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
-import {Album, DetailedTrack} from "@shared/types";
+import {DetailedTrack} from "@shared/types";
 
 export type TopUserTrackEntryProps = {
-    track: Omit<DetailedTrack & {playCount: number, album: Album}, "playedAt">;
+    track: Omit<DetailedTrack & {playCount: number}, "playedAt">;
     idx: number;
 }
 
@@ -27,7 +27,7 @@ export function TopUserTrackEntry({track, idx}: TopUserTrackEntryProps) {
                     >
                         {track.trackName}
                     </Link>
-                    <p className="text-foreground-muted  text-sm">{track.album.albumName}</p>
+                    <p className="text-foreground-muted  text-sm">{track.albumId}</p>
                     <p className="text-gray-500 text-xs">
                         {track.artists.map((a, i) => (
                             <React.Fragment key={a.id}>
