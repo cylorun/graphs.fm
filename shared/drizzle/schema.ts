@@ -21,7 +21,7 @@ export const tracks = pgTable("tracks", {
     trackName: varchar("track_name", { length: 255 }).notNull(),
     durationMs: integer("duration_ms").notNull(),
     imageUrl: text("image_url"),
-    albumId: integer("album_id")
+    albumId: integer("album_id").notNull()
         .references(() => albums.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow()
 });
@@ -31,7 +31,8 @@ export const albums = pgTable("albums", {
     spotifyId: varchar("spotify_id", { length: 50 }).unique().notNull(),
     albumName: varchar("album_name", { length: 255 }).notNull(),
     imageUrl: text("image_url"),
-    releaseDate: timestamp("release_date"),
+    releaseDate: text("release_date").notNull(), // only year | month | day
+    releaseDatePrecision: text("release_date_precision").notNull(),
     artistId: integer("artist_id").notNull()
         .references(() => artists.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow()

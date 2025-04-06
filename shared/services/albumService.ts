@@ -15,6 +15,17 @@ export async function getAlbumBySpotifyID(spotifyId: string): Promise<Album | nu
     return album;
 }
 
+export async function getAlbumById(id: number): Promise<Album | null> {
+    const album = (await db
+        .select()
+        .from(albums)
+        .where(eq(albums.id, id)))[0];
+
+    if (!album) return null;
+
+    return album;
+}
+
 export async function createAlbum(data: NewAlbum): Promise<Album | null> {
      return (await db.insert(albums)
         .values(data)

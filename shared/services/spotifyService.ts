@@ -6,6 +6,7 @@ import {eq} from "drizzle-orm";
 import {Artist, DetailedTrack, NewAlbum, NewTrack, UserNotFoundException} from '../types';
 import {createArtist, getArtistBySpotifyId} from "./artistService";
 import {createAlbum, getAlbumBySpotifyID} from "./albumService";
+import {parseReleaseDate} from "../util/util";
 
 export const getAccessToken = async (uid: number) => {
     const user = (await db.select({accessToken: users.accessToken})
@@ -84,7 +85,7 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
 
         const artistIds = response.data.item.artists.map((a: any) => a.id);
 
-        const trackData: NewTrack = {
+        const trackData: Omit<NewTrack, "albumId"> = {
             spotifyId: response.data.item.id,
             trackName: response.data.item.name,
             durationMs: response.data.item.duration_ms,
@@ -107,12 +108,17 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             await createArtistIfNotExists(artistIds, accessToken);
 
             const albumItemData = response.data.item.album;
+            console.log(albumItemData)
             const albumData = {
                 spotifyId: albumItemData.id,
                 albumName: albumItemData.name,
                 artistSpotifyId: albumItemData.artists[0].id,
                 imageUrl: albumItemData.images[0]?.url || null,
+                releaseDate: albumItemData.release_date,
+                releaseDatePrecision: albumItemData.release_date_precision
             };
+
+            console.log(albumData)
 
             const album = await createAlbumIfNotExists(albumItemData.id, albumData);
             if (!album) {

@@ -71,6 +71,13 @@
       "when": 1743894601694,
       "tag": "0009_damp_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1743898151734,
+      "tag": "0010_awesome_eddie_brock",
+      "breakpoints": true
     }
   ]
 }
