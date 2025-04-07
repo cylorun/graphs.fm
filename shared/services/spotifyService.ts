@@ -83,13 +83,23 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             return null;
         }
 
-        const artistIds = response.data.item.artists.map((a: any) => a.id);
+        if (response.data.currently_playing_type !== 'track' || !response.data.is_playing) {
+            return null;
+        }
+
+        const item = response.data.item;
+        console.log(response.data)
+        if (!item || item.type !== "track") {
+            return null;
+        }
+
+        const artistIds = item.artists.map((a: any) => a.id);
 
         const trackData: Omit<NewTrack, "albumId"> = {
-            spotifyId: response.data.item.id,
-            trackName: response.data.item.name,
-            durationMs: response.data.item.duration_ms,
-            imageUrl: response.data.item.album.images[0]?.url || null,
+            spotifyId: item.id,
+            trackName: item.name,
+            durationMs: item.duration_ms,
+            imageUrl: item.album.images[0]?.url || null,
         };
 
         const existingTrack = await db
@@ -107,8 +117,7 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             // link artists and genres
             await createArtistIfNotExists(artistIds, accessToken);
 
-            const albumItemData = response.data.item.album;
-            console.log(albumItemData)
+            const albumItemData = item.album;
             const albumData = {
                 spotifyId: albumItemData.id,
                 albumName: albumItemData.name,
@@ -118,7 +127,6 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
                 releaseDatePrecision: albumItemData.release_date_precision
             };
 
-            console.log(albumData)
 
             const album = await createAlbumIfNotExists(albumItemData.id, albumData);
             if (!album) {
