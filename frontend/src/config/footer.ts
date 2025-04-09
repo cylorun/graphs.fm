@@ -17,7 +17,7 @@ export const footerDetails: {
             url: "/global"
         }
     ],
-    discord: 'discord.gg/notestats',
+    discord: 'discord.gg/graphsfm',
     socials: {
         github: 'https://github.com/',
         twitter: 'https://twitter.com/',

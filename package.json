@@ -1,5 +1,5 @@
 {
-    "name": "notestats.com",
+    "name": "graphs.com",
     "private": true,
     "scripts": {
         "dev:front": "pnpm --filter frontend dev",

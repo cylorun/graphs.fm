@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
-    container_name: notestats-backend
+    container_name: graphsfm-backend
     expose:
       - "5000"  # expose to containers internal network
     restart: always
@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
-    container_name: notestats-frontend
+    container_name: graphsfm-frontend
     expose:
       - "3000" # expose to containers internal network
     restart: always
@@ -34,7 +34,7 @@ services:
     build:
       context: .
       dockerfile: ./cron/Dockerfile
-    container_name: notestats-cron
+    container_name: graphsfm-cron
     restart: always
     working_dir: /app
     env_file:
@@ -44,7 +44,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: notestats-nginx
+    container_name: graphsfm-nginx
     ports:
       - "5004:80"  # Expose port 5004 to host
     volumes:

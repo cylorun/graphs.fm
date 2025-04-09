@@ -1,4 +1,4 @@
-# notestats monorepo
+# graphsfm monorepo
 
 
 ## Developer info

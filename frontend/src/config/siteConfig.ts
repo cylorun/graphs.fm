@@ -1,9 +1,9 @@
 export const siteConfig = {
-    siteName: 'Notestats',
-    siteUrl: 'https://demo.notestats.com',
+    siteName: 'graphs.fm',
+    siteUrl: 'https://d.graphs.fm',
     metadata: {
-        title: 'Notestats',
-        description: 'Notestats spotify stats',
+        title: 'graphs.fm',
+        description: 'graphs.fm spotify stats',
     },
     language: 'en-us',
     locale: 'en-US',
