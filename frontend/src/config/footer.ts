@@ -19,7 +19,7 @@ export const footerDetails: {
     ],
     discord: 'discord.gg/graphsfm',
     socials: {
-        github: 'https://github.com/',
+        github: 'https://github.com/graphsfm',
         twitter: 'https://twitter.com/',
         instagram: 'https://www.instagram.com',
     }
