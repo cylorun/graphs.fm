@@ -39,7 +39,7 @@ export const getRecentTracks = async (uid: number, count: number = 20): Promise<
 };
 
 
-export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit<DetailedTrack, "playedAt">[]> => {
+export const getGlobalTopTracks = async (count: number = 20): Promise<Omit<DetailedTrack, "playedAt">[]> => {
     const sq = db.$with("sq").as(
         db
             .select({
@@ -88,6 +88,48 @@ export const getTopMostListenedTracks = async (count: number = 20): Promise<Omit
         .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.albumId, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
         .orderBy(desc(sq.playCount));
 };
+
+
+export const getTopUserArtists = async (count: number = 20, uid: number): Promise<(Artist & {playCount: number})[]> => {
+    const sq = db.$with("sq").as(
+        db
+            .select({
+                artistId: artists.id,
+                spotifyId: artists.spotifyId,
+                artistName: artists.artistName,
+                imageUrl: artists.imageUrl,
+                createdAt: artists.createdAt,
+                playCount: sql<number>`COUNT(${userTracks.trackId})`.as("playCount"),
+            })
+            .from(userTracks)
+            .innerJoin(tracks, eq(userTracks.trackId, tracks.id))
+            .innerJoin(artistTracks, eq(artistTracks.trackId, tracks.id))
+            .innerJoin(artists, eq(artistTracks.artistId, artists.id))
+            .where(eq(userTracks.userId, uid))
+            .groupBy(
+                artists.id,
+                artists.spotifyId,
+                artists.artistName,
+                artists.imageUrl,
+                artists.createdAt
+            )
+    );
+
+    return db
+        .with(sq)
+        .select({
+            id: sq.artistId,
+            spotifyId: sq.spotifyId,
+            artistName: sq.artistName,
+            imageUrl: sq.imageUrl,
+            createdAt: sq.createdAt,
+            playCount: sq.playCount,
+        })
+        .from(sq)
+        .orderBy(desc(sq.playCount))
+        .limit(count);
+};
+
 
 export const getTopUserTracks = async (count: number = 20, uid: number): Promise<Omit<DetailedTrack, "playedAt">[]> => {
     const sq = db.$with("sq").as(
@@ -173,7 +215,7 @@ export async function getById(tracKId: number): Promise<Omit<DetailedTrack, "pla
 }
 
 
-export async function getTotalPlayCount(): Promise<number> {
+export async function getGlobalPlaycount(): Promise<number> {
     return (await db
         .select({val: count()})
         .from(userTracks))[0].val;

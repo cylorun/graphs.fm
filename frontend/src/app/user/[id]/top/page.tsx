@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Container from "@/components/container";
 import UserNav, { UserNavSkeleton } from "@/components/user-nav";
-import {DetailedTrack, PublicUser, UserNotFoundException} from "@shared/types";
+import {Artist, DetailedTrack, PublicUser, UserNotFoundException} from "@shared/types";
 import api from "@/util/api";
 import Link from "next/link";
 import {TopUserTrackEntry} from "@/components/top-user-track-entry";
+import {TopUserArtistEntry} from "@/components/top-user-artist-entry";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -22,25 +23,6 @@ const PageSkeleton = () => (
     </Container>
 );
 
-// type Artist = {
-//     id: number;
-//     spotifyId: string;
-//     artistName: string;
-//     imageUrl: string;
-//     createdAt: string;
-// };
-//
-// type Track = {
-//     id: number;
-//     spotifyId: string;
-//     trackName: string;
-//     album: string;
-//     durationMs: number;
-//     imageUrl: string;
-//     createdAt: string;
-//     playCount: number;
-//     artists: Artist[];
-// };
 
 const Page = ({ params }: PageProps) => {
     const [uid, setUid] = useState<string>();
@@ -48,6 +30,7 @@ const Page = ({ params }: PageProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [user, setUser] = useState<PublicUser | null>(null);
     const [topTracks, setTopTracks] = useState<Omit<DetailedTrack & {playCount: number}, "playedAt">[]>([]);
+    const [topArtists, setTopArtists] = useState<(Artist & {playCount: number})[]>([]);
 
     useEffect(() => {
         const unwrapParams = async () => {
@@ -100,7 +83,19 @@ const Page = ({ params }: PageProps) => {
             }
         };
 
+        const fetchTopArtists = async () => {
+            if (!uid) return;
+            try {
+                const res = await api.get(`users/${uid}/artists/top`);
+                setTopArtists(res.data);
+            } catch (e) {
+                console.error("Failed to fetch top tracks:", e);
+                setError(new Error("Failed to load top artists"));
+            }
+        }
+
         fetchTopTracks();
+        fetchTopArtists();
     }, [uid]);
 
     if (error instanceof UserNotFoundException) {
@@ -127,20 +122,43 @@ const Page = ({ params }: PageProps) => {
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
             <UserNav className="border-b-gray-700" user={user} tab="top" />
 
-            <h2 className="mt-8 text-2xl font-bold text-white border-b border-gray-700 pb-2">
-                Top Tracks
-            </h2>
+            <main className="flex gap-10 w-full mt-8">
+                {/* Top Tracks */}
+                <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-white border-b border-gray-700 pb-2">
+                        Top Tracks
+                    </h2>
 
-            <div className="mt-6 space-y-3">
-                {topTracks.length === 0 ? (
-                    <p className="text-foreground-muted">No tracks found</p>
-                ) : (
-                    topTracks.map((track, index) => (
-                       <TopUserTrackEntry track={track} idx={index} key={index} />
-                    ))
-                )}
-            </div>
+                    <div className="mt-6 space-y-3">
+                        {topTracks.length === 0 ? (
+                            <p className="text-foreground-muted">No tracks found</p>
+                        ) : (
+                            topTracks.map((track, index) => (
+                                <TopUserTrackEntry track={track} idx={index} key={index} />
+                            ))
+                        )}
+                    </div>
+                </div>
+
+                {/* Top Artists */}
+                <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-white border-b border-gray-700 pb-2">
+                        Top Artists
+                    </h2>
+
+                    <div className="mt-6 space-y-3">
+                        {topArtists.length === 0 ? (
+                            <p className="text-foreground-muted">No artists found</p>
+                        ) : (
+                            topArtists.map((artist, index) => (
+                                <TopUserArtistEntry artist={artist} idx={index} key={index} />
+                            ))
+                        )}
+                    </div>
+                </div>
+            </main>
         </Container>
+
     );
 };
 

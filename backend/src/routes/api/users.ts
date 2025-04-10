@@ -6,7 +6,8 @@ import {
     getUserTracks,
     getNowPlaying,
     getTopTracks,
-    setTimezone
+    setTimezone,
+    getTopArtists
 } from '../../controllers/api/userApiController'
 import {requireAuth} from "../../middleware";
 
@@ -106,9 +107,12 @@ router.get('/:id/now-playing', getNowPlaying);
  */
 router.get('/tracks/recent', requireAuth, getUserTracks);
 router.get('/:id/tracks/recent', getUserTracks);
-router.get('/tracks/top', getTopTracks);
+router.get('/tracks/top', requireAuth, getTopTracks);
 router.get('/:id/tracks/top', getTopTracks);
 
+
+router.get('/artists/top', requireAuth, getTopArtists);
+router.get('/:id/artists/top', getTopArtists);
 
 /**
  *
