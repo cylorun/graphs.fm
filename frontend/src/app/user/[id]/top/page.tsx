@@ -122,7 +122,7 @@ const Page = ({ params }: PageProps) => {
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
             <UserNav className="border-b-gray-700" user={user} tab="top" />
 
-            <main className="flex gap-10 w-full mt-8">
+            <main className="flex flex-col md:flex-row gap-10 w-full mt-8">
                 {/* Top Tracks */}
                 <div className="flex-1">
                     <h2 className="text-2xl font-bold text-white border-b border-gray-700 pb-2">
