@@ -22,12 +22,12 @@ export function TopUserArtistEntry({artist, idx}: TopUserArtistEntryProps) {
                 />
                 <div>
                     <Link
-                        href={`/track/${artist.id}`}
+                        href={`/artist/${artist.id}`}
                         className="text-white font-semibold hover:underline"
                     >
                         {artist.artistName}
                     </Link>
-                    <p className="text-foreground-muted  text-sm">{artist.id}</p>
+                    {/*<p className="text-foreground-muted  text-sm">{artist.id}</p>*/}
                     <p className="text-gray-500 text-xs">
                         {/*{artist.artists.map((a, i) => (*/}
                         {/*    <React.Fragment key={a.id}>*/}
