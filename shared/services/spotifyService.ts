@@ -55,7 +55,7 @@ const createAlbumIfNotExists = async (albumId: string, data: Omit<NewAlbum, "art
         return await createAlbum({...data, artistId: artist.id});
     }
 
-    return null;
+    return album;
 }
 
 const linkArtistTracks = async (artistIds: string[], trackId: number) => {
@@ -88,7 +88,6 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
         }
 
         const item = response.data.item;
-        console.log(response.data)
         if (!item || item.type !== "track") {
             return null;
         }
@@ -138,7 +137,7 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
                 .values({...trackData, albumId: album.id})
                 .returning())[0];
 
-            console.log("Registered new track:", track.trackName, {...trackData, albumId: album.id});
+            console.log("Registered new track:", track.trackName);
 
             await linkArtistTracks(artistIds, track.id);
         }
