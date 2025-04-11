@@ -4,15 +4,28 @@ dotenv.config();
 import schedule from "node-schedule";
 
 import {db} from "@/shared/db";
-import {users, userTracks, tracks, artistTracks} from "@/shared/drizzle/schema";
+import {users, userTracks, tracks} from "@/shared/drizzle/schema";
 import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
 import {Track} from "@/shared/types";
 import {desc, eq} from "drizzle-orm";
 import moment from "moment";
+import { createClient } from 'redis';
 
+const redis = createClient({url: process.env.REDIS_URL!});
+(async () => {
+    await redis.connect();
+})();
 
-async function insertUserTrack(uid: number, track: Track): Promise<void> {
+async function onTrackChange(uid: number, track: Track): Promise<void> {
     await db.insert(userTracks).values({userId: uid, trackId: track.id});
+
+    const payload = JSON.stringify({
+        userId: uid,
+        trackId: track.id
+    });
+
+    await redis.publish('track-updates', payload);
+    console.log('Redis updates successfully.', payload);
 }
 
 
@@ -47,7 +60,7 @@ async function run() {
         await Promise.all(uids.map(async ({id})=>{
             const curr = await getCurrentlyPlaying(id);
             if (curr && (await shouldInsertTrack(id, curr))) {
-                await insertUserTrack(id, curr);
+                await onTrackChange(id, curr);
             }
         }));
     } catch (e: any) {

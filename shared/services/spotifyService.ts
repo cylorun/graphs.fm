@@ -38,6 +38,8 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
                     artistName: name,
                     imageUrl: imageUrl
                 }, genres);
+            } else {
+                console.error("Failed to fetch artist data: ", response.data);
             }
         }
     }

@@ -52,3 +52,12 @@ services:
     depends_on:
       - frontend
       - backend
+
+  redis:
+    image: redis:alpine  # Lightweight Redis image
+    container_name: graphsfm-redis
+    restart: always
+#    ports:
+#      - "6379:6379"  # expose redis to the host machine
+    volumes:
+      - redis_data:/data  # Persistent storage for Redis data

@@ -4,6 +4,7 @@
     "scripts": {
         "dev:front": "pnpm --filter frontend dev",
         "dev:back": "pnpm --filter backend dev",
+        "dev:sock": "pnpm --filter websocket dev",
         "start:cron": "pnpm --filter cron start"
     },
     "workspaces": [
