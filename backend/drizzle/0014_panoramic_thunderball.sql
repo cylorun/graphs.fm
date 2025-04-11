@@ -1,0 +1,1 @@
+ALTER TABLE "user_badges" ALTER COLUMN "badge_id" SET DATA TYPE varchar;

@@ -14,6 +14,20 @@ export const users = pgTable("users", {
     lastLogin: timestamp("last_login").defaultNow().notNull(),
 });
 
+export const badges = pgTable("badges", {
+    id: varchar("id").primaryKey(),
+    badgeName: varchar("badge_name", {length: 50}).unique().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const userBadges = pgTable("user_badges", {
+    id: serial("id"),
+    userId: integer("user_id").notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    badgeId: varchar("badge_id").notNull()
+        .references(() => badges.id, { onDelete: "cascade" }),
+});
+
 
 export const tracks = pgTable("tracks", {
     id: serial("id").primaryKey(),
