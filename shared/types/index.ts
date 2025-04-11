@@ -1,5 +1,15 @@
 import {InferInsertModel, InferSelectModel} from "drizzle-orm";
-import {tracks, users, userTracks, artists, genres, artistGenres, artistTracks, albums} from "../drizzle/schema";
+import {
+    tracks,
+    users,
+    userTracks,
+    artists,
+    genres,
+    artistGenres,
+    artistTracks,
+    albums,
+    badges
+} from "../drizzle/schema";
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
@@ -17,9 +27,9 @@ export type ArtistGenre = InferSelectModel<typeof artistGenres>;
 export type NewArtistGenre = InferInsertModel<typeof artistGenres>;
 export type ArtistTracks = InferSelectModel<typeof artistTracks>;
 export type NewArtistTracks = InferInsertModel<typeof artistTracks>
+export type Badge = InferSelectModel<typeof badges>;
 export type DetailedTrack = Track & {playedAt: Date | null} & {artists: Artist[]}
 export type ArtistWithGenre = Artist & {genres: Genre[]}
-
 export type PublicUser = Omit<User & {plays: number}, "expiresAt" | "refreshToken" | "accessToken" | "lastLogin">
 
 export type DetailedArtist = Artist & {genres: Genre[]};

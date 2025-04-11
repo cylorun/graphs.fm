@@ -1,7 +1,7 @@
 import {db} from "../db";
-import {users, userTracks} from "../drizzle/schema";
+import {badges, userBadges, users, userTracks} from "../drizzle/schema";
 import {and, count, eq, ilike} from "drizzle-orm";
-import {PublicUser, User} from "../types";
+import {Badge, PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
 
@@ -66,4 +66,14 @@ export async function getUserPlaysSince(uid: number, since: Date): Promise<numbe
 
 export async function setUserTimezone(uid: number, timezone: string): Promise<void> {
     await db.update(users).set({timezone: timezone}).where(eq(users.id, uid));
+}
+
+export async function getUserBadges(uid: number): Promise<Badge[]> {
+    return  db
+        .select({badges: badges})
+        .from(badges)
+        .innerJoin(userBadges, eq(badges.id, userBadges.badgeId))
+        .where(eq(userBadges.userId, uid))
+        .then(d => d.map(a => a.badges));
+
 }
