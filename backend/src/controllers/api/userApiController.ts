@@ -1,5 +1,12 @@
 import {Request, Response} from 'express';
-import {getUserById, getUserId, getUserPlaycount, getUserProfileImageUrl, resolveUid} from "@/shared/services/userService";
+import {
+    getHourlyListeningStats,
+    getUserById,
+    getUserId,
+    getUserPlaycount,
+    getUserProfileImageUrl,
+    resolveUid
+} from "@/shared/services/userService";
 import {getRecentTracks, getTopUserArtists, getTopUserTracks} from "@/shared/services/trackService";
 import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
 import {setUserTimezone} from "@/shared/services/userService";
@@ -170,6 +177,21 @@ export async function setTimezone(req: Request, res: Response) {
 
         await setUserTimezone(uid, timezone);
         res.json({message: "Success"});
+    } catch (e: any) {
+        reportError("AN error occured in  userapicontroller", e, res);
+    }
+}
+
+export async function getHourlyListeningCount(req: Request, res: Response) {
+    try {
+        const uid =  (await resolveUid(req.params.id)) || req.user?.id;
+        if (!uid) { // should never happen cause this function should always be after the 'requireAuth' middleware function
+            res.status(401).json({message: "Not logged in"});
+            return;
+        }
+
+        const d = await getHourlyListeningStats(uid);
+        res.json(d);
     } catch (e: any) {
         reportError("AN error occured in  userapicontroller", e, res);
     }

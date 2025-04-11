@@ -7,7 +7,7 @@ import {
     getNowPlaying,
     getTopTracks,
     setTimezone,
-    getTopArtists
+    getTopArtists, getHourlyListeningCount
 } from '../../controllers/api/userApiController'
 import {requireAuth} from "../../middleware";
 
@@ -127,6 +127,8 @@ router.get('/:id/artists/top', getTopArtists);
 router.get('/playcount', requireAuth, getUserPlayCount);
 router.get('/:id/playcount', getUserPlayCount);
 
+router.get('/playcount/hourly', requireAuth, getHourlyListeningCount);
+router.get('/:id/playcount/hourly', getHourlyListeningCount);
 
 /**
  * Example response for url /api/users/1/pfp: {

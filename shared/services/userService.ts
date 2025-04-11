@@ -1,6 +1,6 @@
 import {db} from "../db";
 import {badges, userBadges, users, userTracks} from "../drizzle/schema";
-import {and, count, eq, ilike} from "drizzle-orm";
+import {and, count, eq, ilike, sql} from "drizzle-orm";
 import {Badge, PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
 
@@ -76,4 +76,37 @@ export async function getUserBadges(uid: number): Promise<Badge[]> {
         .where(eq(userBadges.userId, uid))
         .then(d => d.map(a => a.badges));
 
+}
+
+export async function getHourlyListeningStats(userId: number): Promise<number[]> {
+    const user = await db.query.users.findFirst({
+        where: (u, { eq }) => eq(u.id, userId),
+        columns: { timezone: true }
+    });
+
+    if (!user) throw new Error("User not found");
+
+    const tz = user.timezone;
+
+    const results = await db.execute(
+        sql`
+        SELECT
+            EXTRACT(HOUR FROM played_at AT TIME ZONE 'UTC' AT TIME ZONE ${tz}) AS hour,
+            COUNT(*) AS count
+        FROM user_tracks
+        WHERE user_id = ${userId}
+        GROUP BY hour
+        ORDER BY hour
+    `
+    );
+
+    const hourlyCounts = new Array(24).fill(0);
+
+    for (const row of results.rows) {
+        const hour = parseInt(row.hour as string, 10);
+        const count = parseInt(row.count as string, 10);
+        hourlyCounts[hour] = count;
+    }
+
+    return hourlyCounts;
 }
