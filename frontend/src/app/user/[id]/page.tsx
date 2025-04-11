@@ -5,6 +5,7 @@ import UserNav, {UserNavSkeleton} from "@/components/user-nav";
 import RecentUserTracks, {RecentUserTracksSkeleton} from "@/components/recent-user-tracks";
 import api from "@/util/api";
 import {PublicUser, UserNotFoundException} from "@shared/types";
+import {ListeningClock} from "@/components/listening-clock";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -107,7 +108,14 @@ const Page = ({params}: PageProps) => {
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
             <UserNav className={'border-b-gray-700'} user={user} tab={'overview'} />
             <h2 className={'border-b border-b-gray-400 mt-8'}>Recent activity</h2>
-            <RecentUserTracks uid={uid} />
+            <div className={'flex flex-col md:flex-row'}>
+                <RecentUserTracks uid={uid} />
+                <div className={'mr-8'}>
+                    <h2 className={'text-center mt-4'}>Listening clock</h2>
+                    <ListeningClock uid={user.username}/>
+                </div>
+
+            </div>
         </Container>
     );
 }
