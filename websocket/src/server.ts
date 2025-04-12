@@ -4,6 +4,8 @@ import { createClient } from 'redis';
 import * as dotenv from 'dotenv'
 dotenv.config();
 
+import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
+
 const server = http.createServer();
 const wss = new WebSocketServer({ server });
 
@@ -16,7 +18,7 @@ const redis = createClient({url: process.env.REDIS_URL!});
 const subscriptions = new Map<number, Set<WebSocket>>();
 
 wss.on('connection', (socket: WebSocket) => {
-    socket.on('message', (message: string) => {
+    socket.on('message', async (message: string) => {
         try {
             const data = JSON.parse(message.toString());
 
@@ -24,10 +26,14 @@ wss.on('connection', (socket: WebSocket) => {
                 const subs = subscriptions.get(data.uid) || new Set<WebSocket>();
                 subs.add(socket);
                 subscriptions.set(data.uid, subs);
+
+
+                const currtrackid = (await getCurrentlyPlaying(data.uid))?.id!;
+                socket.send(JSON.stringify({type: 'listen-update', trackId: currtrackid, userId: data.uid}));
             }
 
         } catch (err) {
-            console.error('Bad message:', message);
+            console.error('error ', err);
         }
     });
 
@@ -46,11 +52,11 @@ redis.subscribe('track-updates', (message) => {
 
     for (const socket of subs) {
         if (socket.readyState === WebSocket.OPEN) {
-            socket.send({type:"listen-update", ...data});
+            socket.send(JSON.stringify({type:"listen-update", ...data}));
         }
     }
 });
 
-server.listen(3001, () => {
-    console.log('WebSocket server running on ws://localhost:3001');
+server.listen(4000, () => {
+    console.log('WebSocket server running on ws://localhost:4000');
 });
