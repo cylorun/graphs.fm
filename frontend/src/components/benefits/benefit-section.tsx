@@ -50,7 +50,7 @@ const BenefitSection: React.FC<Props> = ({benefit, imageAtRight}: Props) => {
     const {title, description, imageSrc, bullets} = benefit;
 
     return (
-        <section className="benefit-section">
+        <section className="benefit-section mt-12">
             <motion.div
                 className="flex flex-wrap flex-col items-center justify-center gap-2 lg:flex-row lg:gap-20 lg:flex-nowrap mb-24"
                 variants={containerVariants}
@@ -92,7 +92,7 @@ const BenefitSection: React.FC<Props> = ({benefit, imageAtRight}: Props) => {
 
                 <div className={clsx("mt-5 lg:mt-0", {"lg:order-2": imageAtRight})}>
                     <div className={clsx("w-fit flex", {"justify-start": imageAtRight, "justify-end": !imageAtRight})}>
-                        <Image src={imageSrc} alt="title" width="384" height="762" quality={100} className="lg:ml-0"/>
+                        <Image src={imageSrc} alt="title" width="270" height="650" quality={100} className="lg:ml-0"/>
                     </div>
                 </div>
             </motion.div>

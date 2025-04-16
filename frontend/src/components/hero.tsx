@@ -26,16 +26,15 @@ const Hero: React.FC = () => {
                 </div>
                 <Image
                     src={heroDetails.centerImageSrc}
-                    width={900} // Set a higher default width
-                    height={340} // Auto height to maintain aspect ratio
+                    width={900}
+                    height={340}
                     quality={100}
-                    sizes="(max-width: 1024px) 90vw, 900px" // 90% width on smaller screens, max width on larger screens
+                    sizes="(max-width: 1024px) 90vw, 900px"
                     priority={true}
                     unoptimized={true}
                     alt="app mockup"
-                    className="relative mt-12 md:mt-16 mx-auto z-10 w-[90%] max-w-[900px]" // Ensure 90% width and cap max size
+                    className="relative mt-12 md:mt-16 mx-auto z-10 w-[90%] max-w-[900px]"
                 />
-
             </div>
         </section>
     );
