@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from "react";
 import Container from "@/components/container";
-import {redirect, useSearchParams} from "next/navigation";
+import {redirect} from "next/navigation";
 import {ListeningOverlay, ListeningOverlayProps} from "@/components/listening-overlay";
 import api from "@/util/api";
 

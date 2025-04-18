@@ -2,9 +2,10 @@
 
 import {ListeningOverlay} from "@/components/listening-overlay";
 import {useSearchParams} from "next/navigation";
+import {Suspense} from "react";
 
 
-export default function Page() {
+function Page() {
     const searchParams = useSearchParams();
     const data = {
         uid: parseInt(searchParams.get('uid') || '-1')
@@ -19,5 +20,13 @@ export default function Page() {
 
     return (
         <ListeningOverlay data={data}/>
+    )
+}
+
+export default function PageWrapper() {
+    return (
+        <Suspense>
+            <Page />
+        </Suspense>
     )
 }

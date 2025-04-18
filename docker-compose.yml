@@ -29,7 +29,6 @@ services:
     env_file:
       - ./frontend/.env
 
-
   cron:
     build:
       context: .
@@ -37,10 +36,30 @@ services:
     container_name: graphsfm-cron
     restart: always
     working_dir: /app
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
     env_file:
       - ./backend/.env
     depends_on:
       - backend
+
+  websocket:
+    build:
+      context: .
+      dockerfile: ./websocket/Dockerfile
+    container_name: graphsfm-websocket
+    restart: always
+    working_dir: /app
+    ports:
+      - "4000:4000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - redis
 
   nginx:
     image: nginx:alpine
@@ -53,11 +72,12 @@ services:
       - frontend
       - backend
 
-  redis:
+  redis: # url: redis://redis:6379
     image: redis:alpine  # Lightweight Redis image
     container_name: graphsfm-redis
     restart: always
-#    ports:
-#      - "6379:6379"  # expose redis to the host machine
     volumes:
       - redis_data:/data  # Persistent storage for Redis data
+
+volumes:
+  redis_data:
