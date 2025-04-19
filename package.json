@@ -5,7 +5,8 @@
         "dev:front": "pnpm --filter frontend dev",
         "build:front": "pnpm --filter frontend build",
         "dev:back": "pnpm --filter backend dev",
-        "dev:sock": "pnpm --filter websocket dev",
+        "dev:websocket": "pnpm --filter websocket dev",
+        "start:websocket": "pnpm --filter websocket start",
         "start:cron": "pnpm --filter cron start"
     },
     "workspaces": [

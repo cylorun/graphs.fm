@@ -16,4 +16,4 @@ COPY ./shared ./shared
 
 RUN pnpm install
 
-CMD ["pnpm", "--filter", "sock", "start"]
+CMD ["pnpm", "--filter", "websocket", "start"]
