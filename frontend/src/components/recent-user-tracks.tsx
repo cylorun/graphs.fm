@@ -40,7 +40,6 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
                 const currTrackResponse = await api.get(`/users/${uid}/now-playing`);
                 if (currTrackResponse.status === 200) {
                     setCurrTrack(currTrackResponse.data);
-                    // console.log("currtrack:" , currTrackResponse.data.artists);
                 } else if (currTrackResponse.status !== 204) { // no content / no track playing
                     setError(new Error(currTrackResponse.statusText));
                 }
@@ -58,9 +57,6 @@ const RecentUserTracks = ({uid}: RecentUserTracksProps) => {
     return (
         <div className={'flex'}>
             <ul className={'flex flex-col gap-2 mt-4'}>
-                {/*{currTrack && (*/}
-                {/*    <li><UserTrackEntry isActive={true} track={currTrack}/></li>*/}
-                {/*)}*/}
                 {tracks && tracks.map((track, idx) => (
                     <li key={idx}><UserTrackEntry isActive={(currTrack?.id === track.id && idx === 0)} track={track}/></li>
                 ))}
