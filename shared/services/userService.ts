@@ -91,7 +91,7 @@ export async function getHourlyListeningStats(userId: number): Promise<number[]>
     const results = await db.execute(
         sql`
         SELECT
-            EXTRACT(HOUR FROM played_at AT TIME ZONE 'UTC' AT TIME ZONE ${tz}) AS hour,
+            EXTRACT(HOUR FROM played_at AT TIME ZONE ${tz}) AS hour,
             COUNT(*) AS count
         FROM user_tracks
         WHERE user_id = ${userId}
