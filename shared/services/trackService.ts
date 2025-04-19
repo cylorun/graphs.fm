@@ -1,6 +1,6 @@
-import {count, desc, eq, sql} from "drizzle-orm";
+import {and, count, desc, eq, sql} from "drizzle-orm";
 import {db} from "../db";
-import {artists, artistTracks, tracks, userTracks} from "../drizzle/schema";
+import {artists, artistTracks, tracks, users, userTracks} from "../drizzle/schema";
 import {Artist, DetailedTrack} from "../types";
 
 export const getRecentTracks = async (uid: number, count: number = 20): Promise<DetailedTrack[]> => {
@@ -214,6 +214,29 @@ export async function getById(tracKId: number): Promise<Omit<DetailedTrack, "pla
         ))[0] || null;
 }
 
+export async function getTrackPlayCountForUser(uid: number, trackId: number): Promise<number | null> {
+    return (await db
+        .select({val: count()})
+        .from(userTracks)
+        .where(
+            and(
+                eq(userTracks.trackId, trackId),
+                eq(userTracks.userId, uid))
+        )
+    )[0]?.val;
+}
+
+
+export async function getTrackPlayCount(trackId: number): Promise<number | null> {
+    const result = await db
+        .select({ val: count() })
+        .from(userTracks)
+        .innerJoin(users, eq(userTracks.userId, users.id))
+        .innerJoin(tracks, eq(userTracks.trackId, tracks.id))
+        .where(eq(tracks.id, trackId));
+
+    return result[0]?.val ?? null;
+}
 
 export async function getGlobalPlaycount(): Promise<number> {
     return (await db

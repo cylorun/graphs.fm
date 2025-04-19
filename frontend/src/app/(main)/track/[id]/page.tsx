@@ -52,11 +52,12 @@ const Page = ({ params }: PageProps) => {
             setError(null);
 
             try {
-                const res = await api.get(`/tracks/${trackId}?albumdata=1`, {
+                const res = await api.get(`/tracks/${trackId}?albumdata=1&userdata=1`, {
                     validateStatus: (status: number) => status === 200 || status === 304,
                 });
 
                 if (res.status === 200 || res.status === 304) {
+                    console.log(res.data);
                     setTrack({
                         ...res.data,
                         createdAt: new Date(res.data.createdAt),
@@ -76,39 +77,33 @@ const Page = ({ params }: PageProps) => {
         fetchTrackData();
     }, [trackId]);
 
-    if (loading) return <PageSkeleton />;
-    if (error) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">{error.message}</p></Container>;
+    if (!error && (loading || !track)) return <PageSkeleton />;
+    if (error || !track) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">{error?.message}</p></Container>;
 
     return (
-        <Container className="flex flex-col items-center text-center min-h-screen px-5 pt-32 md:pt-40">
-            <Image
-                src={track?.imageUrl || "/placeholder.jpg"}
-                alt={track?.trackName || "Album cover"}
-                width={300}
-                height={300}
-                className="rounded-lg shadow-lg"
-            />
-            <h2 className="text-2xl font-bold mt-4">{track?.trackName}</h2>
-            <p className="text-lg text-gray-500">{track?.album.albumName}</p>
-            <p className="text-sm text-foreground-muted  mt-2">Duration: {formatDuration(track?.durationMs || 0)}</p>
-
-            <div className="mt-6">
-                <h3 className="text-lg font-semibold">Artists</h3>
-                <div className="flex gap-4 mt-2">
-                    {track?.artists.map(artist => (
-                        <a  href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
-                            <Image
-                                src={artist.imageUrl || "/placeholder-artist.jpg"}
-                                alt={artist.artistName}
-                                width={60}
-                                height={60}
-                                className="rounded-full"
-                            />
-                            <p className="text-sm text-gray-600 mt-1">{artist.artistName}</p>
-                        </a>
-                    ))}
+        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40">
+            <div className={'flex flex-row items-end gap-2'}>
+                <Image
+                    src={track?.imageUrl || "/placeholder.jpg"}
+                    alt={track?.trackName || "Album cover"}
+                    width={200}
+                    height={200}
+                    className="rounded-lg shadow-lg"
+                />
+                <div className={'flex flex-col items-start'}>
+                    <h2 className="text-2xl font-bold mt-4">{track.trackName}</h2>
+                    <div className="">
+                        {track?.artists.map(artist => (
+                            <a  href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
+                                <p className="text-lg text-gray-500 mt-1">{artist.artistName}</p>
+                            </a>
+                        ))}
+                    </div>
+                    <p className="text-sm text-foreground-muted  mt-2">Plays: {track.plays} {track.yourPlaycount !== undefined ? ` | Your Plays: ${track.yourPlaycount}` : ''}</p>
                 </div>
+
             </div>
+
         </Container>
     );
 };

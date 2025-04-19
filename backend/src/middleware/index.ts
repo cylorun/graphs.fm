@@ -18,3 +18,14 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
         res.status(403).json({ message: "Invalid token" });
     }
 }
+
+
+// sets up req.user, required to add as middleware if you wanna use access that
+export function optionalAuth(req: Request, res: Response, next: NextFunction): void {
+    const token = req.cookies["token"];
+    if (token) {
+        req.user = jwt.verify(token, JWT_SECRET) as JWTUser;
+    }
+
+    next();
+}

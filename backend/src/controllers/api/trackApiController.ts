@@ -1,32 +1,40 @@
 import {Request, Response} from "express";
-import {getById} from "@/shared/services/trackService";
+import {getById, getTrackPlayCount, getTrackPlayCountForUser} from "@/shared/services/trackService";
 import {reportError} from "../../util/exceptions";
 import {getAlbumById, getAlbumBySpotifyID} from "@/shared/services/albumService";
 
 export async function getTrackById(req: Request, res: Response) {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
+        const trackId = parseInt(req.params.id);
+        if (isNaN(trackId)) {
             res.status(400).json({message: "Id must be a whole number"});
             return;
         }
 
-        const data = await getById(id);
+        let data = await getById(trackId);
         if (!data) {
             res.status(404).json({message: "Track not found"});
             return;
         }
 
-        const {albumdata = "0"} = req.query;
+        const totalPlays = await getTrackPlayCount(trackId);
+
+        const {albumdata = "0", userdata = "0"} = req.query;
         const includeAlbumData = albumdata === "1";
+        const includeUserData = userdata === "1";
+
         if (includeAlbumData) {
             const album = await getAlbumById(data.albumId);
 
-            res.json({...data, album: album});
-            return;
+            data = {...data, album: album}
         }
 
-        res.json(data);
+        if (includeUserData && req.user?.id) {
+            const userPlays = await getTrackPlayCountForUser(req.user?.id, trackId);
+            data = {...data, yourPlaycount: userPlays};
+        }
+
+        res.json({...data, plays: totalPlays});
     } catch (e: any) {
         reportError("Error in track controller", e, res);
     }

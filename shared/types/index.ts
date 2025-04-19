@@ -28,11 +28,12 @@ export type NewArtistGenre = InferInsertModel<typeof artistGenres>;
 export type ArtistTracks = InferSelectModel<typeof artistTracks>;
 export type NewArtistTracks = InferInsertModel<typeof artistTracks>
 export type Badge = InferSelectModel<typeof badges>;
-export type DetailedTrack = Track & {playedAt: Date | null} & {artists: Artist[]}
+export type DetailedTrack = Track & {playedAt: Date | null} & {artists: Artist[], album?: Album | null, yourPlaycount?: number | null, plays?: number | null};
 export type ArtistWithGenre = Artist & {genres: Genre[]}
 export type PublicUser = Omit<User & {plays: number}, "expiresAt" | "refreshToken" | "accessToken" | "lastLogin">
 
 export type DetailedArtist = Artist & {genres: Genre[]};
+
 
 export type JWTUser = {
     id: number;

@@ -1,12 +1,16 @@
 import {Router} from "express";
 import {getTrackById} from "../../controllers/api/trackApiController";
+import {optionalAuth} from "../../middleware";
 
 const router = Router();
 /**
  * Returns track data for the given id
+ *
  * Query {
- *     albumdata: 1 or 0, whether to include album data or not
+ *     albumdata: 1 or 0, whether to include album data or not,
+ *     userdata: 1 or 0, whether to include your playcount in the response, requires you to be logged in
  * }
+ *
  * Example response {
  *   "id": 95,
  *   "spotifyId": "5fwSHlTEWpluwOM0Sxnh5k",
@@ -55,7 +59,7 @@ const router = Router();
  *   }
  * }
  */
-router.get('/:id', getTrackById);
+router.get('/:id', optionalAuth,  getTrackById);
 
 
 export default router;
