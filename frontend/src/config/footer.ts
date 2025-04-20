@@ -3,6 +3,7 @@ import { IMenuItem, ISocials } from "@/types";
 export const footerDetails: {
     subheading: string;
     quickLinks: IMenuItem[];
+    legal: IMenuItem[];
     discord: string;
     socials: ISocials;
 } = {
@@ -15,6 +16,16 @@ export const footerDetails: {
         {
             text: "Global stats",
             url: "/global"
+        }
+    ],
+    legal: [
+        {
+            text: "Privacy",
+            url: "/privacy"
+        },
+        {
+            text: "Terms",
+            url: "/tos"
         }
     ],
     discord: 'discord.gg/graphsfm',

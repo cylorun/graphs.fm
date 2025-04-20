@@ -2,6 +2,7 @@ import fs from 'fs'
 import pino from 'pino'
 import pretty from 'pino-pretty'
 import dotenv from "dotenv";
+import path from "node:path";
 dotenv.config();
 
 const SERVICE_NAME = process.env.SERVICE_NAME!;
@@ -11,7 +12,12 @@ if (!['backend', 'scraper', 'websocket', 'frontend'].includes(SERVICE_NAME)) {
     throw new Error("Invalid SERVICE_NAME env");
 }
 
-const logFs = fs.createWriteStream(`./logs/${SERVICE_NAME}.log`, { flags: 'a' })
+const logDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+}
+
+const logFs = fs.createWriteStream(path.join(logDir, `${SERVICE_NAME}.log`), { flags: 'a' });
 
 const logger = pino(
     {
