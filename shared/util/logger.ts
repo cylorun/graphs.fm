@@ -12,7 +12,7 @@ if (!['backend', 'scraper', 'websocket', 'frontend'].includes(SERVICE_NAME)) {
     throw new Error("Invalid SERVICE_NAME env");
 }
 
-const logDir = path.join(__dirname, 'logs');
+const logDir = path.join(__dirname, '../../logs');
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
 }
