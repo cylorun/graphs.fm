@@ -7,6 +7,7 @@ import {eq} from "drizzle-orm";
 import {NewUser} from "@/shared/types";
 import {generateToken, saveTokenAsCookie} from "../../../util/jwt";
 import {redirectFrontend} from "../../../util/util";
+import {logger} from "@/shared/util/logger";
 
 const router = Router();
 
@@ -95,8 +96,8 @@ router.get("/", async (req: Request, res: Response) => {
         const token = generateToken(user[0]);
         saveTokenAsCookie(res, token);
         redirectFrontend(res, `/user/${user[0].username}?m=login+successful`);
-    } catch (error) {
-        console.error("Error fetching Spotify data:", error);
+    } catch (error: any) {
+        logger.error("Error fetching Spotify data:" + error.message);
         res.redirect(
             "/#" +
             querystring.stringify({

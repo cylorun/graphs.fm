@@ -7,6 +7,7 @@ import {Artist, DetailedTrack, NewAlbum, NewTrack, UserNotFoundException} from '
 import {createArtist, getArtistBySpotifyId} from "./artistService";
 import {createAlbum, getAlbumBySpotifyID} from "./albumService";
 import {parseReleaseDate} from "../util/util";
+import {logger} from "../util/logger";
 
 export const getAccessToken = async (uid: number) => {
     const user = (await db.select({accessToken: users.accessToken})
@@ -31,7 +32,6 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
             if (response.status === 200) {
                 const {genres, images, name} = response.data;
 
-                console.log("Registering new artist:", response.data.name);
                 const imageUrl = images[0]?.url;
                 await createArtist({
                     spotifyId: id,
@@ -39,7 +39,7 @@ const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
                     imageUrl: imageUrl
                 }, genres);
             } else {
-                console.error("Failed to fetch artist data: ", response.data);
+                logger.error("Failed to fetch artist data: " +  response.data);
             }
         }
     }
@@ -50,7 +50,7 @@ const createAlbumIfNotExists = async (albumId: string, data: Omit<NewAlbum, "art
     if (!album) {
         const artist = await getArtistBySpotifyId(data.artistSpotifyId);
         if (!artist) {
-            console.error("Failed to fetch artist data whilst registering album");
+            logger.error("Failed to fetch artist data whilst registering album with id:" + albumId);
             return null;
         }
 
@@ -131,15 +131,13 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
 
             const album = await createAlbumIfNotExists(albumItemData.id, albumData);
             if (!album) {
-                console.error("Failed to register album :/");
+                logger.error("Failed to register album :/");
                 return null;
             }
 
             track = (await db.insert(tracks)
                 .values({...trackData, albumId: album.id})
                 .returning())[0];
-
-            console.log("Registered new track:", track.trackName);
 
             await linkArtistTracks(artistIds, track.id);
         }
@@ -158,11 +156,9 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
             artists: artistsData,
         };
     } catch (error: any) {
-        console.error("failed to fetch current track");
-        console.dir(error.response);
+        logger.warn(`Failed to fetch current track for: ${uid}\\nMessage: ${error.message}`);
 
         if (error.response?.status === 401 && failedAttempts <= 1) {
-            console.log("Reloading access token");
             await refreshAccessToken(uid);
             return getCurrentlyPlaying(uid, failedAttempts + 1);
         }

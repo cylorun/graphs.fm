@@ -17,6 +17,7 @@ import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
 import logoutRoutes from './routes/auth/logout';
 import {JWTUser} from "@/shared/types";
+import {logger} from "@/shared/util/logger";
 
 const PORT = 5000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
@@ -62,12 +63,9 @@ app.use((req: Request, res: Response) => {
 });
 
 process.on("uncaughtException", (err) => {
-    console.error("Uncaught exception:");
-    console.error("Error name: " + err.name);
-    console.error("Error message: " + err.message);
-    console.error("Stack trace:\n" + err.stack);
+    logger.fatal(`UNCAUGHT EXCEPTION!!\\nName: ${err.name}\\nMessage: ${err.message}\\nStack: ${err.stack}`);
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`http://localhost:${PORT}`);
+    logger.info(`Backend server started up at http://localhost:${PORT}`);
 });

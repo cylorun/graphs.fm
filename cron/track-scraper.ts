@@ -10,6 +10,7 @@ import {Track} from "@/shared/types";
 import {desc, eq} from "drizzle-orm";
 import moment from "moment";
 import { createClient } from 'redis';
+import {logger} from "@/shared/util/logger";
 
 const redis = createClient({url: process.env.REDIS_URL!});
 (async () => {
@@ -25,7 +26,7 @@ async function onTrackChange(uid: number, track: Track): Promise<void> {
     });
 
     await redis.publish('track-updates', payload);
-    console.log('Redis updates successfully.', payload);
+    logger.debug('Redis updates successfully.', payload);
 }
 
 
@@ -64,8 +65,7 @@ async function run() {
             }
         }));
     } catch (e: any) {
-        console.error("An error occured in scraper: ", e.message);
-        console.error("stack: \n", e.stack);
+        logger.error(`An error occured in scraper: ${e.message}\\n stack:\\n ${e.stack}`);
     }
 }
 
