@@ -37,6 +37,7 @@ export type DetailedArtist = Artist & {genres: Genre[]};
 
 export type JWTUser = {
     id: number;
+    role: number;
     username: string;
 }
 

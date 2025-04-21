@@ -1,7 +1,9 @@
 import { pgTable, serial, integer, varchar, text, timestamp } from "drizzle-orm/pg-core";
+import {ROLE_MASKS} from "../util/userrole";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
+    role: integer("role").notNull().default(ROLE_MASKS.viewer),
     spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
     username: varchar("username", {length: 50}).unique().notNull(),
     email: varchar("email", {length: 100}).unique().notNull(),

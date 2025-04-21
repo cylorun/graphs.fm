@@ -1,9 +1,16 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {JWTUser} from "@/shared/types";
+import {hasRole} from "@/shared/util/userrole";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+
+export function requireRole(req: Request, res: Response, next: NextFunction, role: number) {
+    if (req.user && hasRole(req.user?.role, role)) {
+        next();
+    }
+}
 export function requireAuth(req: Request, res: Response, next: NextFunction): void {
     const token = req.cookies["token"];
     if (!token) {
