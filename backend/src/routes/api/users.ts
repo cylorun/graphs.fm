@@ -7,7 +7,7 @@ import {
     getNowPlaying,
     getTopTracks,
     setTimezone,
-    getTopArtists, getHourlyListeningCount
+    getTopArtists, getHourlyListeningCount, uploadUserHistory
 } from '../../controllers/api/userApiController'
 import {requireAuth} from "../../middleware";
 
@@ -147,5 +147,6 @@ router.get('/:id/pfp', getUserPfp);
  */
 router.post('/set-timezone', requireAuth, setTimezone);
 
+router.post('/history/upload', requireAuth, uploadUserHistory);
 
 export default router;

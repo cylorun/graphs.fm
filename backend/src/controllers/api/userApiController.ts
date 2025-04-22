@@ -196,3 +196,11 @@ export async function getHourlyListeningCount(req: Request, res: Response) {
         reportError("AN error occured in  userapicontroller", e, res);
     }
 }
+
+export async function uploadUserHistory(req: Request, res: Response) {
+    try {
+        res.status(501).json({message: "unimplemented route"});
+    } catch (e: any) {
+        reportError("AN error occured in  userapicontroller", e, res);
+    }
+}

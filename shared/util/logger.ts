@@ -1,9 +1,7 @@
 import fs from 'fs'
 import pino from 'pino'
 import pretty from 'pino-pretty'
-import dotenv from "dotenv";
 import path from "node:path";
-dotenv.config();
 
 const SERVICE_NAME = process.env.SERVICE_NAME!;
 const NODE_ENV = process.env.NODE_ENV || "dev";
