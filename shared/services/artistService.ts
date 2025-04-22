@@ -2,6 +2,8 @@ import {Artist, Genre, NewArtist} from "../types";
 import {db} from "../db";
 import {artistGenres, artists, artistTracks, genres, tracks, userTracks} from "../drizzle/schema";
 import {desc, eq, sql} from "drizzle-orm";
+import axios from "axios";
+import {logger} from "../util/logger";
 
 
 export async function getArtistBySpotifyId(spotifyId: string): Promise<Artist | null> {
@@ -79,3 +81,39 @@ export const getTopArtists = async (count: number = 20): Promise<Artist[]> => {
         .orderBy(desc(sql`COUNT(user_tracks.track_id)`))
         .limit(count);
 };
+
+
+export async function createArtistsIfNotExists(ids: string[], accessToken: string) {
+    for (const id of ids) {
+        const artist = await getArtistBySpotifyId(id);
+        if (!artist) {
+            const response = await axios.get(`https://api.spotify.com/v1/artists/${id}`, {
+                headers: {Authorization: `Bearer ${accessToken}`}
+            });
+
+            if (response.status === 200) {
+                const {genres, images, name} = response.data;
+
+                const imageUrl = images[0]?.url;
+                await createArtist({
+                    spotifyId: id,
+                    artistName: name,
+                    imageUrl: imageUrl
+                }, genres);
+            } else {
+                logger.error("Failed to fetch artist data: " +  response.data);
+            }
+        }
+    }
+}
+
+
+// link a list of artists to a given track
+export async function linkArtistTracks(artistIds: string[], trackId: number){
+    for (let id of artistIds) {
+        const artist = await getArtistBySpotifyId(id);
+        if (artist) { // it should always exist, since `createArtistIfNotExists` should always be called before
+            await db.insert(artistTracks).values({artistId: artist.id, trackId: trackId});
+        }
+    }
+}

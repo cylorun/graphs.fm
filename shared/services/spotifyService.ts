@@ -4,10 +4,11 @@ import {db} from "../db";
 import {albums, artists, artistTracks, tracks, users} from "../drizzle/schema";
 import {eq} from "drizzle-orm";
 import {Artist, DetailedTrack, NewAlbum, NewTrack, UserNotFoundException} from '../types';
-import {createArtist, getArtistBySpotifyId} from "./artistService";
-import {createAlbum, getAlbumBySpotifyID} from "./albumService";
+import {createArtist, createArtistsIfNotExists, getArtistBySpotifyId} from "./artistService";
+import {createAlbum, createAlbumIfNotExists, getAlbumBySpotifyID} from "./albumService";
 import {parseReleaseDate} from "../util/util";
 import {logger} from "../util/logger";
+import {createAndLinkTrack} from "./trackService";
 
 export const getAccessToken = async (uid: number) => {
     const user = (await db.select({accessToken: users.accessToken})
@@ -21,53 +22,6 @@ export const getAccessToken = async (uid: number) => {
     return user.accessToken;
 };
 
-const createArtistIfNotExists = async (ids: string[], accessToken: string) => {
-    for (const id of ids) {
-        const artist = await getArtistBySpotifyId(id);
-        if (!artist) {
-            const response = await axios.get(`https://api.spotify.com/v1/artists/${id}`, {
-                headers: {Authorization: `Bearer ${accessToken}`}
-            });
-
-            if (response.status === 200) {
-                const {genres, images, name} = response.data;
-
-                const imageUrl = images[0]?.url;
-                await createArtist({
-                    spotifyId: id,
-                    artistName: name,
-                    imageUrl: imageUrl
-                }, genres);
-            } else {
-                logger.error("Failed to fetch artist data: " +  response.data);
-            }
-        }
-    }
-}
-
-const createAlbumIfNotExists = async (albumId: string, data: Omit<NewAlbum, "artistId"> & {artistSpotifyId: string}) => {
-    const album = await getAlbumBySpotifyID(albumId);
-    if (!album) {
-        const artist = await getArtistBySpotifyId(data.artistSpotifyId);
-        if (!artist) {
-            logger.error("Failed to fetch artist data whilst registering album with id:" + albumId);
-            return null;
-        }
-
-        return await createAlbum({...data, artistId: artist.id});
-    }
-
-    return album;
-}
-
-const linkArtistTracks = async (artistIds: string[], trackId: number) => {
-    for (let id of artistIds) {
-        const artist = await getArtistBySpotifyId(id);
-        if (artist) { // it should always exist, since `createArtistIfNotExists` should always be called before
-            await db.insert(artistTracks).values({artistId: artist.id, trackId: trackId});
-        }
-    }
-}
 
 export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 0): Promise<DetailedTrack | null> => {
     const accessToken = await getAccessToken(uid);
@@ -112,11 +66,8 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
         let track = existingTrack.length > 0 ? existingTrack[0] : null;
 
         if (!track) {
-            // create the new track
-
-
             // link artists and genres
-            await createArtistIfNotExists(artistIds, accessToken);
+            await createArtistsIfNotExists(artistIds, accessToken);
 
             const albumItemData = item.album;
             const albumData = {
@@ -135,11 +86,7 @@ export const getCurrentlyPlaying = async (uid: number, failedAttempts: number = 
                 return null;
             }
 
-            track = (await db.insert(tracks)
-                .values({...trackData, albumId: album.id})
-                .returning())[0];
-
-            await linkArtistTracks(artistIds, track.id);
+           track = await createAndLinkTrack(artistIds, {...trackData, albumId: album.id});
         }
 
 

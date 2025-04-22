@@ -1,7 +1,8 @@
 import {and, count, desc, eq, sql} from "drizzle-orm";
 import {db} from "../db";
 import {artists, artistTracks, tracks, users, userTracks} from "../drizzle/schema";
-import {Artist, DetailedTrack} from "../types";
+import {Artist, DetailedTrack, NewTrack, Track} from "../types";
+import {createArtistsIfNotExists, linkArtistTracks} from "./artistService";
 
 export const getRecentTracks = async (uid: number, count: number = 20): Promise<DetailedTrack[]> => {
     return await db
@@ -242,4 +243,16 @@ export async function getGlobalPlaycount(): Promise<number> {
     return (await db
         .select({val: count()})
         .from(userTracks))[0].val;
+}
+
+
+// creates a track and links it with the given artist ids. requires the artists to actuall exist though
+export async function createAndLinkTrack(artistIds: string[], track: NewTrack): Promise<Track> {
+    const rettrack = (await db.insert(tracks)
+        .values(track)
+        .returning())[0];
+
+    await linkArtistTracks(artistIds, rettrack.id);
+
+    return rettrack;
 }
