@@ -1,6 +1,9 @@
 node_modules
 .idea
 ./logs
+/uploads
+/unzipped
+
 .env
 dist
 *.js

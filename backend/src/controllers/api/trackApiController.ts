@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getById, getTrackPlayCount, getTrackPlayCountForUser} from "@/shared/services/trackService";
+import {getDetailedById, getTrackPlayCount, getTrackPlayCountForUser} from "@/shared/services/trackService";
 import {reportError} from "../../util/exceptions";
 import {getAlbumById, getAlbumBySpotifyID} from "@/shared/services/albumService";
 
@@ -11,7 +11,7 @@ export async function getTrackById(req: Request, res: Response) {
             return;
         }
 
-        let data = await getById(trackId);
+        let data = await getDetailedById(trackId);
         if (!data) {
             res.status(404).json({message: "Track not found"});
             return;

@@ -1,8 +1,11 @@
 import {and, count, desc, eq, sql} from "drizzle-orm";
 import {db} from "../db";
 import {artists, artistTracks, tracks, users, userTracks} from "../drizzle/schema";
-import {Artist, DetailedTrack, NewTrack, Track} from "../types";
+import {Artist, DetailedTrack, NewTrack, Track, TrackNotFoundException} from "../types";
 import {createArtistsIfNotExists, linkArtistTracks} from "./artistService";
+import {getSpotifyAppToken} from "./spotifyService";
+import axios from "axios";
+import {createAlbum, createAlbumIfNotExists, getAlbumBySpotifyID} from "./albumService";
 
 export const getRecentTracks = async (uid: number, count: number = 20): Promise<DetailedTrack[]> => {
     return await db
@@ -183,8 +186,27 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
         .orderBy(desc(sq.playCount));
 };
 
+export async function getTrackById(trackId: number): Promise<Track | null> {
+    return (await db.select().from(tracks).where(eq(tracks.id, trackId)))[0];
+}
 
-export async function getById(tracKId: number): Promise<Omit<DetailedTrack, "playedAt"> | null> {
+export async function getTrackBySpotifyId(spotifyId: string): Promise<Track | null> {
+    return (await db.select().from(tracks).where(eq(tracks.spotifyId, spotifyId)))[0];
+}
+
+// TODO link artists
+export async function createTrackIfNotExists(spotifyId: string): Promise<Track> {
+    const localTrack = await getTrackBySpotifyId(spotifyId);
+    if (localTrack) {
+        return localTrack;
+    }
+
+    const trackData = await fetchSpotifyTrack(spotifyId);
+    return (await db.insert(tracks).values(trackData).returning())[0]
+}
+
+
+export async function getDetailedById(tracKId: number): Promise<Omit<DetailedTrack, "playedAt"> | null> {
     return (await db
         .select({
             id: tracks.id,
@@ -255,4 +277,48 @@ export async function createAndLinkTrack(artistIds: string[], track: NewTrack): 
     await linkArtistTracks(artistIds, rettrack.id);
 
     return rettrack;
+}
+
+
+export async function fetchSpotifyTrack(spotifyId: string): Promise<NewTrack> {
+    const accessToken = await getSpotifyAppToken();
+
+    try {
+        const res = await axios.get(`https://api.spotify.com/v1/tracks/${spotifyId}`);
+        const {duration_ms, name, album} = res.data;
+
+
+        const insertAlbumData = {
+            spotifyId: album.id,
+            albumName: album.name,
+            artistSpotifyId: album.artists[0].id,
+            imageUrl: album.images[0]?.url || null,
+            releaseDate: album.release_date,
+            releaseDatePrecision: album.release_date_precision
+        };
+
+        // album in our db
+        const localAlbum = await createAlbumIfNotExists(album.id, insertAlbumData);
+
+        if (!localAlbum) {
+            throw new TrackNotFoundException("Failed to create or fetch album data");
+        }
+
+        return {
+            durationMs: duration_ms,
+            spotifyId: spotifyId,
+            trackName: name,
+            albumId: localAlbum.id,
+        }
+    } catch (e: any) {
+        if (e?.status === 404) {
+            throw new TrackNotFoundException("Track does not exist");
+        }
+
+        if (e instanceof TrackNotFoundException) {
+            throw e;
+        }
+
+        throw new Error("Failed to fetch track");
+    }
 }

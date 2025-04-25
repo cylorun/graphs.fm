@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import AdmZip from 'adm-zip';
 import {
     getHourlyListeningStats,
     getUserById,
@@ -12,6 +13,9 @@ import {getCurrentlyPlaying} from "@/shared/services/spotifyService";
 import {setUserTimezone} from "@/shared/services/userService";
 import {reportError} from "../../util/exceptions";
 import {UserNotFoundException} from "@/shared/types";
+import {importUserHistory} from "../../util/history-import";
+import * as path from "node:path";
+import * as fs from "node:fs";
 
 export async function getUserData(req: Request, res: Response) {
     try {
@@ -199,8 +203,23 @@ export async function getHourlyListeningCount(req: Request, res: Response) {
 
 export async function uploadUserHistory(req: Request, res: Response) {
     try {
-        res.status(501).json({message: "unimplemented route"});
+        if (!req.file) {
+            res.status(400).send('No file uploaded.');
+            return;
+        }
+
+        const zipPath = req.file.path;
+
+
+        const zip = new AdmZip(zipPath);
+        const outputPath = path.join(__dirname, '../../../unzipped', path.parse(zipPath).name); // root directory of backend + /unzipped
+        zip.extractAllTo(outputPath, true);
+
+        res.status(202).json({ message: 'History import accepted. Processing will begin shortly.' });
+
+        importUserHistory(outputPath);
     } catch (e: any) {
+        console.error(e);
         reportError("AN error occured in  userapicontroller", e, res);
     }
 }
