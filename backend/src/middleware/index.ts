@@ -31,7 +31,9 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
 export function optionalAuth(req: Request, res: Response, next: NextFunction): void {
     const token = req.cookies["token"];
     if (token) {
-        req.user = jwt.verify(token, JWT_SECRET) as JWTUser;
+        try {
+            req.user = jwt.verify(token, JWT_SECRET) as JWTUser;
+        } catch (e) {}
     }
 
     next();
