@@ -41,7 +41,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - NODE_ENV=production
-      - SERVICE_NAME=cron
+      - SERVICE_NAME=scraper
     env_file:
       - ./backend/.env
     depends_on:
