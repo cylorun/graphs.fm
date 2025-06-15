@@ -1,6 +1,6 @@
 import {Router} from "express";
-import {getTrackById} from "../../controllers/api/trackApiController";
-import {optionalAuth} from "../../middleware";
+import {getTrackById, getUserTrackData} from "../../controllers/api/trackApiController";
+import {optionalAuth, requireAuth} from "../../middleware";
 
 const router = Router();
 /**
@@ -60,6 +60,9 @@ const router = Router();
  * }
  */
 router.get('/:id', optionalAuth,  getTrackById);
+
+
+router.get('/:track_id/:user_id', requireAuth, getUserTrackData);
 
 
 export default router;

@@ -2,6 +2,8 @@ import {Request, Response} from "express";
 import {getDetailedById, getTrackPlayCount, getTrackPlayCountForUser} from "@/shared/services/trackService";
 import {reportError} from "../../util/exceptions";
 import {getAlbumById, getAlbumBySpotifyID} from "@/shared/services/albumService";
+import {getUserTrackListenPoints, resolveUid} from "@/shared/services/userService";
+import {userTracks} from "@/shared/drizzle/schema";
 
 export async function getTrackById(req: Request, res: Response) {
     try {
@@ -35,6 +37,34 @@ export async function getTrackById(req: Request, res: Response) {
         }
 
         res.json({...data, plays: totalPlays});
+    } catch (e: any) {
+        reportError("Error in track controller", e, res);
+    }
+}
+
+
+export async function getUserTrackData(req: Request, res: Response) {
+    try {
+        const trackId = parseInt(req.params.track_id);
+        const userId = await resolveUid(req.params.user_id);
+
+        if (!userId) {
+            res.status(404).json({message: "User not found"});
+            return;
+        }
+
+        if (isNaN(trackId)) {
+            res.status(400).json({message: "Invalid track id"});
+            return;
+        }
+
+        const data = await getUserTrackListenPoints(userId, trackId);
+        if (!data) {
+            res.status(500).json({message: "Something went wrong"});
+            return;
+        }
+
+        res.json(data);
     } catch (e: any) {
         reportError("Error in track controller", e, res);
     }

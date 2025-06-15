@@ -110,3 +110,14 @@ export async function getHourlyListeningStats(userId: number): Promise<number[]>
 
     return hourlyCounts;
 }
+
+
+export async function getUserTrackListenPoints(uid: number, trackId: number): Promise<Date[]> {
+    return (await db
+        .select({time: userTracks.playedAt})
+        .from(userTracks)
+        .where(and(
+            eq(userTracks.userId, uid),
+            eq(userTracks.trackId, trackId),
+        ))).map(a => a.time).filter(a => a !== null);
+}
