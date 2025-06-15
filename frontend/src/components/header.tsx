@@ -9,7 +9,7 @@ import Container from './container';
 import { siteConfig } from '@/config/siteConfig';
 import { menuItems } from '@/config/menuItems';
 import GetStartedButton from "@/components/get-started-button";
-import api from "@/util/api";
+import api, {API_BASE_URL} from "@/util/api";
 import {PublicUser} from "@shared/types";
 
 const Header: React.FC = () => {
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/logout" className="text-foreground hover:text-foreground-accent transition-colors">
+                                    <Link href={`${API_BASE_URL}/auth/logout`} className="text-foreground hover:text-foreground-accent transition-colors">
                                         Log out
                                     </Link>
                                 </li>
@@ -130,7 +130,7 @@ const Header: React.FC = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/logout" className="text-foreground hover:text-foreground-accent transition-colors">
+                                    <Link href={`${API_BASE_URL}/auth/logout`} className="text-foreground hover:text-foreground-accent transition-colors">
                                         Log out
                                     </Link>
                                 </li>
