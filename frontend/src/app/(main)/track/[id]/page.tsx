@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Container from "@/components/container";
 import api from "@/util/api";
-import {Album, DetailedTrack, TrackNotFoundException} from "@shared/types";
+import {Album, DetailedTrack, TrackNotFoundException, UserNotFoundException} from "@shared/types";
 import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
+import {useSession} from "@/context/session-context";
+import SimpleLineChart from "@/components/line-chart";
 
 export type PageProps = {
     params: Promise<{ id: string }>;
@@ -31,11 +33,26 @@ const PageSkeleton = () => {
     );
 };
 
+function transformPlayTimestamps(timestamps: string[]) {
+    const playsPerDay: Record<string, number> = {};
+
+    timestamps.forEach((ts) => {
+        const date = new Date(ts).toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        playsPerDay[date] = (playsPerDay[date] || 0) + 1;
+    });
+
+    return Object.entries(playsPerDay).map(([time, plays]) => ({ time, plays }));
+}
+
+
 const Page = ({ params }: PageProps) => {
     const [trackId, setTrackId] = useState<string>();
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [track, setTrack] = useState<DetailedTrack & {album: Album} | null>(null);
+    const [userListeningTimes, setUserListeningTimes] = useState<any>([]);
+
+    const {user} = useSession();
 
     useEffect(() => {
         const unwrapParams = async () => {
@@ -74,34 +91,82 @@ const Page = ({ params }: PageProps) => {
             }
         };
 
+        const fetchUserListeningPoints = async () => {
+            if (!trackId || !user) return;
+            setLoading(true);
+            setError(null);
+
+            try {
+                const res = await api.get(`/tracks/${trackId}/${user.id}`, {
+                    validateStatus: (status: number) => status === 200 || status === 304,
+                });
+
+                if (res.status === 200 || res.status === 304) {
+                    console.log(res.data);
+                    setUserListeningTimes(
+                        transformPlayTimestamps(res.data)
+                    );
+                }
+            } catch (e: any) {
+                if (e.status === 404) {
+                    setError(new UserNotFoundException("User not found"));
+                } else {
+                    setError(new Error("Failed to fetch user track data"));
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+
         fetchTrackData();
-    }, [trackId]);
+        fetchUserListeningPoints();
+    }, [trackId, user]);
 
     if (!error && (loading || !track)) return <PageSkeleton />;
     if (error || !track) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">{error?.message}</p></Container>;
 
     return (
-        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40">
-            <div className={'flex flex-row items-end gap-2'}>
-                <Image
-                    src={track?.imageUrl || "/placeholder.jpg"}
-                    alt={track?.trackName || "Album cover"}
-                    width={200}
-                    height={200}
-                    className="rounded-lg shadow-lg"
-                />
-                <div className={'flex flex-col items-start'}>
-                    <h2 className="text-2xl font-bold mt-4">{track.trackName}</h2>
-                    <div className="">
-                        {track?.artists.map(artist => (
-                            <a  href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
-                                <p className="text-lg text-gray-500 mt-1">{artist.artistName}</p>
-                            </a>
-                        ))}
+        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-5">
+            {/*top section*/}
+            <div className={'flex flex-row'}>
+                <div className={'flex flex-row items-end gap-2 w-[70%]'}>
+                    <Image
+                        src={track?.imageUrl || "/placeholder.jpg"}
+                        alt={track?.trackName || "Album cover"}
+                        width={200}
+                        height={200}
+                        className="rounded-lg shadow-lg"
+                    />
+                    <div className={'flex flex-col items-start'}>
+                        <h2 className="text-2xl font-bold mt-4 text-left">{track.trackName}</h2>
+                        <div className="flex flex-row gap-2">
+                            {track?.artists.map((artist, i) => (
+                                <a href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
+                                    <p className="text-lg text-gray-500 mt-1">{artist.artistName}{i !== track.artists.length-1 ? ', ' : ''}</p>
+                                </a>
+                            ))}
+                        </div>
+                        <p className="text-sm text-foreground-muted  mt-2">Plays: {track.plays} {track.yourPlaycount !== undefined ? ` | Your Plays: ${track.yourPlaycount}` : ''}</p>
                     </div>
-                    <p className="text-sm text-foreground-muted  mt-2">Plays: {track.plays} {track.yourPlaycount !== undefined ? ` | Your Plays: ${track.yourPlaycount}` : ''}</p>
                 </div>
+                <div className={'flex borderd border-red-700 w-full m-0 p-0'}>
+                     <SimpleLineChart data={userListeningTimes} xKey={'time'} yKey={'plays'} yLabel={'Your Plays'}/>
+                </div>
+            </div>
 
+            {/*middle section*/}
+            <div className={'flex flex-row justify-between gap-2 h-16'}>
+                <div className={'flex border border-red-700 w-[30%]'}>
+                    artist info
+                </div>
+                <div className={'flex border border-red-700 w-[70%]'}>
+                    ratings
+                </div>
+            </div>
+
+            {/*bottom section*/}
+            <div className={'flex border border-red-700 w-full h-96'}>
+                comments
             </div>
 
         </Container>

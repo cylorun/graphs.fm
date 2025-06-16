@@ -8,6 +8,7 @@ import {siteConfig} from '@/config/siteConfig';
 
 import "../globals.css";
 import React from "react";
+import {SessionProvider} from "@/context/session-context";
 
 const manrope = Manrope({subsets: ['latin']});
 const sourceSans = Source_Sans_3({subsets: ['latin']});
@@ -45,12 +46,16 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${manrope.className} ${sourceSans.className} antialiased`}>
-            {siteConfig.googleAnalyticsId && <GoogleAnalytics gaId={siteConfig.googleAnalyticsId}/>}
+        {siteConfig.googleAnalyticsId && <GoogleAnalytics gaId={siteConfig.googleAnalyticsId}/>}
+
+        <SessionProvider>
             <Header/>
             <main>
                 {children}
             </main>
             <Footer/>
+        </SessionProvider>
+
         </body>
         </html>
     );
