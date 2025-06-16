@@ -7,6 +7,7 @@ import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
 import {useSession} from "@/context/session-context";
 import SimpleLineChart from "@/components/line-chart";
+import ArtistOverview from "@/components/artists/artist-overview";
 
 export type PageProps = {
     params: Promise<{ id: string }>;
@@ -126,9 +127,9 @@ const Page = ({ params }: PageProps) => {
     if (error || !track) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">{error?.message}</p></Container>;
 
     return (
-        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-5">
+        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-2">
             {/*top section*/}
-            <div className={'flex flex-row'}>
+            <div className={'flex flex-row border-b border-b-foreground-accent pb-4'}>
                 <div className={'flex flex-row items-end gap-2 w-[70%]'}>
                     <Image
                         src={track?.imageUrl || "/placeholder.jpg"}
@@ -149,15 +150,15 @@ const Page = ({ params }: PageProps) => {
                         <p className="text-sm text-foreground-muted  mt-2">Plays: {track.plays} {track.yourPlaycount !== undefined ? ` | Your Plays: ${track.yourPlaycount}` : ''}</p>
                     </div>
                 </div>
-                <div className={'flex borderd border-red-700 w-full m-0 p-0'}>
+                <div className={'flex w-full m-0 p-0'}>
                      <SimpleLineChart data={userListeningTimes} xKey={'time'} yKey={'plays'} yLabel={'Your Plays'}/>
                 </div>
             </div>
 
             {/*middle section*/}
             <div className={'flex flex-row justify-between gap-2 h-16'}>
-                <div className={'flex border border-red-700 w-[30%]'}>
-                    artist info
+                <div className={'flex w-[30%]'}>
+                    <ArtistOverview artist={track?.artists[0]} />
                 </div>
                 <div className={'flex border border-red-700 w-[70%]'}>
                     ratings
