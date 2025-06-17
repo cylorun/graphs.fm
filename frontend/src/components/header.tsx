@@ -45,7 +45,7 @@ const Header: React.FC = () => {
                         <span className="manrope text-xl font-semibold text-foreground cursor-pointer">
                             {siteConfig.siteName}
                         </span>
-                        <h2 className="flex text-2xl text-black  rounded-xl bg-gradient-to-tl to-primary from-secondary h-10 w-24 items-center justify-center ">
+                        <h2 className="inline-flex items-center justify-center gap-1 px-4 py-1.5 text-sm font-semibold tracking-wide text-black bg-gradient-to-tr from-[#1db954] to-[#1ed760] rounded-full shadow-md ring-1 ring-black/10">
                             WIP
                         </h2>
                     </Link>
