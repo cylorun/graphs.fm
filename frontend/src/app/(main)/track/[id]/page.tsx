@@ -168,7 +168,7 @@ const Page = ({ params }: PageProps) => {
             </div>
 
             {/*bottom section*/}
-            <CommentsContainer  />
+            <CommentsContainer postId={Number(trackId)} postType={'track'} />
 
         </Container>
     );

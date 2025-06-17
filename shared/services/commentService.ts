@@ -1,7 +1,7 @@
 import { db } from "../db";
-import { comments, commentLikes } from "../drizzle/schema";
-import { eq, and, count } from "drizzle-orm";
-import {Comment, PostType} from "../types";
+import {comments, commentLikes, users} from "../drizzle/schema";
+import {eq, and, count, sql, desc} from "drizzle-orm";
+import {Comment, DetailedComment, PostType} from "../types";
 
 export async function createPostComment(postId: number, postType: PostType, content: string, authorId: number) {
     return (
@@ -11,13 +11,34 @@ export async function createPostComment(postId: number, postType: PostType, cont
             .returning()
     )[0] || null;
 }
-
-export async function getPostComments(postId: number, postType: PostType): Promise<Comment[]> {
-    return db
-        .select()
+export async function getPostComments(postId: number, postType: PostType, userId?: number): Promise<DetailedComment[]> {
+    const rows = await db
+        .select({
+            id: comments.id,
+            content: comments.content,
+            postType: comments.postType,
+            postId: comments.postId,
+            totalLikes: sql<number>`COUNT(${commentLikes.userId})`.as('totalLikes'),
+            likedByYou: userId
+                ? sql<number>`SUM(CASE WHEN ${commentLikes.userId} = ${userId} THEN 1 ELSE 0 END)`.as('likedByYou')
+                : sql<number>`0`.as('likedByYou'),
+            authorId: comments.authorId,
+            authorName: users.username,
+            authorImageUrl: users.profileImage,
+            createdAt: comments.createdAt,
+            updatedAt: comments.updatedAt,
+        })
         .from(comments)
+        .leftJoin(users, eq(comments.authorId, users.id))
+        .leftJoin(commentLikes, eq(comments.id, commentLikes.commentId))
         .where(and(eq(comments.postId, postId), eq(comments.postType, postType)))
-        .orderBy(comments.createdAt);
+        .groupBy(comments.id, users.id)
+        .orderBy(desc(comments.createdAt));
+
+    return rows.map(row => ({
+        ...row,
+        totalLikes: Number(row.totalLikes),
+    }));
 }
 
 export async function updateComment(commentId: number, authorId: number, content: string) {

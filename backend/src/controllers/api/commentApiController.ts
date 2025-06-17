@@ -55,20 +55,11 @@ export async function fetchComments(req: Request, res: Response) {
             return;
         }
 
-        let comments = await getPostComments(Number(postId), postType);
+        const comments = await getPostComments(Number(postId), postType);
         if (comments === null) {
             res.status(404).json({ message: "Post not found." });
             return;
         }
-
-        comments = await Promise.all(comments.map(async (comment) => {
-            return {
-                ...comment,
-                totalLikes: await getCommentLikes(Number(comment.id)),
-                yourLikes: req.user ? await getUserPostLikes(comment.id, req.user.id as number) : null
-            }
-        }));
-
 
         res.json(comments);
     } catch (e: any) {
