@@ -55,7 +55,7 @@ export async function fetchComments(req: Request, res: Response) {
             return;
         }
 
-        const comments = await getPostComments(Number(postId), postType);
+        const comments = await getPostComments(Number(postId), postType, req?.user?.id);
         if (comments === null) {
             res.status(404).json({ message: "Post not found." });
             return;

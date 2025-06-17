@@ -20,7 +20,7 @@ export async function getPostComments(postId: number, postType: PostType, userId
             postId: comments.postId,
             totalLikes: sql<number>`COUNT(${commentLikes.userId})`.as('totalLikes'),
             likedByYou: userId
-                ? sql<number>`SUM(CASE WHEN ${commentLikes.userId} = ${userId} THEN 1 ELSE 0 END)`.as('likedByYou')
+                ? sql<number>`MAX(CASE WHEN ${commentLikes.userId} = ${userId} THEN 1 ELSE 0 END)`.as('likedByYou')
                 : sql<number>`0`.as('likedByYou'),
             authorId: comments.authorId,
             authorName: users.username,

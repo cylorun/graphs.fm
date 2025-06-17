@@ -77,7 +77,6 @@ const Page = ({ params }: PageProps) => {
                 });
 
                 if (res.status === 200 || res.status === 304) {
-                    console.log(res.data);
                     setTrack({
                         ...res.data,
                         createdAt: new Date(res.data.createdAt),
@@ -105,7 +104,6 @@ const Page = ({ params }: PageProps) => {
                 });
 
                 if (res.status === 200 || res.status === 304) {
-                    console.log(res.data);
                     setUserListeningTimes(
                         transformPlayTimestamps(res.data)
                     );

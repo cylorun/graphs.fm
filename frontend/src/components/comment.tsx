@@ -3,6 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp } from "lucide-react";
 import clsx from "clsx";
 import {DetailedComment as CommentType} from "@shared/types";
+import api from "@/util/api";
 
 export type CommentProps = {
     comment: CommentType;
@@ -12,16 +13,19 @@ export type CommentProps = {
 
 export default function Comment({
                                     comment,
-                                    initialLikes = 0,
-                                    initiallyLiked = false,
                                 }: CommentProps) {
-    const [likes, setLikes] = useState(initialLikes);
-    const [liked, setLiked] = useState(initiallyLiked);
+    const [likes, setLikes] = useState(comment.totalLikes);
+    const [liked, setLiked] = useState(!!comment.likedByYou);
 
-    const toggleLike = () => {
+    const toggleLike = async () => {
         setLiked((prev) => !prev);
         setLikes((prev) => (liked ? prev - 1 : prev + 1));
-        // TODO: APIify
+
+        try {
+            const res = await api.post(`/comments/${comment.id}/like`)
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (
