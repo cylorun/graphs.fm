@@ -8,7 +8,7 @@ import {
     artistGenres,
     artistTracks,
     albums,
-    badges
+    badges, comments
 } from "../drizzle/schema";
 
 export type User = InferSelectModel<typeof users>;
@@ -20,6 +20,8 @@ export type NewUserTrack = InferInsertModel<typeof userTracks>;
 export type Album  = InferSelectModel<typeof albums>;
 export type NewAlbum  = InferInsertModel<typeof albums>;
 export type Artist = InferSelectModel<typeof artists>;
+export type NewComment  = InferInsertModel<typeof comments>;
+export type Comment = InferSelectModel<typeof comments>;
 export type NewArtist = InferInsertModel<typeof artists>;
 export type Genre = InferSelectModel<typeof genres>;
 export type NewGenre = InferInsertModel<typeof genres>;

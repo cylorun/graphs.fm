@@ -8,6 +8,7 @@ import {formatDuration} from "@/util/timeutil";
 import {useSession} from "@/context/session-context";
 import SimpleLineChart from "@/components/line-chart";
 import ArtistOverview from "@/components/artists/artist-overview";
+import Comment from "@/components/comment";
 
 export type PageProps = {
     params: Promise<{ id: string }>;
@@ -168,6 +169,13 @@ const Page = ({ params }: PageProps) => {
             {/*bottom section*/}
             <div className={'flex border border-red-700 w-full h-96'}>
                 comments
+                <Comment comment={{
+                    id: 1,
+                    createdAt: new Date(),
+                    content: "hihi guys",
+                    authorId: 2,
+                    updatedAt: new Date()
+                }} initialLikes={2} initiallyLiked={false} />
             </div>
 
         </Container>
