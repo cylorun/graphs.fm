@@ -11,29 +11,15 @@ import { menuItems } from '@/config/menuItems';
 import GetStartedButton from "@/components/get-started-button";
 import api, {API_BASE_URL} from "@/util/api";
 import {PublicUser} from "@shared/types";
+import { useSession } from '@/context/session-context';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState<PublicUser | null>(null);
+    const {user} = useSession();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-
-    useEffect(() => {
-        const checkUserLoggedIn = async () => {
-            try {
-                const res = await api.get('/users');
-                if (res.status === 200) {
-                    setUser(res.data);
-                }
-            } catch (error) {
-                setUser(null);
-            }
-        };
-
-        checkUserLoggedIn();
-    }, []);
 
     return (
         <header className="bg-transparent fixed top-0 left-0 right-0 md:absolute z-50 mx-auto w-full">
