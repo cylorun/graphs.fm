@@ -26,10 +26,10 @@ export default function Comment({
 
     return (
         <div className="flex gap-3 p-3  w-[25%]">
-            <img src={comment.authorImageUrl} className="w-10 h-10 rounded-full" />
+            <img src={comment.authorImageUrl || "/placeholder-profile.jpg"} className="w-10 h-10 rounded-full" />
             <div className="flex-1">
                 <div className="flex items-center mb-1 gap-2">
-                    <p className="text-sm font-medium">{comment.authorName}</p>
+                    <a href={`/user/${comment.authorName}`} className="text-sm font-medium hover:text-foreground-accent">{comment.authorName}</a>
                     <span className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(comment.createdAt || 0), {
                             addSuffix: true,
