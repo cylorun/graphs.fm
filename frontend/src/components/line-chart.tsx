@@ -24,7 +24,7 @@ export default function SimpleLineChart<T extends Record<string, any>>({
                                                                            yKey,
                                                                            xLabel = 'Time',
                                                                            yLabel = 'Plays',
-                                                                           color = '#04732e', // Tailwind indigo-600
+                                                                           color = '#04732e',
                                                                        }: SimpleLineChartProps<T>) {
     return (
         <div style={{ width: '100%', height: 200 }}>
@@ -41,8 +41,9 @@ export default function SimpleLineChart<T extends Record<string, any>>({
                     <YAxis
                         fontSize={12}
                         tickMargin={6}
-                        // @ts-ignore
-                        tickFormatter={(value) => Math.floor(value)}
+                        allowDecimals={false}
+                        domain={['auto', 'auto']}
+                        tickFormatter={(value) => value}
                     >
                         <Label
                             value={yLabel}
