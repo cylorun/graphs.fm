@@ -1,9 +1,9 @@
-import {pgTable, serial, integer, varchar, text, timestamp, bigint} from "drizzle-orm/pg-core";
+import {pgTable, serial, integer, varchar, text, timestamp, bigint, index} from "drizzle-orm/pg-core";
 import {ROLE_MASKS} from "../util/userrole";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
-    role: bigint("role", {mode: 'number'}).notNull().default(ROLE_MASKS.viewer),
+    role: integer("role").notNull().default(ROLE_MASKS.viewer),
     spotifyId: varchar("spotify_id", {length: 50}).unique().notNull(),
     username: varchar("username", {length: 50}).unique().notNull(),
     email: varchar("email", {length: 100}).unique().notNull(),
@@ -91,13 +91,15 @@ export const artistTracks = pgTable("artist_tracks", {
         .references(() => tracks.id, { onDelete: "cascade" }),
 });
 
-
+export const postTypes = ['track', 'artist', 'album'] as const;
 export const comments = pgTable('comments', {
-    id: serial('id').primaryKey(),
-    content: text('content').notNull(),
-    authorId: integer('author_id').notNull().references(() => users.id),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+        id: serial('id').primaryKey(),
+        content: text('content').notNull(),
+        authorId: integer('author_id').notNull().references(() => users.id),
+        postId: integer("post_id").notNull(),
+        postType: text('post_type', {enum: postTypes}).notNull(),
+        createdAt: timestamp('created_at', {withTimezone: true}).defaultNow(),
+        updatedAt: timestamp('updated_at', {withTimezone: true}).defaultNow(),
 });
 
 export const commentLikes = pgTable('comment_likes', {

@@ -8,7 +8,7 @@ import {
     artistGenres,
     artistTracks,
     albums,
-    badges, comments
+    badges, comments, postTypes
 } from "../drizzle/schema";
 
 export type User = InferSelectModel<typeof users>;
@@ -22,6 +22,7 @@ export type NewAlbum  = InferInsertModel<typeof albums>;
 export type Artist = InferSelectModel<typeof artists>;
 export type NewComment  = InferInsertModel<typeof comments>;
 export type Comment = InferSelectModel<typeof comments>;
+export type DetailedComment = Comment & {authorName: string, authorImageUrl: string};
 export type NewArtist = InferInsertModel<typeof artists>;
 export type Genre = InferSelectModel<typeof genres>;
 export type NewGenre = InferInsertModel<typeof genres>;
@@ -33,6 +34,7 @@ export type Badge = InferSelectModel<typeof badges>;
 export type DetailedTrack = Track & {playedAt: Date | null} & {artists: Artist[], album?: Album | null, yourPlaycount?: number | null, plays?: number | null};
 export type ArtistWithGenre = Artist & {genres: Genre[]}
 export type PublicUser = Omit<User & {plays: number}, "expiresAt" | "refreshToken" | "accessToken" | "lastLogin">
+export type PostType = typeof postTypes[number];
 
 export type DetailedArtist = Artist & {genres: Genre[]};
 

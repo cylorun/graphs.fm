@@ -12,6 +12,7 @@ import userApiRoutes from "./routes/api/users";
 import globalDataRoutes from "./routes/api/global";
 import artistApiRoutes from './routes/api/artists'
 import tracksApiRoutes from './routes/api/tracks';
+import commentsApiRoutes from './routes/api/comments';
 
 import spotifyCallbackRoutes from './routes/auth/spotify/callback';
 import spotifyLoginRoutes from './routes/auth/spotify/login';
@@ -48,6 +49,7 @@ app.use('/status', statusRoutes)
 app.use('/users', userApiRoutes);
 app.use('/artists', artistApiRoutes);
 app.use('/tracks', tracksApiRoutes);
+app.use('/comments', commentsApiRoutes);
 
 app.use('/global', globalDataRoutes);
 
