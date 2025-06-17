@@ -57,7 +57,7 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
     return (
         <div className={'flex flex-col items-start w-full h-fit'}>
             <div className="flex flex-col gap-3 px-2 py-3 bg-muted rounded-md w-[60%] items-start">
-                <h2><b>2 Comments</b></h2>
+                <h2><b>{comments.length} Comments</b></h2>
 
                 <div className={'flex gap-2 w-full'}>
                     <img
@@ -85,9 +85,9 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
             </div>
 
             <div className={'w-full'}>
-                {comments.map((comment, index) => (
+                {comments.length ? comments.map((comment, index) => (
                     <Comment comment={comment} key={index} />
-                ))}
+                )) : null}
             </div>
         </div>
     )
