@@ -2,7 +2,7 @@ import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp } from "lucide-react";
 import clsx from "clsx";
-import {Comment as CommentType} from "@shared/types";
+import {DetailedComment as CommentType} from "@shared/types";
 
 export type CommentProps = {
     comment: CommentType;
@@ -25,18 +25,19 @@ export default function Comment({
     };
 
     return (
-        <div className="flex gap-3 p-3 border-b border-muted">
-            <div className="w-10 h-10 rounded-full bg-gray-300" />
+        <div className="flex gap-3 p-3  w-[25%]">
+            <img src={comment.authorImageUrl} className="w-10 h-10 rounded-full" />
             <div className="flex-1">
-                <div className="flex justify-between items-center mb-1">
-                    <p className="text-sm font-medium">User #{comment.authorId}</p>
+                <div className="flex items-center mb-1 gap-2">
+                    <p className="text-sm font-medium">{comment.authorName}</p>
                     <span className="text-xs text-gray-500">
-            {formatDistanceToNow(new Date(comment.createdAt || 0), {
-                addSuffix: true,
-            })}
-          </span>
+                        {formatDistanceToNow(new Date(comment.createdAt || 0), {
+                            addSuffix: true,
+                        })}
+                    </span>
                 </div>
-                <p className="text-sm text-gray-900">{comment.content}</p>
+
+                <p className="text-sm text-left text-gray-300">{comment.content}</p>
                 <button
                     onClick={toggleLike}
                     className={clsx(
