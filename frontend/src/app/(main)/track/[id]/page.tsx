@@ -7,7 +7,7 @@ import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
 import {useSession} from "@/context/session-context";
 import SimpleLineChart from "@/components/line-chart";
-import ArtistOverview from "@/components/artists/artist-overview";
+import ArtistOverview, {ArtistOverviewSkeleton} from "@/components/artists/artist-overview";
 import Comment from "@/components/comment";
 import CommentsContainer from "@/components/comments-container";
 
@@ -17,21 +17,38 @@ export type PageProps = {
 
 const PageSkeleton = () => {
     return (
-        <Container className="flex flex-col items-center text-center min-h-screen px-5 pt-32 md:pt-40">
-            <div className={'size-[300px] rounded-lg shadow-lg bg-skeleton animate-pulse'}/>
-            <div className="mt-4 w-32 h-8 bg-skeleton animate-pulse"></div>
-            <p className="mt-1 w-24 h-4 bg-skeleton animate-pulse"></p>
-            <p className="w-12 h-3 mt-2 bg-skeleton animate-pulse"></p>
-
-            <div className="mt-6">
-                <h3 className="text-lg font-semibold">Artists</h3>
-                <div className="flex gap-4 mt-2">
-                    <div className="flex flex-col items-center">
-                        <div className="rounded-full size-[60px] bg-skeleton animate-pulse"/>
-                        <p className="w-12 h-3 mt-1 bg-skeleton animate-pulse"></p>
+        <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-2">
+            {/*top section*/}
+            <div className={'flex flex-row border-b border-b-foreground-accent pb-4'}>
+                <div className={'flex flex-row items-end gap-2 w-[70%]'}>
+                    <div
+                        className="size-[200px] rounded-lg shadow-lg bg-skeleton animate-pulse"
+                    />
+                    <div className={'flex flex-col items-start'}>
+                        <div className="h-8 w-48 mt-4 rounded-lg bg-skeleton animate-pulse"></div>
+                        <div className="flex flex-row gap-2">
+                            <div className="mt-4 mb-2 h-6 w-24 rounded-lg bg-skeleton animate-pulse"></div>
+                        </div>
                     </div>
                 </div>
+                <div className={'flex w-full m-0 p-0'}>
+                    <div className={'w-full h-[200px] rounded-lg bg-skeleton animate-pulse'}/>
+                </div>
             </div>
+
+            {/*middle section*/}
+            <div className={'flex flex-row justify-between gap-2 h-16'}>
+                <div className={'flex w-[30%]'}>
+                    <ArtistOverviewSkeleton />
+                </div>
+                {/*<div className={'flex border border-red-700 w-[70%]'}>*/}
+                {/*    ratings*/}
+                {/*</div>*/}
+            </div>
+
+            {/*bottom section*/}
+            {/*<CommentsContainer postId={Number(trackId)} postType={'track'} />*/}
+
         </Container>
     );
 };
