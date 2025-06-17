@@ -33,6 +33,7 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
     const onCancelButtonClick = () => {
         setIsInputFocused(false);
         document.getElementById("comment-input")?.blur();
+        setInputValue("")
     }
 
     const onCommentSubmit = async () => {
