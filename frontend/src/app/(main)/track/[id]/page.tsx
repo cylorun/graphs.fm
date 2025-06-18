@@ -168,7 +168,9 @@ const Page = ({ params }: PageProps) => {
                     </div>
                 </div>
                 <div className={'flex w-full m-0 p-0'}>
-                     <SimpleLineChart data={userListeningTimes} xKey={'time'} yKey={'plays'} yLabel={'Your Plays'}/>
+                    {user && (
+                        <SimpleLineChart data={userListeningTimes} xKey={'time'} yKey={'plays'} yLabel={'Your Plays'}/>
+                    )}
                 </div>
             </div>
 

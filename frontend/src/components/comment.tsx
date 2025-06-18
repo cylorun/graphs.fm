@@ -7,17 +7,17 @@ import api from "@/util/api";
 
 export type CommentProps = {
     comment: CommentType;
-    initialLikes?: number;
-    initiallyLiked?: boolean;
+    loggedIn: boolean;
 };
 
 export default function Comment({
-                                    comment,
+                                    comment, loggedIn,
                                 }: CommentProps) {
     const [likes, setLikes] = useState(comment.totalLikes);
     const [liked, setLiked] = useState(!!comment.likedByYou);
 
     const toggleLike = async () => {
+        if (!loggedIn) return;
         setLiked((prev) => !prev);
         setLikes((prev) => (liked ? prev - 1 : prev + 1));
 
@@ -44,9 +44,11 @@ export default function Comment({
                 <p className="text-sm text-left text-gray-300">{comment.content}</p>
                 <button
                     onClick={toggleLike}
+                    disabled={!loggedIn}
                     className={clsx(
                         "mt-2 flex items-center text-sm transition",
-                        liked ? "text-blue-600 font-semibold" : "text-gray-500 hover:text-gray-700"
+                        liked ? "text-blue-600 font-semibold" : "text-gray-500 hover:text-gray-700",
+                        loggedIn ? "" : "hover:!text-gray-500 !cursor-no-drop"
                     )}
                 >
                     <ThumbsUp className="w-4 h-4 mr-1" />

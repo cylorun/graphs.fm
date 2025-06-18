@@ -60,14 +60,17 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
                 <h2><b>{comments.length} Comments</b></h2>
 
                 <div className={'flex gap-2 w-full'}>
-                    <img
-                        src={user?.profileImage || "/placeholder-profile.jpg"}
-                        alt="Profile"
-                        className="w-10 h-10 rounded-full object-cover border border-gray-300"
-                    />
+                    {user && (
+                        <img
+                            src={user.profileImage || "/placeholder-profile.jpg"}
+                            alt="Profile"
+                            className="w-10 h-10 rounded-full object-cover border border-gray-300"
+                        />
+                    )}
                     <input
                         type="text"
-                        placeholder="Add a comment..."
+                        placeholder={user ? "Add a comment..." : "Login to comment"}
+                        disabled={!user}
                         id={'comment-input'}
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
@@ -76,7 +79,7 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
                         className="w-full bg-transparent outline-none text-sm placeholder:text-gray-400 border-b border-b-foreground-muted focus:border-b-foreground"
                     />
                 </div>
-                {isInputFocused ? (
+                {isInputFocused && user ? (
                     <div className={'flex justify-end w-full gap-2 text-sm'}>
                         <button onClick={onCancelButtonClick} className={'hover:bg-foreground-muted px-2 py-1 rounded-2xl'}>Cancel</button>
                         <button onClick={onCommentSubmit} className={'bg-primary hover:bg-primary-accent px-2 py-1 rounded-2xl text-md'}>Comment</button>
@@ -86,7 +89,7 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
 
             <div className={'w-full'}>
                 {comments.length ? comments.map((comment, index) => (
-                    <Comment comment={comment} key={index} />
+                    <Comment loggedIn={!!user} comment={comment} key={index} />
                 )) : null}
             </div>
         </div>
