@@ -18,7 +18,7 @@ export const saveTokenAsCookie = (res: Response, token: string) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: NODE_ENV === 'production',
-        sameSite: "strict",
+        sameSite: "none",
         path: '/',
     });
 };
