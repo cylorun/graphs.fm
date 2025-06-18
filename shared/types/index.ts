@@ -43,6 +43,7 @@ export type JWTUser = {
     id: number;
     role: number;
     username: string;
+    spotifyId: string;
 }
 
 export class UserNotFoundException extends Error {

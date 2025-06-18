@@ -8,6 +8,8 @@ const NODE_ENV = process.env.NODE_ENV!;
 export const generateToken = (user: NewUser) => {
     return jwt.sign({
         id: user.id,
+        role: user.role,
+        username: user.username,
         spotifyId: user.spotifyId,
     }, JWT_SECRET, {expiresIn: 60 * 60 * 24 * 7}); // 7 days in seconds
 }
