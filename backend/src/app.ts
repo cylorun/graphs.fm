@@ -19,6 +19,7 @@ import spotifyLoginRoutes from './routes/auth/spotify/login';
 import logoutRoutes from './routes/auth/logout';
 import {JWTUser} from "@/shared/types";
 import {logger} from "@/shared/util/logger";
+import {lowRateLimit} from "./middleware/ratelimits";
 
 const PORT = 5000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
@@ -43,6 +44,8 @@ app.use(cors({
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
+// Rate Limits
+app.use('/comments')
 
 // API Routes
 app.use('/status', statusRoutes)
