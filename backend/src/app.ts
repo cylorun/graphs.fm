@@ -44,8 +44,7 @@ app.use(cors({
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-// Rate Limits
-app.use('/comments')
+
 
 // API Routes
 app.use('/status', statusRoutes)
