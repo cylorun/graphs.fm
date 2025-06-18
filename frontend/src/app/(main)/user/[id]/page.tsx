@@ -75,7 +75,7 @@ const Page = ({params}: PageProps) => {
                 });
             } catch (e) {
                 console.error(e);
-                setError(new Error("Failed to update user data"));
+                // setError(new Error("Failed to update user data"));
             }
         }
 
