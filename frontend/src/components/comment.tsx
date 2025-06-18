@@ -29,19 +29,21 @@ export default function Comment({
     };
 
     return (
-        <div className="flex gap-3 p-3  w-[25%]">
-            <img src={comment.authorImageUrl || "/placeholder-profile.jpg"} className="w-10 h-10 rounded-full" />
-            <div className="flex-1">
-                <div className="flex items-center mb-1 gap-2">
+        <div className="flex gap-3 p-3 w-full">
+            <img
+                src={comment.authorImageUrl || "/placeholder-profile.jpg"}
+                className="w-10 h-10 rounded-full object-cover shrink-0"
+            />
+            <div className="flex-1 min-w-0 break-words">
+                <div className="flex md:flex-row flex-col items-start mb-1 md:gap-2">
                     <a href={`/user/${comment.authorName}`} className="text-sm font-medium hover:text-foreground-accent">{comment.authorName}</a>
                     <span className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(comment.createdAt || 0), {
-                            addSuffix: true,
-                        })}
+                        {formatDistanceToNow(new Date(comment.createdAt || 0), { addSuffix: true })}
                     </span>
                 </div>
 
                 <p className="text-sm text-left text-gray-300">{comment.content}</p>
+
                 <button
                     onClick={toggleLike}
                     disabled={!loggedIn}

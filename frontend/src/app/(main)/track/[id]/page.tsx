@@ -146,28 +146,28 @@ const Page = ({ params }: PageProps) => {
     return (
         <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-2">
             {/*top section*/}
-            <div className={'flex flex-row border-b border-b-foreground-accent pb-4'}>
-                <div className={'flex flex-row items-end gap-2 w-[70%]'}>
+            <div className={'flex md:flex-row flex-col border-b border-b-foreground-accent pb-4'}>
+                <div className={'flex flex-row items-end gap-2 md:w-[70%] w-full'}>
                     <Image
                         src={track?.imageUrl || "/placeholder.jpg"}
                         alt={track?.trackName || "Album cover"}
                         width={200}
                         height={200}
-                        className="rounded-lg shadow-lg"
+                        className="rounded-lg shadow-lg w-[150px] h-[150px] md:w-[200px] md:h-[200px]"
                     />
                     <div className={'flex flex-col items-start'}>
-                        <h2 className="text-2xl font-bold mt-4 text-left">{track.trackName}</h2>
-                        <div className="flex flex-row gap-2">
+                        <h2 className="text-2xl font-bold mt-4 mb-2 text-left">{track.trackName}</h2>
+                        <div className="flex flex-col md:items-center items-start md:flex-row md:gap-2">
                             {track?.artists.map((artist, i) => (
                                 <a href={`/artist/${artist.id}`} key={artist.id} className="flex flex-col items-center">
-                                    <p className="text-lg text-gray-500 mt-1">{artist.artistName}{i !== track.artists.length-1 ? ', ' : ''}</p>
+                                    <p className="text-lg text-gray-500">{artist.artistName}{i !== track.artists.length-1 ? ', ' : ''}</p>
                                 </a>
                             ))}
                         </div>
                         <p className="text-sm text-foreground-muted  mt-2">Plays: {track.plays} {track.yourPlaycount !== undefined ? ` | Your Plays: ${track.yourPlaycount}` : ''}</p>
                     </div>
                 </div>
-                <div className={'flex w-full m-0 p-0'}>
+                <div className={'flex w-full m-0 p-0 md:mt-0 mt-4'}>
                     {user && (
                         <SimpleLineChart data={userListeningTimes} xKey={'time'} yKey={'plays'} yLabel={'Your Plays'}/>
                     )}
@@ -175,17 +175,17 @@ const Page = ({ params }: PageProps) => {
             </div>
 
             {/*middle section*/}
-            <div className={'flex flex-row justify-between gap-2 h-16'}>
-                <div className={'flex w-[30%]'}>
+            <div className="flex flex-col md:flex-row justify-between gap-4">
+                <div className="w-full md:w-[30%]">
                     <ArtistOverview artist={track?.artists[0]} />
                 </div>
-                {/*<div className={'flex border border-red-700 w-[70%]'}>*/}
-                {/*    ratings*/}
-                {/*</div>*/}
+                {/* Ratings section (if re-enabled later) */}
             </div>
 
             {/*bottom section*/}
-            <CommentsContainer postId={Number(trackId)} postType={'track'} />
+            <div className="mt-6">
+                <CommentsContainer postId={Number(trackId)} postType="track" />
+            </div>
 
         </Container>
     );
