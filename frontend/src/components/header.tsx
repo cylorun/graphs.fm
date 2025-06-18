@@ -116,9 +116,9 @@ const Header: React.FC = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href={`${API_BASE_URL}/auth/logout`} className="text-foreground hover:text-foreground-accent transition-colors">
+                                    <a href={`${API_BASE_URL}/auth/logout`} className="text-foreground hover:text-foreground-accent transition-colors">
                                         Log out
-                                    </Link>
+                                    </a>
                                 </li>
                             </>
 
