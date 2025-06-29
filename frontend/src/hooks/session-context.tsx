@@ -1,7 +1,8 @@
-"use client"
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import {PublicUser} from "@shared/types";
-import api from "@/util/api";
+'use client';
+
+import React, { createContext, useContext, useMemo } from 'react';
+import { PublicUser } from '@shared/types';
+import { useApi } from '@/hooks/useApi';
 
 type Session = {
     user: PublicUser | null;
@@ -14,33 +15,23 @@ const SessionContext = createContext<Session>({
 });
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<PublicUser | null>(null);
-    const [status, setStatus] = useState<Session['status']>('loading');
+    const { data, status } = useApi<PublicUser>('/users', {
+        method: 'GET',
+    });
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const res = await api.get('/users');
-                return res.data;
-            } catch (e) {
-                console.error(e);
-                return null;
-            }
-        };
-        fetchUser()
-            .then((data: any) => {
-                if (data) {
-                    setUser(data);
-                    setStatus('authenticated');
-                } else {
-                    setStatus('unauthenticated');
-                }
-            })
-            .catch(() => setStatus('unauthenticated'));
-    }, []);
+    const sessionStatus: Session['status'] = useMemo(() => {
+        if (status === 'loading') return 'loading';
+        if (status === 'error' || !data) return 'unauthenticated';
+        return 'authenticated';
+    }, [status, data]);
+
+    const sessionValue = useMemo<Session>(() => ({
+        user: data ?? null,
+        status: sessionStatus,
+    }), [data, sessionStatus]);
 
     return (
-        <SessionContext.Provider value={{ user, status }}>
+        <SessionContext.Provider value={sessionValue}>
             {children}
         </SessionContext.Provider>
     );
