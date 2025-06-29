@@ -8,7 +8,7 @@ import Container from "@/components/container";
 import {redirect} from "next/navigation";
 import {ListeningOverlay, ListeningOverlayProps} from "@/components/listening-overlay";
 import api from "@/util/api";
-import {useSession} from "@/context/session-context";
+import {useSession} from "@/hooks/session-context";
 
 export default function Page() {
     const [overlayData, setOverlayData] = useState<ListeningOverlayProps>({ uid: 2 })

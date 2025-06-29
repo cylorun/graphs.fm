@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useSession} from "@/context/session-context";
+import {useSession} from "@/hooks/session-context";
 import {DetailedComment, NewComment, PostType} from "@shared/types";
 import api from "@/util/api";
 import Comment from "@/components/comment";

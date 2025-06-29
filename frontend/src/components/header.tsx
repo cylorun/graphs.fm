@@ -11,7 +11,7 @@ import { menuItems } from '@/config/menuItems';
 import GetStartedButton from "@/components/get-started-button";
 import api, {API_BASE_URL} from "@/util/api";
 import {PublicUser} from "@shared/types";
-import { useSession } from '@/context/session-context';
+import { useSession } from '@/hooks/session-context';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,7 @@ import api from "@/util/api";
 import {Album, DetailedTrack, TrackNotFoundException, UserNotFoundException} from "@shared/types";
 import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
-import {useSession} from "@/context/session-context";
+import {useSession} from "@/hooks/session-context";
 import SimpleLineChart from "@/components/line-chart";
 import ArtistOverview, {ArtistOverviewSkeleton} from "@/components/artists/artist-overview";
 import Comment from "@/components/comment";

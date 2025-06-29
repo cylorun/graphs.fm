@@ -8,7 +8,7 @@ import {siteConfig} from '@/config/siteConfig';
 
 import "../globals.css";
 import React from "react";
-import {SessionProvider} from "@/context/session-context";
+import {SessionProvider} from "@/hooks/session-context";
 
 const manrope = Manrope({subsets: ['latin']});
 const sourceSans = Source_Sans_3({subsets: ['latin']});
