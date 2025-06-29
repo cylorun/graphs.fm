@@ -37,7 +37,11 @@ async function apiFetch<T>(
 
 export type ApiStatus = 'loading' | 'error' | 'success';
 
-export function useApi<T>(endpoint: string, options: RequestInit) {
+export function useApi<T>(endpoint: string, options: RequestInit = {}) {
+    if (endpoint.length && !endpoint.startsWith("/")) {
+        throw new Error("Endpoints should always start with a trailing slash");
+    }
+
     const [status, setStatus] = useState<ApiStatus>('loading');
     const [statusCode, setStatusCode] = useState<number>(0);
     const [data, setData] = useState<T | null>(null);

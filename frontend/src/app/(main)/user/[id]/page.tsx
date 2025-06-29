@@ -1,95 +1,91 @@
 'use client'
-import React, {useEffect, useState} from "react";
+
+import React, {useEffect, useMemo, useState} from "react";
 import Container from "@/components/container";
-import UserNav, {UserNavSkeleton} from "@/components/user-nav";
-import RecentUserTracks, {RecentUserTracksSkeleton} from "@/components/recent-user-tracks";
-import api from "@/util/api";
-import {PublicUser, UserNotFoundException} from "@shared/types";
-import {ListeningClock} from "@/components/listening-clock";
+import UserNav, { UserNavSkeleton } from "@/components/user-nav";
+import RecentUserTracks, { RecentUserTracksSkeleton } from "@/components/recent-user-tracks";
+import { PublicUser, UserNotFoundException } from "@shared/types";
+import { ListeningClock } from "@/components/listening-clock";
+import {API_BASE_URL, useApi} from "@/hooks/useApi";
 
 export type PageProps = {
     params: Promise<{ id: string }>
-}
+};
 
-const PageSkeleton = () => {
-    return (
-        <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            <UserNavSkeleton/>
-            <RecentUserTracksSkeleton rows={15}/>
-        </Container>
-    )
-}
+const PageSkeleton = () => (
+    <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
+        <UserNavSkeleton />
+        <RecentUserTracksSkeleton rows={15} />
+    </Container>
+);
 
-const Page = ({params}: PageProps) => {
-    const [uid, setUid] = useState<string>(); // username or uid
-    const [error, setError] = useState<Error>();
-    const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<PublicUser | null>(null);
-
+const Page = ({ params }: PageProps) => {
+    const [uid, setUid] = useState<string | null>(null);
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
         const unwrapParams = async () => {
-            const unwrappedParams = await params;
-            setUid(unwrappedParams.id);
+            const unwrapped = await params;
+            setUid(unwrapped.id);
         };
         unwrapParams();
     }, [params]);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (!uid) return;
-            setLoading(true);
+    const {
+        status: userStatus,
+        statusCode: userStatusCode,
+        data: user
+    } = useApi<PublicUser>(uid ? `/users/${uid}` : '', {
+        method: 'GET'
+    });
 
-            try {
-                const res = await api.get(`/users/${uid}`, {
-                    validateStatus: (status: number) => status === 200 || status === 304,
-                });
 
-                if (res.status === 200 || res.status === 304) {
-                    setUser({
-                        ...res.data,
-                        createdAt: new Date(res.data.createdAt),
-                        lastLogin: new Date(res.data.lastLogin)
-                    });
-                }
-            } catch (e: any) {
-                if (e.status === 404) {
-                    setError(new UserNotFoundException("User not found"));
-                    return;
-                }
-                setError(new Error("Failed to fetch user data: " + e.status));
-            } finally {
-                setLoading(false);
-            }
+    const transformedUser = useMemo(() => {
+        if (!user) return null;
+        return {
+            ...user,
+            createdAt: new Date(user.createdAt),
         };
+    }, [user]);
 
-
-        // sets the users timezone in the DB, used for radial bar graph (clock graph)
+    // Send user's timezone once uid is loaded
+    useEffect(() => {
         const updateUserTimezone = async () => {
             if (!uid) return;
 
             try {
                 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const res = await api.post('/users/set-timezone', {
-                    timezone: timeZone
+
+                await fetch(`${API_BASE_URL}/users/set-timezone`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ timezone: timeZone })
                 });
             } catch (e) {
-                console.error(e);
-                // setError(new Error("Failed to update user data"));
+                console.error("Failed to update timezone", e);
             }
-        }
+        };
 
-        fetchUserData();
-        updateUserTimezone(); // maybe some issues with the fact that this is called after the data is fetched,
-                              // so if tz changed the clock graphs might be off
+        updateUserTimezone();
     }, [uid]);
+
+    useEffect(() => {
+        if (userStatus === "error" && userStatusCode === 404) {
+            setError(new UserNotFoundException("User not found"));
+        } else if (userStatus === "error") {
+            setError(new Error("Failed to fetch user"));
+        }
+    }, [userStatus, userStatusCode]);
 
     if (error instanceof UserNotFoundException) {
         return (
             <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
                 User not found
             </Container>
-        )
+        );
     }
 
     if (error) {
@@ -97,27 +93,26 @@ const Page = ({params}: PageProps) => {
             <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
                 Something went wrong
             </Container>
-        )
+        );
     }
 
-    if (loading || !user) {
-        return <PageSkeleton/>
+    if (userStatus === 'loading' || !transformedUser) {
+        return <PageSkeleton />;
     }
 
     return (
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            <UserNav className={'border-b-gray-700'} user={user} tab={'overview'} />
+            <UserNav className={'border-b-gray-700'} user={transformedUser} tab={'overview'} />
             <h2 className={'border-b border-b-gray-400 mt-8'}>Recent activity</h2>
             <div className={'flex flex-col md:flex-row'}>
-                <RecentUserTracks uid={uid} />
+                <RecentUserTracks uid={uid!} />
                 <div className={'mr-8'}>
-                    <h2 className={'text-center mt-4'}>Listening clock</h2>
-                    <ListeningClock uid={user.username}/>
+                    <h2 className={'text-center mt-4'}>Listenixng clock</h2>
+                    <ListeningClock uid={transformedUser.username} />
                 </div>
-
             </div>
         </Container>
     );
-}
+};
 
 export default Page;

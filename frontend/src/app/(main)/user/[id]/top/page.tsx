@@ -1,12 +1,12 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Container from "@/components/container";
 import UserNav, { UserNavSkeleton } from "@/components/user-nav";
 import {Artist, DetailedTrack, PublicUser, UserNotFoundException} from "@shared/types";
-import api from "@/util/api";
-import Link from "next/link";
 import {TopUserTrackEntry} from "@/components/top-user-track-entry";
 import {TopUserArtistEntry} from "@/components/top-user-artist-entry";
+import {useIdParam} from "@/hooks/useIdParam";
+import {useApi} from "@/hooks/useApi";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -25,78 +25,50 @@ const PageSkeleton = () => (
 
 
 const Page = ({ params }: PageProps) => {
-    const [uid, setUid] = useState<string>();
+    const uid = useIdParam(params);
     const [error, setError] = useState<Error>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [user, setUser] = useState<PublicUser | null>(null);
-    const [topTracks, setTopTracks] = useState<Omit<DetailedTrack & {playCount: number}, "playedAt">[]>([]);
-    const [topArtists, setTopArtists] = useState<(Artist & {playCount: number})[]>([]);
+
+    const {
+        status: userStatus,
+        statusCode: userStatusCode,
+        data: user
+    } = useApi<PublicUser>(uid ? `/users/${uid}` : '', {
+        method: 'GET'
+    });
+
+
+    const transformedUser = useMemo(() => {
+        if (!user) return null;
+        return {
+            ...user,
+            createdAt: new Date(user.createdAt),
+        };
+    }, [user]);
+
+    const {
+        status: artistStatus,
+        statusCode: artistStatusCode,
+        data: topArtists
+    } = useApi<(Artist & {playCount: number})[]>(uid ? `/users/${uid}/artists/top` : '', {
+        method: 'GET'
+    });
+
+    const {
+        status: tracksStatus,
+        statusCode: tracksStatusCode,
+        data: topTracks
+    } = useApi<Omit<DetailedTrack & {playCount: number}, "playedAt">[]>(uid ? `/users/${uid}/tracks/top` : '', {
+        method: 'GET'
+    });
 
     useEffect(() => {
-        const unwrapParams = async () => {
-            const unwrappedParams = await params;
-            setUid(unwrappedParams.id);
-        };
-        unwrapParams();
-    }, [params]);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (!uid) return;
-            setLoading(true);
-
-            try {
-                const res = await api.get(`/users/${uid}`, {
-                    validateStatus: (status: number) => status === 200 || status === 304,
-                });
-
-                if (res.status === 200 || res.status === 304) {
-                    setUser({
-                        ...res.data,
-                        createdAt: new Date(res.data.createdAt),
-                        lastLogin: new Date(res.data.lastLogin),
-                    });
-                }
-            } catch (e: any) {
-                if (e.status === 404) {
-                    setError(new UserNotFoundException("User not found"));
-                    return;
-                }
-                setError(new Error("Failed to fetch user data: " + e.status));
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, [uid]);
-
-    useEffect(() => {
-        const fetchTopTracks = async () => {
-            if (!uid) return;
-            try {
-                const res = await api.get(`users/${uid}/tracks/top`);
-                setTopTracks(res.data);
-            } catch (e) {
-                console.error("Failed to fetch top tracks:", e);
-                setError(new Error("Failed to load top tracks"));
-            }
-        };
-
-        const fetchTopArtists = async () => {
-            if (!uid) return;
-            try {
-                const res = await api.get(`users/${uid}/artists/top`);
-                setTopArtists(res.data);
-            } catch (e) {
-                console.error("Failed to fetch top tracks:", e);
-                setError(new Error("Failed to load top artists"));
-            }
+        if (userStatus === "error" && userStatusCode === 404) {
+            setError(new UserNotFoundException("User not found"));
+        } else if (userStatus === "error") {
+            setError(new Error("Failed to fetch user"));
         }
-
-        fetchTopTracks();
-        fetchTopArtists();
-    }, [uid]);
+    }, [userStatus, userStatusCode]);
 
     if (error instanceof UserNotFoundException) {
         return (
@@ -114,13 +86,13 @@ const Page = ({ params }: PageProps) => {
         );
     }
 
-    if (loading || !user) {
+    if (loading || !transformedUser) {
         return <PageSkeleton />;
     }
 
     return (
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            <UserNav className="border-b-gray-700" user={user} tab="top" />
+            <UserNav className="border-b-gray-700" user={transformedUser} tab="top" />
 
             <main className="flex flex-col md:flex-row gap-10 w-full mt-8">
                 {/* Top Tracks */}
@@ -130,10 +102,10 @@ const Page = ({ params }: PageProps) => {
                     </h2>
 
                     <div className="mt-6 space-y-3">
-                        {topTracks.length === 0 ? (
+                        {topTracks?.length === 0 ? (
                             <p className="text-foreground-muted">No tracks found</p>
                         ) : (
-                            topTracks.map((track, index) => (
+                            topTracks?.map((track, index) => (
                                 <TopUserTrackEntry track={track} idx={index} key={index} />
                             ))
                         )}
@@ -147,10 +119,10 @@ const Page = ({ params }: PageProps) => {
                     </h2>
 
                     <div className="mt-6 space-y-3">
-                        {topArtists.length === 0 ? (
+                        {topArtists?.length === 0 ? (
                             <p className="text-foreground-muted">No artists found</p>
                         ) : (
-                            topArtists.map((artist, index) => (
+                            topArtists?.map((artist, index) => (
                                 <TopUserArtistEntry artist={artist} idx={index} key={index} />
                             ))
                         )}
