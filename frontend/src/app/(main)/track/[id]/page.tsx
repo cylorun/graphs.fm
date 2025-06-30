@@ -1,7 +1,6 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Container from "@/components/container";
-import api from "@/util/api";
 import {Album, DetailedTrack, TrackNotFoundException, UserNotFoundException} from "@shared/types";
 import Image from "next/image";
 import {formatDuration} from "@/util/timeutil";
@@ -10,6 +9,8 @@ import SimpleLineChart from "@/components/line-chart";
 import ArtistOverview, {ArtistOverviewSkeleton} from "@/components/artists/artist-overview";
 import Comment from "@/components/comment";
 import CommentsContainer from "@/components/comments-container";
+import {useApi} from "@/hooks/useApi";
+import { useUnwrappedParams } from "@/hooks/useUnwrappedParams";
 
 export type PageProps = {
     params: Promise<{ id: string }>;
@@ -66,82 +67,19 @@ function transformPlayTimestamps(timestamps: string[]) {
 
 
 const Page = ({ params }: PageProps) => {
-    const [trackId, setTrackId] = useState<string>();
-    const [error, setError] = useState<Error | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [track, setTrack] = useState<DetailedTrack & {album: Album} | null>(null);
-    const [userListeningTimes, setUserListeningTimes] = useState<any>([]);
+    const {id: trackId} = useUnwrappedParams(params, ['id']) || {};
 
     const {user} = useSession();
+    const {data: track, status: trackStatus} = useApi<(DetailedTrack & {album: Album}) | null>(`/tracks/${trackId}?albumdata=1&userdata=1`);
+    const {data: _userListeningTimes, status: listeningTimesStatus} = useApi<any>(`/tracks/${trackId}/${user?.id}`);
 
-    useEffect(() => {
-        const unwrapParams = async () => {
-            const unwrappedParams = await params;
-            setTrackId(unwrappedParams.id);
-        };
-        unwrapParams();
-    }, [params]);
+    const userListeningTimes =  useMemo(() => {
+        if (!_userListeningTimes) return;
+        return transformPlayTimestamps(_userListeningTimes);
+    }, [_userListeningTimes]);
 
-    useEffect(() => {
-        const fetchTrackData = async () => {
-            if (!trackId) return;
-            setLoading(true);
-            setError(null);
-
-            try {
-                const res = await api.get(`/tracks/${trackId}?albumdata=1&userdata=1`, {
-                    validateStatus: (status: number) => status === 200 || status === 304,
-                });
-
-                if (res.status === 200 || res.status === 304) {
-                    setTrack({
-                        ...res.data,
-                        createdAt: new Date(res.data.createdAt),
-                    });
-                }
-            } catch (e: any) {
-                if (e.status === 404) {
-                    setError(new TrackNotFoundException("Track not found"));
-                } else {
-                    setError(new Error("Failed to fetch track data"));
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const fetchUserListeningPoints = async () => {
-            if (!trackId || !user) return;
-            setLoading(true);
-            setError(null);
-
-            try {
-                const res = await api.get(`/tracks/${trackId}/${user.id}`, {
-                    validateStatus: (status: number) => status === 200 || status === 304,
-                });
-
-                if (res.status === 200 || res.status === 304) {
-                    setUserListeningTimes(
-                        transformPlayTimestamps(res.data)
-                    );
-                }
-            } catch (e: any) {
-                if (e.status === 404) {
-                    setError(new UserNotFoundException("User not found"));
-                } else {
-                    setError(new Error("Failed to fetch user track data"));
-                }
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchTrackData();
-        fetchUserListeningPoints();
-    }, [trackId, user]);
-
-    if (!error && (loading || !track)) return <PageSkeleton />;
-    if (error || !track) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">{error?.message}</p></Container>;
+    if (listeningTimesStatus === 'loading' || trackStatus === 'loading') return <PageSkeleton />;
+    if (trackStatus === 'error' || listeningTimesStatus === 'error' || !track || !userListeningTimes) return <Container className="flex flex-col items-center justify-center min-h-screen"><p className="text-red-500">error idk</p></Container>;
 
     return (
         <Container className="flex flex-col text-center min-h-screen px-5 pt-32 md:pt-40 gap-2">

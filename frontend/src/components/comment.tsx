@@ -3,7 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp } from "lucide-react";
 import clsx from "clsx";
 import {DetailedComment as CommentType} from "@shared/types";
-import api from "@/util/api";
+import {apiFetch} from "@/hooks/useApi";
 
 export type CommentProps = {
     comment: CommentType;
@@ -22,7 +22,7 @@ export default function Comment({
         setLikes((prev) => (liked ? prev - 1 : prev + 1));
 
         try {
-            const res = await api.post(`/comments/${comment.id}/like`)
+            const [resData, status] = await apiFetch(`/comments/${comment.id}/like`, {method: "POST"});
         } catch (e) {
             console.error(e);
         }

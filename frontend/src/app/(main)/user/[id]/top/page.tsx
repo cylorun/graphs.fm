@@ -5,7 +5,7 @@ import UserNav, { UserNavSkeleton } from "@/components/user-nav";
 import {Artist, DetailedTrack, PublicUser, UserNotFoundException} from "@shared/types";
 import {TopUserTrackEntry} from "@/components/top-user-track-entry";
 import {TopUserArtistEntry} from "@/components/top-user-artist-entry";
-import {useIdParam} from "@/hooks/useIdParam";
+import {useUnwrappedParams} from "@/hooks/useUnwrappedParams";
 import {useApi} from "@/hooks/useApi";
 
 export type PageProps = {
@@ -25,7 +25,7 @@ const PageSkeleton = () => (
 
 
 const Page = ({ params }: PageProps) => {
-    const uid = useIdParam(params);
+    const uid = useUnwrappedParams(params);
     const [error, setError] = useState<Error>();
     const [loading, setLoading] = useState<boolean>(true);
 

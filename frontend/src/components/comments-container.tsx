@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useSession} from "@/hooks/session-context";
 import {DetailedComment, NewComment, PostType} from "@shared/types";
-import api from "@/util/api";
 import Comment from "@/components/comment";
+import {apiFetch, useApi} from "@/hooks/useApi";
 
 
 export type CommentContainerProps = {
@@ -14,21 +14,13 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
     const {user} = useSession();
     const [isInputFocused, setIsInputFocused] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const {data, status: commentStatus} = useApi<DetailedComment[]>(`/comments?postId=${postId}&postType=${postType}`, {}, []);
     const [comments, setComments] = useState<DetailedComment[]>([]);
 
     useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const res = await api.get(`/comments?postId=${postId}&postType=${postType}`);
-                setComments(res.data);
-            } catch (e) {
-                console.error(e);
-            }
-        };
-
-        fetchComments();
-    }, [postId, postType]);
-
+        if (!data) return;
+        setComments(data);
+    }, [data]);
 
     const onCancelButtonClick = () => {
         setIsInputFocused(false);
@@ -46,11 +38,24 @@ export default function CommentsContainer({postType, postId}: CommentContainerPr
             postType: postType,
         }
 
+
         try {
-            const res = await api.post('/comments', {...comment});
-            setComments(prev => [{...res.data, authorName: user.username, authorImageUrl: user.profileImage, totalLikes: 0, postId: res.data.id}, ...prev])
+            const [resData] = await apiFetch<DetailedComment>('/comments', {
+                method: 'POST',
+                body: JSON.stringify(comment),
+            });
+
+            const enriched = {
+                ...resData,
+                authorName: user.username,
+                authorImageUrl: user.profileImage,
+                totalLikes: 0,
+                postId: resData.id,
+            };
+
+            setComments(prev => [enriched, ...prev]);
         } catch (e) {
-            console.error(e);
+            console.error('Failed to post comment:', e);
         }
     }
 
