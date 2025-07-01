@@ -25,9 +25,8 @@ const PageSkeleton = () => (
 
 
 const Page = ({ params }: PageProps) => {
-    const uid = useUnwrappedParams(params);
+    const {id: uid} = useUnwrappedParams(params, ['id']) || {};
     const [error, setError] = useState<Error>();
-    const [loading, setLoading] = useState<boolean>(true);
 
     const {
         status: userStatus,
@@ -86,7 +85,7 @@ const Page = ({ params }: PageProps) => {
         );
     }
 
-    if (loading || !transformedUser) {
+    if (!transformedUser) {
         return <PageSkeleton />;
     }
 

@@ -19,7 +19,7 @@ function parseJSONWithDates<T>(json: string): T {
     });
 }
 
-async function apiFetch<T>(
+export async function apiFetch<T>(
     endpoint: string,
     options: RequestInit = {}
 ): Promise<[T, number]> {

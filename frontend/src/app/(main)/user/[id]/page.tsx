@@ -6,6 +6,7 @@ import UserNav, { UserNavSkeleton } from "@/components/user-nav";
 import RecentUserTracks, { RecentUserTracksSkeleton } from "@/components/recent-user-tracks";
 import { ListeningClock } from "@/components/listening-clock";
 import UserPageLayout from "@/components/user-page-layout";
+import {useUnwrappedParams} from "@/hooks/useUnwrappedParams";
 
 export type PageProps = {
     params: Promise<{ id: string }>
@@ -18,8 +19,9 @@ const PageSkeleton = () => (
     </Container>
 );
 
-export function Page({ params }: { params: { id: string } }) {
-    const uid = params.id;
+export function Page({ params }: { params: Promise<{id: string}>  }) {
+    const uparams = useUnwrappedParams(params, ['id']);
+    const uid = uparams?.id || "0";
 
     return (
         <UserPageLayout uid={uid} tab="overview">
