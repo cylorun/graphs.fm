@@ -1,5 +1,7 @@
 import {Router} from "express";
-import {getArtistData} from "../../controllers/api/artistApiController";
+import {getArtistData, getUserArtistData} from "../../controllers/api/artistApiController";
+import {requireAuth} from "../../middleware";
+import {getUserTrackData} from "../../controllers/api/trackApiController";
 
 const router = Router();
 
@@ -34,6 +36,9 @@ const router = Router();
  * }
  */
 router.get("/:id", getArtistData);
+
+
+router.get('/:artist_id/:user_id', requireAuth, getUserArtistData);
 
 
 export default router;

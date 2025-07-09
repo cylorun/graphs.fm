@@ -1,5 +1,5 @@
 import {db} from "../db";
-import {badges, userBadges, users, userTracks} from "../drizzle/schema";
+import {artistTracks, badges, userBadges, users, userTracks} from "../drizzle/schema";
 import {and, count, eq, ilike, sql} from "drizzle-orm";
 import {Badge, PublicUser, User} from "../types";
 import {between} from "drizzle-orm/sql/expressions/conditions";
@@ -119,5 +119,16 @@ export async function getUserTrackListenPoints(uid: number, trackId: number): Pr
         .where(and(
             eq(userTracks.userId, uid),
             eq(userTracks.trackId, trackId),
+        ))).map(a => a.time).filter(a => a !== null);
+}
+
+export async function getUserArtistListenPoints(uid: number, artistId: number): Promise<Date[]> {
+    return (await db
+        .select({ time: userTracks.playedAt })
+        .from(userTracks)
+        .innerJoin(artistTracks, eq(userTracks.trackId, artistTracks.trackId))
+        .where(and(
+            eq(userTracks.userId, uid),
+            eq(artistTracks.artistId, artistId),
         ))).map(a => a.time).filter(a => a !== null);
 }
