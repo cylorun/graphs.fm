@@ -9,7 +9,7 @@ import {
     setTimezone,
     getTopArtists, getHourlyListeningCount, uploadUserHistory
 } from '../../controllers/api/userApiController'
-import {requireAuth} from "../../middleware";
+import {notImplemented, requireAuth} from "../../middleware";
 import multer from "multer";
 
 const router = Router();
@@ -150,6 +150,6 @@ router.post('/set-timezone', requireAuth, setTimezone);
 
 
 const upload = multer({ dest: '../uploads/' });
-router.post('/history/upload', upload.single("zipfile"), uploadUserHistory);
+router.post('/history/upload', notImplemented, upload.single("zipfile"), uploadUserHistory);
 
 export default router;

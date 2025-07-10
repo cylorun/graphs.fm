@@ -4,7 +4,7 @@ import {JWTUser} from "@/shared/types";
 import {hasRole} from "@/shared/util/userrole";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-
+const NODE_ENV = process.env.NODE_ENV!;
 
 export function requireRole(req: Request, res: Response, next: NextFunction, role: number) {
     if (req.user && hasRole(req.user?.role, role)) {
@@ -37,4 +37,13 @@ export function optionalAuth(req: Request, res: Response, next: NextFunction): v
     }
 
     next();
+}
+
+export function notImplemented(req: Request, res: Response, next: NextFunction): void {
+    if (NODE_ENV !== "production") {
+        next();
+        return;
+    }
+
+    res.status(501).json({message: "Not implemented"});
 }
