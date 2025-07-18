@@ -30,14 +30,6 @@ const UserPageLayout = ({ uid, tab, children }: UserPageLayoutProps) => {
         method: 'GET'
     });
 
-    const transformedUser = useMemo(() => {
-        if (!user) return null;
-        return {
-            ...user,
-            createdAt: new Date(user.createdAt),
-        };
-    }, [user]);
-
     // Set timezone on load
     useEffect(() => {
         const updateUserTimezone = async () => {
@@ -73,13 +65,13 @@ const UserPageLayout = ({ uid, tab, children }: UserPageLayoutProps) => {
         return <Container>Something went wrong</Container>;
     }
 
-    if (userStatus === "loading" || !transformedUser) {
+    if (userStatus === "loading" || !user) {
         return <UserPageLayoutSkeleton />;
     }
 
     return (
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            <UserNav className="border-b-gray-700" user={transformedUser} tab={tab} />
+            <UserNav className="border-b-gray-700" user={user} tab={tab} />
             {children}
         </Container>
     );

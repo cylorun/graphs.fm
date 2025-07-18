@@ -36,15 +36,6 @@ const Page = ({ params }: PageProps) => {
         method: 'GET'
     });
 
-
-    const transformedUser = useMemo(() => {
-        if (!user) return null;
-        return {
-            ...user,
-            createdAt: new Date(user.createdAt),
-        };
-    }, [user]);
-
     const {
         status: artistStatus,
         statusCode: artistStatusCode,
@@ -85,13 +76,13 @@ const Page = ({ params }: PageProps) => {
         );
     }
 
-    if (!transformedUser) {
+    if (!user) {
         return <PageSkeleton />;
     }
 
     return (
         <Container className="flex flex-col min-h-screen pb-0 pt-32 md:pt-40 px-5">
-            <UserNav className="border-b-gray-700" user={transformedUser} tab="top" />
+            <UserNav className="border-b-gray-700" user={user} tab="top" />
 
             <main className="flex flex-col md:flex-row gap-10 w-full mt-8">
                 {/* Top Tracks */}

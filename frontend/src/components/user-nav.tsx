@@ -1,5 +1,6 @@
 import { PublicUser } from "@shared/types";
 import Link from "next/link";
+import {useEffect} from "react";
 
 export type UserNavProps = {
     user: PublicUser;
@@ -39,7 +40,7 @@ const UserNav = ({ user, tab, className }: UserNavProps) => {
                 />
                 <div>
                     <h2 className="text-3xl font-semibold text-white">{user.username}</h2>
-                    <p className="text-foreground-muted  text-sm">Joined {user.createdAt?.toLocaleDateString()}</p>
+                    <p className="text-foreground-muted  text-sm">Joined {user.createdAt.toLocaleDateString()}</p>
                     <p className="text-foreground-muted  text-sm">0 friends</p>
                 </div>
             </div>
@@ -52,7 +53,7 @@ const UserNav = ({ user, tab, className }: UserNavProps) => {
                     { name: "Recs", path: `/user/${user.id}/recs`, key: "reccomended" },
                     { name: "Friends", path: `/user/${user.id}/friends`, key: "friends" }
                 ].map(({ name, path, key }) => (
-                    <Link
+                    <a // Making this a Link breaks everything, so don't (infinite re-renders)
                         key={key}
                         href={path}
                         className={`usr-nav-item px-6 py-2 rounded-lg text-sm font-semibold transition-colors
@@ -63,7 +64,7 @@ const UserNav = ({ user, tab, className }: UserNavProps) => {
                         }`}
                     >
                         {name}
-                    </Link>
+                    </a>
                 ))}
             </ul>
         </div>
