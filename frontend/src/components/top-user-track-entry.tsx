@@ -21,12 +21,12 @@ export function TopUserTrackEntry({track, idx}: TopUserTrackEntryProps) {
                     className="w-14 h-14 rounded-lg object-cover"
                 />
                 <div>
-                    <Link
+                    <a
                         href={`/track/${track.id}`}
                         className="text-white font-semibold hover:underline"
                     >
                         {track.trackName}
-                    </Link>
+                    </a>
                     <p className="text-foreground-muted  text-sm">{track.albumId}</p>
                     <p className="text-gray-500 text-xs">
                         {track.artists.map((a, i) => (

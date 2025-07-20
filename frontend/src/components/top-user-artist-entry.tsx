@@ -21,12 +21,12 @@ export function TopUserArtistEntry({artist, idx}: TopUserArtistEntryProps) {
                     className="w-14 h-14 rounded-lg object-cover"
                 />
                 <div>
-                    <Link
+                    <a
                         href={`/artist/${artist.id}`}
                         className="text-white font-semibold hover:underline"
                     >
                         {artist.artistName}
-                    </Link>
+                    </a>
                     {/*<p className="text-foreground-muted  text-sm">{artist.id}</p>*/}
                     <p className="text-gray-500 text-xs">
                         {/*{artist.artists.map((a, i) => (*/}

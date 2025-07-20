@@ -48,8 +48,8 @@ export async function apiFetch<T>(
 
 export type ApiStatus = 'loading' | 'error' | 'success';
 
-export function useApi<T>(endpoint: string, options: RequestInit = {}, defaultValue?: T) {
-    if (endpoint.length && !endpoint.startsWith("/")) {
+export function useApi<T>(endpoint: string | null, options: RequestInit = {}, defaultValue?: T) {
+    if (endpoint && !endpoint?.startsWith("/")) {
         throw new Error("Endpoints should always start with a trailing slash");
     }
 
@@ -58,9 +58,14 @@ export function useApi<T>(endpoint: string, options: RequestInit = {}, defaultVa
     const [data, setData] = useState<T | undefined>(defaultValue);
 
     useEffect(() => {
-        let isMounted = true;
+        if (!endpoint) {
+            console.log("goon")
+            return
+        };
 
+        let isMounted = true;
         setStatus('loading');
+
         apiFetch<T>(endpoint, options)
             .then(([data, code]) => {
                 if (!isMounted) return;
@@ -78,6 +83,7 @@ export function useApi<T>(endpoint: string, options: RequestInit = {}, defaultVa
             isMounted = false;
         };
     }, [endpoint, JSON.stringify(options)]);
+
 
     return { status, statusCode, data };
 }

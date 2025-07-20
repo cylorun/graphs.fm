@@ -68,8 +68,8 @@ const Page = ({ params }: PageProps) => {
     const {id: artistId} = useUnwrappedParams(params, ['id']) || {};
 
     const {user} = useSession();
-    const {data: artist, status: trackStatus} = useApi<DetailedArtist | null>(`/artists/${artistId}`);
-    const {data: _userListeningTimes, status: listeningTimesStatus} = useApi<any>(`/artists/${artistId}/${user?.id}`);
+    const {data: artist, status: trackStatus} = useApi<DetailedArtist | null>(artistId ? `/artists/${artistId}` : null);
+    const {data: _userListeningTimes, status: listeningTimesStatus} = useApi<any>(artistId && user?.id ?`/artists/${artistId}/${user?.id}` : null);
 
     const userListeningTimes =  useMemo(() => {
         if (!_userListeningTimes) return;
