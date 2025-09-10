@@ -30,7 +30,7 @@ const UserPageLayout = ({ uid, tab, children }: UserPageLayoutProps) => {
         method: 'GET'
     });
 
-    // Set timezone on load
+    // TODO, tf even is this. why not just adjust client-side???? who wrote this... 
     useEffect(() => {
         const updateUserTimezone = async () => {
             if (!uid) return;
@@ -56,6 +56,7 @@ const UserPageLayout = ({ uid, tab, children }: UserPageLayoutProps) => {
             setError(new Error("Failed to fetch user"));
         }
     }, [userStatus, statusCode]);
+
 
     if (error instanceof UserNotFoundException) {
         return <Container>User not found</Container>;

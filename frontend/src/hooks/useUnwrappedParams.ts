@@ -7,6 +7,7 @@ export function useUnwrappedParams<T extends string>(
 ): Partial<Record<T, string>> | null {
     const [values, setValues] = useState<Partial<Record<T, string>> | null>(null);
 
+    const pk = `${param}::${keys}`
     useEffect(() => {
         const unwrapParams = async () => {
             const unwrapped = await param;
@@ -20,7 +21,7 @@ export function useUnwrappedParams<T extends string>(
         };
 
         unwrapParams();
-    }, [param, keys]);
+    }, [pk]);
 
     return values;
 }

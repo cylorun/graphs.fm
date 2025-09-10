@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -48,42 +48,45 @@ export async function apiFetch<T>(
 
 export type ApiStatus = 'loading' | 'error' | 'success';
 
+
 export function useApi<T>(endpoint: string | null, options: RequestInit = {}, defaultValue?: T) {
     if (endpoint && !endpoint?.startsWith("/")) {
         throw new Error("Endpoints should always start with a trailing slash");
     }
 
-    const [status, setStatus] = useState<ApiStatus>('loading');
+    const [status, setStatus] = useState<ApiStatus>("loading");
     const [statusCode, setStatusCode] = useState<number>(0);
     const [data, setData] = useState<T | undefined>(defaultValue);
 
+    const requestKey = useMemo(
+        () => (endpoint ? `${endpoint}::${JSON.stringify(options)}` : null),
+        [endpoint, options]
+    );
+
     useEffect(() => {
-        if (!endpoint) {
-            console.log("goon")
-            return
-        };
+        if (!requestKey || !endpoint) return;
 
         let isMounted = true;
-        setStatus('loading');
+        setStatus("loading");
 
         apiFetch<T>(endpoint, options)
             .then(([data, code]) => {
                 if (!isMounted) return;
                 setData(data);
                 setStatusCode(code);
-                setStatus('success');
+                setStatus("success");
             })
             .catch((e) => {
                 if (!isMounted) return;
-                setStatus('error');
+                setStatus("error");
                 setStatusCode(e.status || 0);
             });
 
         return () => {
             isMounted = false;
         };
-    }, [endpoint, JSON.stringify(options)]);
-
+    }, [requestKey]); // depends only on the stable key
 
     return { status, statusCode, data };
 }
+
