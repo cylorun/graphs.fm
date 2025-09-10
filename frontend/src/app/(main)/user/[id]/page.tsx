@@ -19,7 +19,7 @@ const PageSkeleton = () => (
     </Container>
 );
 
-export function Page({ params }: { params: Promise<{id: string}>  }) {
+export default function Page({ params }: { params: Promise<{id: string}>  }) {
     const uparams = useUnwrappedParams(params, ['id']);
     const uid = uparams?.id || "0";
 
@@ -36,4 +36,3 @@ export function Page({ params }: { params: Promise<{id: string}>  }) {
         </UserPageLayout>
     );
 }
-export default Page;
