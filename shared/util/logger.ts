@@ -6,7 +6,7 @@ import path from "node:path";
 const SERVICE_NAME = process.env.SERVICE_NAME!;
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
-if (!['backend', 'scraper', 'websocket', 'frontend'].includes(SERVICE_NAME)) {
+if (!['backend', 'scraper', 'websocket', 'frontend', 'discordbot'].includes(SERVICE_NAME)) {
     throw new Error("Invalid SERVICE_NAME env");
 }
 
