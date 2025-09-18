@@ -1,4 +1,5 @@
 # graphs.fm
+ spotify statistics tracker.
 
 # disclaimer
 - getting the spotify extended quota is impossible so this project is over.
