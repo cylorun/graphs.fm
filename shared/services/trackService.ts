@@ -172,8 +172,8 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
                     'id', artists.id,
                     'spotifyId', artists.spotify_id,
                     'imageUrl', artists.image_url,
-                    'artistName', artists.artist_name
-                    'createdAt', artists.created_at,
+                    'artistName', artists.artist_name,
+                    'createdAt', artists.created_at
                 )
             )
         `).as("artists")

@@ -3,10 +3,16 @@ import { config } from 'dotenv';
 config();
 
 import * as tracks from './commands/track';
+import { logger } from '@/shared/util/logger';
 
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!;
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+if (!process.env.FRONTEND_URL) {
+    logger.warn("FRONTEND_URL is not set, defaulting to http://localhost:3000");
+}
+
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
