@@ -1,8 +1,7 @@
 # graphs.fm
- spotify statistics tracker.
+**Getting the spotify extended quota (which makes spotify auth not whitelisted and limited to 25 users) is (almost)impossible so i will not be continuing with this.**
 
-# disclaimer
-- getting the spotify extended quota is impossible so this project is over.
+ spotify statistics tracker.
 
 
 ## Developer info
