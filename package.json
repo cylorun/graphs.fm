@@ -6,6 +6,7 @@
         "build:front": "pnpm --filter frontend build",
         "dev:back": "pnpm --filter backend dev",
         "dev:websocket": "pnpm --filter websocket dev",
+        "dev:bot": "pnpm --filter discordbot dev",
         "start:websocket": "pnpm --filter websocket start",
         "start:cron": "pnpm --filter cron start"
     },
@@ -13,7 +14,8 @@
         "backend",
         "frontend",
         "cron",
-        "shared"
+        "shared",
+        "discordbot"
     ],
     "dependencies": {
         "pg": "^8.11.1"

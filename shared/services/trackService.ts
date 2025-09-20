@@ -142,11 +142,11 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
                 id: tracks.id,
                 spotifyId: tracks.spotifyId,
                 trackName: tracks.trackName,
-                album: tracks.albumId,
+                albumId: tracks.albumId,
                 durationMs: tracks.durationMs,
                 imageUrl: tracks.imageUrl,
                 createdAt: tracks.createdAt,
-                playCount: sql<number>`COUNT(${userTracks.trackId})`.as("playCount")
+                yourPlaycount: sql<number>`COUNT(${userTracks.trackId})`.as("yourPlaycount")
             })
             .from(tracks)
             .innerJoin(userTracks, eq(userTracks.trackId, tracks.id))
@@ -161,19 +161,19 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
             id: sq.id,
             spotifyId: sq.spotifyId,
             trackName: sq.trackName,
-            album: sq.album,
+            albumId: sq.albumId,
             durationMs: sq.durationMs,
             imageUrl: sq.imageUrl,
             createdAt: sq.createdAt,
-            playCount: sq.playCount,
+            yourPlaycount: sq.yourPlaycount,
             artists: sql.raw(`
             json_agg(
                 DISTINCT jsonb_build_object(
                     'id', artists.id,
                     'spotifyId', artists.spotify_id,
                     'imageUrl', artists.image_url,
-                    'createdAt', artists.created_at,
-                    'artistName', artists.artist_name
+                    'artistName', artists.artist_name,
+                    'createdAt', artists.created_at
                 )
             )
         `).as("artists")
@@ -182,8 +182,8 @@ export const getTopUserTracks = async (count: number = 20, uid: number): Promise
         .leftJoin(artistTracks, eq(artistTracks.trackId, sq.id))
         .leftJoin(artists, eq(artistTracks.artistId, artists.id))
         .limit(count)
-        .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.album, sq.durationMs, sq.imageUrl, sq.createdAt, sq.playCount)
-        .orderBy(desc(sq.playCount));
+        .groupBy(sq.id, sq.spotifyId, sq.trackName, sq.albumId, sq.durationMs, sq.imageUrl, sq.createdAt, sq.yourPlaycount)
+        .orderBy(desc(sq.yourPlaycount));
 };
 
 export async function getTrackById(trackId: number): Promise<Track | null> {
